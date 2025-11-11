@@ -16,6 +16,8 @@ import {
   Video,
   Link as LinkIcon,
   File,
+  Sparkles,
+  Loader2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -34,6 +36,23 @@ import {
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Progress } from "./ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "./ui/dialog";
+import { Checkbox } from "./ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { Alert, AlertDescription } from "./ui/alert";
 
 interface CourseDetailPageProps {
   courseId: string;
@@ -187,6 +206,17 @@ export function CourseDetailPage({
   const [showAddAssignment, setShowAddAssignment] = useState(false);
   const [showAddQuiz, setShowAddQuiz] = useState(false);
 
+  // Generate Curriculum Modal State
+  const [showGenerateModal, setShowGenerateModal] = useState(false);
+  const [syllabusFile, setSyllabusFile] = useState<string>("");
+  const [pastedOutline, setPastedOutline] = useState("");
+  const [includeStudyMaterials, setIncludeStudyMaterials] = useState(true);
+  const [includeMediaLinks, setIncludeMediaLinks] = useState(true);
+  const [includeQuizzesAssignments, setIncludeQuizzesAssignments] = useState(true);
+  const [aiEngine, setAiEngine] = useState("openai");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
   const getLessonIcon = (type: Lesson["type"]) => {
     switch (type) {
       case "video":
@@ -206,6 +236,37 @@ export function CourseDetailPage({
       .map((n) => n[0])
       .join("")
       .toUpperCase();
+  };
+
+  const handleGenerateCurriculum = async () => {
+    setIsGenerating(true);
+    
+    // Simulate AI generation delay
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    
+    // In a real app, this would call an AI API
+    console.log("Generating curriculum with:", {
+      syllabusFile,
+      pastedOutline,
+      includeStudyMaterials,
+      includeMediaLinks,
+      includeQuizzesAssignments,
+      aiEngine,
+    });
+    
+    setIsGenerating(false);
+    setShowGenerateModal(false);
+    setShowSuccess(true);
+    
+    // Reset form
+    setSyllabusFile("");
+    setPastedOutline("");
+    setIncludeStudyMaterials(true);
+    setIncludeMediaLinks(true);
+    setIncludeQuizzesAssignments(true);
+    
+    // Hide success message after 5 seconds
+    setTimeout(() => setShowSuccess(false), 5000);
   };
 
   return (
@@ -234,6 +295,14 @@ export function CourseDetailPage({
           >
             <BookOpen className="h-5 w-5" />
             <span>Lessons / Modules</span>
+          </button>
+
+          <button
+            onClick={() => setShowGenerateModal(true)}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-purple-700 hover:bg-purple-50 border border-purple-200"
+          >
+            <Sparkles className="h-5 w-5" />
+            <span>Generate Curriculum</span>
           </button>
 
           <button
@@ -274,8 +343,193 @@ export function CourseDetailPage({
         </nav>
       </aside>
 
+      {/* Generate Curriculum Modal */}
+      <Dialog open={showGenerateModal} onOpenChange={setShowGenerateModal}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-purple-600" />
+              Generate Curriculum for {courseName}
+            </DialogTitle>
+            <DialogDescription>
+              Upload or enter a rough syllabus, and let AI create a complete curriculum for this course.
+            </DialogDescription>
+          </DialogHeader>
+
+          {isGenerating ? (
+            <div className="py-12 text-center">
+              <Loader2 className="h-12 w-12 mx-auto mb-4 text-purple-600 animate-spin" />
+              <p className="text-lg">AI is generating your curriculum. Please wait…</p>
+            </div>
+          ) : (
+            <div className="space-y-6 py-4">
+              {/* File Upload */}
+              <div className="space-y-2">
+                <Label htmlFor="syllabus-upload">Upload Syllabus / Outline</Label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
+                  <Upload className="h-8 w-8 mx-auto mb-3 text-gray-400" />
+                  <p className="text-sm text-gray-600 mb-2">
+                    Upload a text, Word, or PDF file
+                  </p>
+                  <Button variant="outline" size="sm">
+                    Choose File
+                  </Button>
+                  {syllabusFile && (
+                    <p className="text-sm text-gray-700 mt-3">
+                      Selected: {syllabusFile}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="flex items-center gap-3">
+                <div className="flex-1 border-t border-gray-300" />
+                <span className="text-sm text-gray-500">OR</span>
+                <div className="flex-1 border-t border-gray-300" />
+              </div>
+
+              {/* Paste Outline */}
+              <div className="space-y-2">
+                <Label htmlFor="paste-outline">Paste Outline</Label>
+                <Textarea
+                  id="paste-outline"
+                  placeholder="Paste your syllabus or list of topics here..."
+                  rows={6}
+                  value={pastedOutline}
+                  onChange={(e) => setPastedOutline(e.target.value)}
+                />
+              </div>
+
+              {/* Checkboxes */}
+              <div className="space-y-3 border-t pt-4">
+                <Label>Generation Options</Label>
+                
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="study-materials"
+                    checked={includeStudyMaterials}
+                    onCheckedChange={(checked) =>
+                      setIncludeStudyMaterials(checked as boolean)
+                    }
+                  />
+                  <Label
+                    htmlFor="study-materials"
+                    className="cursor-pointer"
+                  >
+                    Include Study Materials
+                    <span className="text-sm text-gray-500 ml-2">
+                      (Generate recommended notes and readings)
+                    </span>
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="media-links"
+                    checked={includeMediaLinks}
+                    onCheckedChange={(checked) =>
+                      setIncludeMediaLinks(checked as boolean)
+                    }
+                  />
+                  <Label
+                    htmlFor="media-links"
+                    className="cursor-pointer"
+                  >
+                    Include Media Links
+                    <span className="text-sm text-gray-500 ml-2">
+                      (Fetch YouTube, blog, and OCW resources)
+                    </span>
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="quizzes-assignments"
+                    checked={includeQuizzesAssignments}
+                    onCheckedChange={(checked) =>
+                      setIncludeQuizzesAssignments(checked as boolean)
+                    }
+                  />
+                  <Label
+                    htmlFor="quizzes-assignments"
+                    className="cursor-pointer"
+                  >
+                    Include Quizzes & Assignments
+                    <span className="text-sm text-gray-500 ml-2">
+                      (Auto-create basic quizzes and assignments)
+                    </span>
+                  </Label>
+                </div>
+              </div>
+
+              {/* AI Engine Selection */}
+              <div className="space-y-2">
+                <Label htmlFor="ai-engine">AI Engine</Label>
+                <Select value={aiEngine} onValueChange={setAiEngine}>
+                  <SelectTrigger id="ai-engine">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="openai">
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="h-4 w-4" />
+                        OpenAI (GPT-4)
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="gemini">
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="h-4 w-4" />
+                        Google Gemini
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowGenerateModal(false)}
+              disabled={isGenerating}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleGenerateCurriculum}
+              disabled={isGenerating}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Generate Curriculum
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Main Content Area */}
       <main className="flex-1 overflow-auto p-8">
+        {/* Success Alert */}
+        {showSuccess && (
+          <Alert className="mb-6 bg-green-50 border-green-200">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            <AlertDescription className="text-green-800">
+              ✅ Your curriculum has been generated and added to the course.
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Lessons Section */}
         {activeSection === "lessons" && (
           <div>
