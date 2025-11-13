@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   ArrowLeft,
   BookOpen,
@@ -200,7 +201,7 @@ export function CourseDetailPage({
   onBack,
 }: CourseDetailPageProps) {
   const [activeSection, setActiveSection] = useState<
-    "lessons" | "assignments" | "quizzes" | "students"
+    "lessons" | "assignments" | "quizzes" | "students" | "curriculum"
   >("lessons");
   const [showAddLesson, setShowAddLesson] = useState(false);
   const [showAddAssignment, setShowAddAssignment] = useState(false);
@@ -208,7 +209,8 @@ export function CourseDetailPage({
 
   // Generate Curriculum Modal State
   const [showGenerateModal, setShowGenerateModal] = useState(false);
-  const [syllabusFile, setSyllabusFile] = useState<string>("");
+  const [syllabusFile, setSyllabusFile] = useState<File | null>(null);
+  const [syllabusFileName, setSyllabusFileName] = useState<string>("");
   const [pastedOutline, setPastedOutline] = useState("");
   const [includeStudyMaterials, setIncludeStudyMaterials] = useState(true);
   const [includeMediaLinks, setIncludeMediaLinks] = useState(true);
@@ -216,6 +218,58 @@ export function CourseDetailPage({
   const [aiEngine, setAiEngine] = useState("openai");
   const [isGenerating, setIsGenerating] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // Curriculum section logic
+  const [curriculum, setCurriculum] = useState<Array<{weekNumber: number; title: string; topics: string[];}>>([]);
+  const [curriculumLoading, setCurriculumLoading] = useState(false);
+  const [curriculumError, setCurriculumError] = useState<string | null>(null);
+
+  const DEFAULT_CURRICULUM_WEEKS = useMemo(() => 12, []);
+
+  async function handleSyllabusUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) {
+      setSyllabusFile(null);
+      setSyllabusFileName("");
+      return;
+    }
+    setSyllabusFile(file);
+    setSyllabusFileName(file.name);
+  }
+
+  // Fetch curriculum from backend
+  async function fetchCurriculum() {
+    setCurriculumLoading(true);
+    setCurriculumError(null);
+    try {
+      const resp = await fetch(`/api/curriculum/${courseId}`);
+      if (resp.status === 404) {
+        setCurriculum([]);
+        setCurriculumError(null);
+        return;
+      }
+      if (!resp.ok) throw new Error("Failed to fetch curriculum");
+      const data = await resp.json();
+      const formatted = (data.weeks || []).map((week: any) => ({
+        weekNumber: week.week_number,
+        title: week.title,
+        topics: (week.topics || []).map((topic: any) => topic.title),
+      }));
+      setCurriculum(formatted);
+    } catch (err: any) {
+      setCurriculum([]);
+      setCurriculumError(err.message || "Error fetching curriculum");
+    } finally {
+      setCurriculumLoading(false);
+    }
+  }
+
+  // Trigger fetch after curriculum generation or on curriculum tab click
+  useEffect(() => {
+    if (activeSection === "curriculum") {
+      fetchCurriculum();
+    }
+  }, [activeSection]);
 
   const getLessonIcon = (type: Lesson["type"]) => {
     switch (type) {
@@ -238,35 +292,66 @@ export function CourseDetailPage({
       .toUpperCase();
   };
 
+  // Generate curriculum via AI and refresh
   const handleGenerateCurriculum = async () => {
     setIsGenerating(true);
-    
-    // Simulate AI generation delay
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    
-    // In a real app, this would call an AI API
-    console.log("Generating curriculum with:", {
-      syllabusFile,
-      pastedOutline,
-      includeStudyMaterials,
-      includeMediaLinks,
-      includeQuizzesAssignments,
-      aiEngine,
-    });
-    
-    setIsGenerating(false);
-    setShowGenerateModal(false);
-    setShowSuccess(true);
-    
-    // Reset form
-    setSyllabusFile("");
-    setPastedOutline("");
-    setIncludeStudyMaterials(true);
-    setIncludeMediaLinks(true);
-    setIncludeQuizzesAssignments(true);
-    
-    // Hide success message after 5 seconds
-    setTimeout(() => setShowSuccess(false), 5000);
+    setCurriculumError(null);
+    try {
+      const url = "/api/curriculum/generate";
+      const hasFile = !!syllabusFile;
+
+      const fetchOptions: RequestInit = { method: "POST" };
+
+      if (hasFile) {
+        const formData = new FormData();
+        formData.append("course_id", courseId);
+        formData.append("number_of_weeks", String(DEFAULT_CURRICULUM_WEEKS));
+        formData.append("include_study_materials", String(includeStudyMaterials));
+        formData.append("include_media_links", String(includeMediaLinks));
+        formData.append("ai_engine", aiEngine);
+        if (pastedOutline) formData.append("course_outline", pastedOutline);
+        formData.append("syllabus_file", syllabusFile);
+        fetchOptions.body = formData;
+      } else {
+        fetchOptions.headers = { "Content-Type": "application/json" };
+        fetchOptions.body = JSON.stringify({
+          course_id: courseId,
+          syllabus_content: null,
+          course_outline: pastedOutline || null,
+          number_of_weeks: DEFAULT_CURRICULUM_WEEKS,
+          include_study_materials: includeStudyMaterials,
+          include_media_links: includeMediaLinks,
+          ai_engine: aiEngine,
+        });
+      }
+
+      const resp = await fetch(url, fetchOptions);
+      if (!resp.ok) {
+        let message = "AI generation failed";
+        try {
+          const err = await resp.json();
+          message = err.detail || err.message || message;
+        } catch (_) {
+          // ignore
+        }
+        throw new Error(message);
+      }
+      await resp.json();
+      setShowGenerateModal(false);
+      setShowSuccess(true);
+      fetchCurriculum(); // re-fetch after generation
+      setTimeout(() => setShowSuccess(false), 5000);
+    } catch (err: any) {
+      setCurriculumError(err.message || "Failed to generate curriculum");
+    } finally {
+      setIsGenerating(false);
+      setSyllabusFile(null);
+      setSyllabusFileName("");
+      setPastedOutline("");
+      setIncludeStudyMaterials(true);
+      setIncludeMediaLinks(true);
+      setIncludeQuizzesAssignments(true);
+    }
   };
 
   return (
@@ -298,11 +383,13 @@ export function CourseDetailPage({
           </button>
 
           <button
-            onClick={() => setShowGenerateModal(true)}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-purple-700 hover:bg-purple-50 border border-purple-200"
+            onClick={() => setActiveSection("curriculum")}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors border ${
+              activeSection === "curriculum" ? "border-purple-400 bg-purple-50 text-purple-700" : "text-purple-700 hover:bg-purple-50 border-purple-200"
+            }`}
           >
             <Sparkles className="h-5 w-5" />
-            <span>Generate Curriculum</span>
+            <span>Curriculum</span>
           </button>
 
           <button
@@ -371,12 +458,15 @@ export function CourseDetailPage({
                   <p className="text-sm text-gray-600 mb-2">
                     Upload a text, Word, or PDF file
                   </p>
-                  <Button variant="outline" size="sm">
-                    Choose File
+                  <Button variant="outline" size="sm" asChild>
+                    <label className="cursor-pointer">
+                      Choose File
+                      <input type="file" accept=".txt,.pdf,.doc,.docx" className="hidden" onChange={handleSyllabusUpload} />
+                    </label>
                   </Button>
-                  {syllabusFile && (
+                  {syllabusFileName && (
                     <p className="text-sm text-gray-700 mt-3">
-                      Selected: {syllabusFile}
+                      Selected: {syllabusFileName}
                     </p>
                   )}
                 </div>
@@ -899,6 +989,42 @@ export function CourseDetailPage({
                 </Card>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Curriculum Section */}
+        {activeSection === "curriculum" && (
+          <div>
+            <Button
+              variant="primary"
+              onClick={() => setShowGenerateModal(true)}
+              className="mb-6"
+            >
+              <Sparkles className="h-4 w-4 mr-2" /> Generate Curriculum
+            </Button>
+            {curriculumError && (
+              <div className="mb-6 p-4 rounded bg-red-50 text-red-700 border border-red-200 text-center">{curriculumError}</div>
+            )}
+            {curriculumLoading ? (
+              <div className="p-8 text-center text-lg text-gray-400">Loading curriculum…</div>
+            ) : curriculum.length === 0 ? (
+              <div className="p-8 text-center text-gray-500">No curriculum available yet.</div>
+            ) : (
+              <div>
+                {curriculum.map((week) => (
+                  <div key={week.weekNumber} className="mb-8">
+                    <h3 className="font-semibold text-lg mb-2">
+                      Week {week.weekNumber}: {week.title}
+                    </h3>
+                    <ul className="list-disc pl-8 text-base">
+                      {week.topics.map((topic, idx) => (
+                        <li key={idx}>{topic}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

@@ -1,0 +1,562 @@
+{
+  "course_id": "1",
+  "success": true,
+  "message": "Curriculum generated successfully",
+  "weeks": [
+    {
+      "week_number": 1,
+      "title": "Introduction to Computer Science & Computational Thinking",
+      "topics": [
+        {
+          "id": "topic_1_1",
+          "title": "What is Computer Science? A Historical Perspective",
+          "description": "Explore the fundamental questions and big ideas of computer science, its evolution from ancient calculating devices to modern computing, and its impact on society. Discuss the difference between computer science, computer engineering, and software development.",
+          "resources": [
+            "https://www.coursera.org/articles/what-is-computer-science",
+            "https://cs.stanford.edu/people/eroberts/cs105/chap1.html",
+            "https://www.youtube.com/watch?v=O5nskjZ_S2I"
+          ]
+        },
+        {
+          "id": "topic_1_2",
+          "title": "Introduction to Computational Thinking",
+          "description": "Understand computational thinking as a problem-solving process that involves expressing problems and their solutions in ways that a computer can execute. Cover its four key pillars: decomposition, pattern recognition, abstraction, and algorithms.",
+          "resources": [
+            "https://www.cs.cmu.edu/~15110-s13/lectures/lecture01.pdf",
+            "https://www.edutopia.org/blog/computational-thinking-karen-reaser",
+            "https://www.youtube.com/watch?v=qE4T0lA4f3g"
+          ]
+        },
+        {
+          "id": "topic_1_3",
+          "title": "Decomposition and Pattern Recognition",
+          "description": "Dive deeper into decomposition (breaking down complex problems into smaller, manageable parts) and pattern recognition (identifying similarities or trends among problems) as initial steps in computational thinking and problem-solving.",
+          "resources": [
+            "https://www.bbc.co.uk/bitesize/guides/zc9k3k7/revision/2",
+            "https://www.tynker.com/blog/articles/coding-concepts/computational-thinking-for-kids.html",
+            "https://www.youtube.com/watch?v=F0S18pWj-5c"
+          ]
+        },
+        {
+          "id": "topic_1_4",
+          "title": "Abstraction and Algorithms (Conceptual)",
+          "description": "Introduce abstraction (focusing on essential information while ignoring irrelevant details) and algorithms (step-by-step instructions to solve a problem) as the remaining pillars of computational thinking. Discuss these concepts conceptually before practical application.",
+          "resources": [
+            "https://www.bbc.co.uk/bitesize/guides/zc9k3k7/revision/3",
+            "https://code.org/curriculum/docs/k-5/unit3/U3_AbstractionAlgorithms",
+            "https://www.youtube.com/watch?v=V6P3u4V5iSg"
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 2,
+      "title": "Problem Solving Strategies & Introduction to Programming",
+      "topics": [
+        {
+          "id": "topic_2_1",
+          "title": "Problem Solving Methodologies",
+          "description": "Explore systematic approaches to problem-solving, including understanding the problem, devising a plan, carrying out the plan, and looking back (Polya's method). Emphasize analytical thinking skills applicable beyond coding.",
+          "resources": [
+            "https://en.wikipedia.org/wiki/How_to_Solve_It",
+            "https://www.mindtools.com/pages/article/newTMC_00.htm",
+            "https://www.youtube.com/watch?v=N_jJtP3kI9g"
+          ]
+        },
+        {
+          "id": "topic_2_2",
+          "title": "Flowcharts and Pseudocode",
+          "description": "Learn to visually represent algorithms using flowcharts (symbols for steps and decisions) and textually represent them using pseudocode (a high-level, language-independent description of an algorithm). These tools help plan program logic before writing code.",
+          "resources": [
+            "https://www.lucidchart.com/pages/flowchart",
+            "https://www.geeksforgeeks.org/introduction-to-pseudocode-and-flowchart/",
+            "https://www.youtube.com/watch?v=wX8Q_l6oN28"
+          ]
+        },
+        {
+          "id": "topic_2_3",
+          "title": "Introduction to Programming Environments",
+          "description": "Set up a basic programming environment. This includes installing a Python interpreter, understanding how to write and execute Python scripts, and getting familiar with an Integrated Development Environment (IDE) like VS Code or an online interpreter like repl.it.",
+          "resources": [
+            "https://www.python.org/downloads/",
+            "https://code.visualstudio.com/docs/python/python-tutorial",
+            "https://replit.com/"
+          ]
+        },
+        {
+          "id": "topic_2_4",
+          "title": "Your First Python Program: 'Hello World!'",
+          "description": "Write and execute your very first program in Python. Understand the basic structure of a Python script, the 'print()' function, and the concept of standard output. This marks the transition from theoretical concepts to practical coding.",
+          "resources": [
+            "https://www.w3schools.com/python/python_getstarted.asp",
+            "https://realpython.com/run-python-scripts/",
+            "https://www.youtube.com/watch?v=rfscVS0vtbw"
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 3,
+      "title": "Python Fundamentals: Data Types & Variables",
+      "topics": [
+        {
+          "id": "topic_3_1",
+          "title": "Basic Python Syntax and Comments",
+          "description": "Learn the fundamental rules of Python syntax, including indentation, statement terminators, and how to write single-line and multi-line comments to explain your code, improving readability and maintainability.",
+          "resources": [
+            "https://www.w3schools.com/python/python_syntax.asp",
+            "https://realpython.com/python-comments-guide/",
+            "https://www.youtube.com/watch?v=kY0prW2gYF0"
+          ]
+        },
+        {
+          "id": "topic_3_2",
+          "title": "Variables and Assignment",
+          "description": "Understand what variables are: named storage locations for data. Learn how to declare variables, assign values to them, and the rules for naming variables in Python to make your code clear and effective.",
+          "resources": [
+            "https://www.w3schools.com/python/python_variables.asp",
+            "https://realpython.com/python-variables/",
+            "https://www.youtube.com/watch?v=CqYf46GjK0o"
+          ]
+        },
+        {
+          "id": "topic_3_3",
+          "title": "Fundamental Data Types: Integers, Floats, Strings",
+          "description": "Explore Python's core data types: integers (whole numbers), floats (decimal numbers), and strings (sequences of characters). Learn how to identify their types and perform basic operations unique to each type.",
+          "resources": [
+            "https://www.w3schools.com/python/python_datatypes.asp",
+            "https://realpython.com/python-data-types/",
+            "https://www.youtube.com/watch?v=oV8g7r4Sg-Q"
+          ]
+        },
+        {
+          "id": "topic_3_4",
+          "title": "Basic Input/Output (I/O) Operations",
+          "description": "Learn how to interact with the user by taking input using the 'input()' function and displaying output using the 'print()' function. Understand type conversion when dealing with user input to ensure correct data handling.",
+          "resources": [
+            "https://www.w3schools.com/python/python_user_input.asp",
+            "https://realpython.com/python-print/",
+            "https://www.youtube.com/watch?v=f4_v1R2Pz_g"
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 4,
+      "title": "Python Fundamentals: Operators & Expressions",
+      "topics": [
+        {
+          "id": "topic_4_1",
+          "title": "Arithmetic Operators",
+          "description": "Understand and apply arithmetic operators in Python: addition (+), subtraction (-), multiplication (*), division (/), floor division (//), modulus (%), and exponentiation (**). Practice using them to perform calculations.",
+          "resources": [
+            "https://www.w3schools.com/python/python_operators.asp",
+            "https://www.geeksforgeeks.org/python-arithmetic-operators/",
+            "https://www.youtube.com/watch?v=vV119h2-z0k"
+          ]
+        },
+        {
+          "id": "topic_4_2",
+          "title": "Comparison (Relational) Operators",
+          "description": "Learn how to compare values using relational operators: equal to (==), not equal to (!=), greater than (>), less than (<), greater than or equal to (>=), and less than or equal to (<=). Understand that these operators return Boolean values.",
+          "resources": [
+            "https://www.w3schools.com/python/python_operators.asp",
+            "https://www.geeksforgeeks.org/python-comparison-operators/",
+            "https://www.youtube.com/watch?v=F0p7L1nU3D0"
+          ]
+        },
+        {
+          "id": "topic_4_3",
+          "title": "Logical Operators and Booleans",
+          "description": "Explore logical operators: 'and', 'or', 'not', and the Boolean data type (True/False). Understand how they combine or modify Boolean expressions to create more complex conditions in your programs.",
+          "resources": [
+            "https://www.w3schools.com/python/python_operators.asp",
+            "https://www.geeksforgeeks.org/python-logical-operators/",
+            "https://www.youtube.com/watch?v=mQ6o-P3a14U"
+          ]
+        },
+        {
+          "id": "topic_4_4",
+          "title": "Operator Precedence and Associativity",
+          "description": "Understand the order in which operators are evaluated in an expression (precedence) and how they are grouped when they have the same precedence (associativity). Learn to use parentheses to explicitly control evaluation order.",
+          "resources": [
+            "https://www.w3schools.com/python/python_operators.asp",
+            "https://realpython.com/operator-precedence-python/",
+            "https://www.youtube.com/watch?v=S374I_yRGMY"
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 5,
+      "title": "Control Flow: Conditional Statements",
+      "topics": [
+        {
+          "id": "topic_5_1",
+          "title": "Introduction to Control Flow",
+          "description": "Understand the concept of control flow – the order in which individual statements or instructions are executed in a program. Introduce how programs can make decisions and repeat actions based on conditions.",
+          "resources": [
+            "https://www.w3schools.com/python/python_conditions.asp",
+            "https://realpython.com/python-flow-control/",
+            "https://www.youtube.com/watch?v=XW_x0mQoVpY"
+          ]
+        },
+        {
+          "id": "topic_5_2",
+          "title": "The 'if' Statement",
+          "description": "Learn the basic 'if' statement to execute a block of code only if a specified condition is true. Focus on syntax, proper indentation, and writing simple conditional logic to steer program execution.",
+          "resources": [
+            "https://www.w3schools.com/python/python_conditions.asp",
+            "https://realpython.com/python-if-else-statements/",
+            "https://www.youtube.com/watch?v=s_vS5W2d0M8"
+          ]
+        },
+        {
+          "id": "topic_5_3",
+          "title": "'else' and 'elif' Statements",
+          "description": "Extend conditional logic with 'else' (executes if the 'if' condition is false) and 'elif' (else if, for multiple conditions). Understand how to build chains of conditional statements to handle various scenarios.",
+          "resources": [
+            "https://www.w3schools.com/python/python_conditions.asp",
+            "https://realpython.com/python-if-else-statements/",
+            "https://www.youtube.com/watch?v=DZwmZ8kmVYM"
+          ]
+        },
+        {
+          "id": "topic_5_4",
+          "title": "Nested Conditionals and Complex Boolean Expressions",
+          "description": "Explore how to use conditional statements within other conditional statements (nesting) and how to construct more intricate conditions using logical operators ('and', 'or', 'not') for nuanced decision-making.",
+          "resources": [
+            "https://www.geeksforgeeks.org/nested-if-else-statement-in-python/",
+            "https://www.programiz.com/python-programming/nested-if",
+            "https://www.youtube.com/watch?v=EazJgM2c-6g"
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 6,
+      "title": "Control Flow: Loops and Iteration",
+      "topics": [
+        {
+          "id": "topic_6_1",
+          "title": "Introduction to Loops",
+          "description": "Understand the concept of iteration and why loops are essential for performing repetitive tasks efficiently in programming. Differentiate between definite (for) and indefinite (while) loops.",
+          "resources": [
+            "https://www.w3schools.com/python/python_while_loops.asp",
+            "https://realpython.com/python-for-loop/",
+            "https://www.youtube.com/watch?v=gT_qNl1B5V4"
+          ]
+        },
+        {
+          "id": "topic_6_2",
+          "title": "The 'for' Loop",
+          "description": "Learn to use the 'for' loop for iterating over sequences (like strings and ranges of numbers). Understand the 'range()' function and how to use it to perform a fixed number of iterations.",
+          "resources": [
+            "https://www.w3schools.com/python/python_for_loops.asp",
+            "https://realpython.com/python-for-loop/",
+            "https://www.youtube.com/watch?v=wxp1WbN5-r8"
+          ]
+        },
+        {
+          "id": "topic_6_3",
+          "title": "The 'while' Loop",
+          "description": "Learn to use the 'while' loop for indefinite iteration, where a block of code repeats as long as a certain condition is true. Emphasize the importance of loop termination conditions to avoid infinite loops.",
+          "resources": [
+            "https://www.w3schools.com/python/python_while_loops.asp",
+            "https://realpython.com/python-while-loop/",
+            "https://www.youtube.com/watch?v=N80KkEa0h_A"
+          ]
+        },
+        {
+          "id": "topic_6_4",
+          "title": "Loop Control Statements: 'break' and 'continue'",
+          "description": "Understand how 'break' can exit a loop prematurely and 'continue' can skip the rest of the current iteration and proceed to the next one. Discuss practical scenarios for their use in optimizing loop behavior.",
+          "resources": [
+            "https://www.w3schools.com/python/python_for_loops.asp (Break/Continue section)",
+            "https://realpython.com/python-break-continue/",
+            "https://www.youtube.com/watch?v=q6gJ9b3_qJc"
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 7,
+      "title": "Functions & Program Modularity",
+      "topics": [
+        {
+          "id": "topic_7_1",
+          "title": "Introduction to Functions: Why Use Them?",
+          "description": "Understand the concept of functions as reusable blocks of code designed to perform a specific task. Discuss the benefits of using functions: modularity, reusability, readability, and abstraction.",
+          "resources": [
+            "https://www.w3schools.com/python/python_functions.asp",
+            "https://realpython.com/defining-your-own-python-function/",
+            "https://www.youtube.com/watch?v=NSbI6F9Jj9Y"
+          ]
+        },
+        {
+          "id": "topic_7_2",
+          "title": "Defining and Calling Functions",
+          "description": "Learn the syntax for defining functions in Python using the 'def' keyword. Understand how to call (execute) a defined function and the flow of control when functions are invoked, returning control to the caller.",
+          "resources": [
+            "https://www.w3schools.com/python/python_functions.asp",
+            "https://www.programiz.com/python-programming/function",
+            "https://www.youtube.com/watch?v=p_w9s9jI_gY"
+          ]
+        },
+        {
+          "id": "topic_7_3",
+          "title": "Function Parameters and Return Values",
+          "description": "Explore how to pass data into functions using parameters (arguments) and how functions can send results back using the 'return' statement. Differentiate between positional and keyword arguments for flexible function calls.",
+          "resources": [
+            "https://www.w3schools.com/python/python_functions.asp",
+            "https://realpython.com/defining-your-own-python-function/#parameters-and-arguments",
+            "https://www.youtube.com/watch?v=kTc_b8W99rQ"
+          ]
+        },
+        {
+          "id": "topic_7_4",
+          "title": "Variable Scope (Local vs. Global)",
+          "description": "Understand the concept of variable scope: where a variable is accessible within a program. Differentiate between local variables (defined inside a function) and global variables (defined outside) and their implications.",
+          "resources": [
+            "https://www.w3schools.com/python/python_scope.asp",
+            "https://realpython.com/python-scope-legb-rule/",
+            "https://www.youtube.com/watch?v=kr0DNy4B8vI"
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 8,
+      "title": "Introduction to Data Structures: Lists & Tuples",
+      "topics": [
+        {
+          "id": "topic_8_1",
+          "title": "Introduction to Data Structures",
+          "description": "Understand the concept of data structures as organized ways to store and manage data efficiently. Introduce the idea of collections of data and their importance in structuring complex programs.",
+          "resources": [
+            "https://www.geeksforgeeks.org/introduction-to-data-structures/",
+            "https://www.javatpoint.com/data-structure-introduction",
+            "https://www.youtube.com/watch?v=DFc2f4rFq1k"
+          ]
+        },
+        {
+          "id": "topic_8_2",
+          "title": "Lists: Creation and Basic Access",
+          "description": "Learn about Python lists, which are ordered, mutable collections of items. Understand how to create lists, access individual elements by index, and use slicing to extract sub-lists, fundamental for data manipulation.",
+          "resources": [
+            "https://www.w3schools.com/python/python_lists.asp",
+            "https://realpython.com/python-lists/",
+            "https://www.youtube.com/watch?v=CnwF5Z0Jm2Y"
+          ]
+        },
+        {
+          "id": "topic_8_3",
+          "title": "Lists: Manipulation Methods",
+          "description": "Explore common list methods for modifying lists: appending elements ('append()'), inserting ('insert()'), removing ('remove()', 'pop()'), and searching for elements. Practice these methods to dynamically manage list content.",
+          "resources": [
+            "https://www.w3schools.com/python/python_lists_methods.asp",
+            "https://realpython.com/python-lists/#list-methods",
+            "https://www.youtube.com/watch?v=Uh2ebFW8OYM"
+          ]
+        },
+        {
+          "id": "topic_8_4",
+          "title": "Tuples: Immutable Sequences",
+          "description": "Introduce tuples as ordered, immutable collections. Understand their similarities and differences with lists, and when to use tuples (e.g., for fixed collections of items or as dictionary keys) due to their immutability.",
+          "resources": [
+            "https://www.w3schools.com/python/python_tuples.asp",
+            "https://realpython.com/python-tuples/",
+            "https://www.youtube.com/watch?v=NI26QU_bM1M"
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 9,
+      "title": "Hardware, Software, and Data Representation Basics",
+      "topics": [
+        {
+          "id": "topic_9_1",
+          "title": "Computer Architecture Overview",
+          "description": "Gain a high-level understanding of the basic components of a computer system: Central Processing Unit (CPU), Memory (RAM), Input/Output (I/O) devices, and storage. Discuss the role of each component in the computing process.",
+          "resources": [
+            "https://www.cs.umd.edu/class/sum2003/cmsc311/Notes/CompOrg/co.html",
+            "https://www.techtarget.com/whatis/definition/computer-architecture",
+            "https://www.youtube.com/watch?v=cNN_tTXABUA"
+          ]
+        },
+        {
+          "id": "topic_9_2",
+          "title": "Operating Systems: The System Software",
+          "description": "Understand the role and purpose of an operating system (OS) as the core software that manages computer hardware and software resources. Discuss common OS functions like process management, memory management, and file system management.",
+          "resources": [
+            "https://www.geeksforgeeks.org/introduction-of-operating-system/",
+            "https://www.ibm.com/topics/operating-system",
+            "https://www.youtube.com/watch?v=ul0bYjMv-00"
+          ]
+        },
+        {
+          "id": "topic_9_3",
+          "title": "Software Layers: System vs. Application Software",
+          "description": "Differentiate between system software (e.g., operating systems, device drivers, utilities) and application software (e.g., web browsers, word processors, games). Understand how these layers interact to provide functionality to the user.",
+          "resources": [
+            "https://www.javatpoint.com/difference-between-system-software-and-application-software",
+            "https://www.geeksforgeeks.org/difference-between-system-software-and-application-software/",
+            "https://www.youtube.com/watch?v=kYJ3o48t36Q"
+          ]
+        },
+        {
+          "id": "topic_9_4",
+          "title": "Binary Representation: Bits and Bytes",
+          "description": "Introduce the fundamental concept of binary code (base-2) as the language of computers. Understand bits (binary digits) and bytes (groups of 8 bits) as the basic units of digital information. Explain why computers use binary.",
+          "resources": [
+            "https://www.cs.uky.edu/~jess/cs101/Binary.html",
+            "https://www.w3schools.com/python/python_datatypes_numbers.asp",
+            "https://www.youtube.com/watch?v=LqUu0nF4k18"
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 10,
+      "title": "Deep Dive into Data Representation & Storage",
+      "topics": [
+        {
+          "id": "topic_10_1",
+          "title": "Number Systems: Decimal, Binary, Hexadecimal",
+          "description": "Expand on binary by comparing it to the decimal system (base-10) and introducing hexadecimal (base-16) as a compact way to represent binary data, especially in memory addresses and color codes. Learn simple conversions.",
+          "resources": [
+            "https://www.tutorialspoint.com/computer_fundamentals/computer_fundamentals_number_system.htm",
+            "https://www.khanacademy.org/computing/computer-science/how-computers-work2/v/computer-science-binary-and-data",
+            "https://www.youtube.com/watch?v=VL-s8Qe0Q0k"
+          ]
+        },
+        {
+          "id": "topic_10_2",
+          "title": "Representing Text: ASCII and Unicode",
+          "description": "Understand how text characters are stored in computers using encoding schemes like ASCII (American Standard Code for Information Interchange) and the more comprehensive Unicode standard, which supports a vast range of global languages and symbols.",
+          "resources": [
+            "https://www.cs.mun.ca/~donald/cs1000/ascii.html",
+            "https://www.freecodecamp.org/news/what-is-unicode-the-ultimate-guide-to-character-encodings/",
+            "https://www.youtube.com/watch?v=MijmJ9D1w2o"
+          ]
+        },
+        {
+          "id": "topic_10_3",
+          "title": "Basics of Digital Images and Sound",
+          "description": "Get a conceptual understanding of how digital images (pixels, color models like RGB, resolution) and digital sound (sampling, amplitude, frequency) are represented and stored as binary data, enabling their manipulation and reproduction.",
+          "resources": [
+            "https://www.cs.princeton.edu/courses/archive/fall12/cos109/readings/08_digitalmedia.pdf",
+            "https://www.techtarget.com/whatis/definition/digital-image",
+            "https://www.youtube.com/watch?v=1F0Q_oM3o1Q",
+            "https://www.youtube.com/watch?v=LqVp935L9oA"
+          ]
+        },
+        {
+          "id": "topic_10_4",
+          "title": "Memory Hierarchy and Storage Devices",
+          "description": "Explore different types of computer memory (RAM, ROM, Cache) and storage devices (Hard Disk Drives, Solid State Drives, Cloud Storage). Understand the trade-offs between speed, cost, and capacity in the memory hierarchy.",
+          "resources": [
+            "https://www.geeksforgeeks.org/memory-hierarchy-in-computer-architecture/",
+            "https://www.intel.com/content/www/us/en/docs/processors-for-data-centers/memory-and-storage/342981/memory-and-storage-overview.html",
+            "https://www.youtube.com/watch?v=W79u-z48qB8"
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 11,
+      "title": "Algorithms: Design, Analysis & Common Patterns",
+      "topics": [
+        {
+          "id": "topic_11_1",
+          "title": "What is an Algorithm? Properties and Characteristics",
+          "description": "Revisit the formal definition of an algorithm as a well-defined sequence of steps to solve a problem. Discuss key properties such as finiteness, definiteness, input, output, and effectiveness, and why efficient algorithms are crucial.",
+          "resources": [
+            "https://www.geeksforgeeks.org/introduction-to-algorithms/",
+            "https://www.cs.princeton.edu/~rs/AlgsDS07/01Intro.pdf",
+            "https://www.youtube.com/watch?v=V6P3u4V5iSg"
+          ]
+        },
+        {
+          "id": "topic_11_2",
+          "title": "Introduction to Algorithmic Efficiency (Big O Notation - Conceptual)",
+          "description": "Introduce the concept of algorithmic efficiency and why it matters for large datasets. Conceptually understand Big O notation as a way to describe how the runtime or space requirements of an algorithm grow with input size, without deep mathematical proofs.",
+          "resources": [
+            "https://www.freecodecamp.org/news/big-o-notation-explained-with-examples/",
+            "https://www.geeksforgeeks.org/complexity-analysis-of-algorithms-set-1-introduction/",
+            "https://www.youtube.com/watch?v=v4cd1O4zkGw"
+          ]
+        },
+        {
+          "id": "topic_11_3",
+          "title": "Searching Algorithms (Linear and Binary Search - Conceptual)",
+          "description": "Explore common searching algorithms. Understand Linear Search (sequential scan) and Binary Search (divide and conquer on sorted data) conceptually. Compare their efficiency and best-case/worst-case scenarios without deep implementation.",
+          "resources": [
+            "https://www.geeksforgeeks.org/searching-algorithms/",
+            "https://www.programiz.com/dsa/searching-algorithms",
+            "https://www.youtube.com/watch?v=C7XbK8f_oT4"
+          ]
+        },
+        {
+          "id": "topic_11_4",
+          "title": "Sorting Algorithms (Bubble and Selection Sort - Conceptual)",
+          "description": "Introduce basic sorting algorithms. Understand the ideas behind Bubble Sort (repeatedly stepping through the list, comparing adjacent elements and swapping them) and Selection Sort (repeatedly finding the minimum element and placing it at the beginning).",
+          "resources": [
+            "https://www.geeksforgeeks.org/sorting-algorithms/",
+            "https://www.programiz.com/dsa/sorting-algorithms",
+            "https://www.youtube.com/watch?v=kPRA0W1kECg",
+            "https://www.youtube.com/watch?v=g-PGLbMth_g"
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 12,
+      "title": "Networking, The Internet & Course Wrap-up",
+      "topics": [
+        {
+          "id": "topic_12_1",
+          "title": "Introduction to Computer Networks",
+          "description": "Understand what a computer network is and why it's essential for communication and resource sharing. Differentiate between local area networks (LANs) and wide area networks (WANs). Discuss basic network components like routers, switches, and cables.",
+          "resources": [
+            "https://www.geeksforgeeks.org/basics-computer-networking/",
+            "https://www.javatpoint.com/computer-network-tutorial",
+            "https://www.youtube.com/watch?v=0ANXjtrE_q0"
+          ]
+        },
+        {
+          "id": "topic_12_2",
+          "title": "The Internet: How it Works (IP, DNS, HTTP)",
+          "description": "Explore the fundamental principles of how the Internet works. Understand the roles of Internet Protocol (IP) addresses for identification, Domain Name System (DNS) for naming, and Hypertext Transfer Protocol (HTTP) for web communication.",
+          "resources": [
+            "https://www.khanacademy.org/computing/computer-science/internet-intro/internet-works-intro/v/the-internet-what-is-the-internet",
+            "https://www.cloudflare.com/learning/network-layer/what-is-the-internet/",
+            "https://www.youtube.com/watch?v=x3c1ih2NJEg",
+            "https://www.youtube.com/watch?v=ZT3C9h4Nfgo"
+          ]
+        },
+        {
+          "id": "topic_12_3",
+          "title": "Introduction to Cybersecurity and Data Privacy",
+          "description": "Discuss basic concepts of cybersecurity, including common threats (malware, phishing), types of attacks, and fundamental defensive measures (strong passwords, software updates, data backups). Briefly touch upon the importance of data privacy in the digital age.",
+          "resources": [
+            "https://www.cisa.gov/resources-tools/resources/cybersecurity-basics",
+            "https://www.ibm.com/topics/cybersecurity",
+            "https://www.youtube.com/watch?v=in_bBq9E-3w"
+          ]
+        },
+        {
+          "id": "topic_12_4",
+          "title": "Course Review and Next Steps in Computer Science",
+          "description": "A comprehensive review of all key concepts covered throughout the 12 weeks, reinforcing understanding of computational thinking, programming fundamentals, hardware/software, data, algorithms, and networking basics. Provide guidance on further learning paths and specializations in computer science.",
+          "resources": [
+            "https://cs50.harvard.edu/x/2023/",
+            "https://www.freecodecamp.org/news/the-top-programming-languages-to-learn-in-2023/",
+            "https://www.coursera.org/browse/computer-science"
+          ]
+        }
+      ]
+    }
+  ]
+}
