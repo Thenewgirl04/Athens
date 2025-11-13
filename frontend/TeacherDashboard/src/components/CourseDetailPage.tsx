@@ -220,7 +220,20 @@ export function CourseDetailPage({
   const [showSuccess, setShowSuccess] = useState(false);
 
   // Curriculum section logic
-  const [curriculum, setCurriculum] = useState<Array<{weekNumber: number; title: string; topics: string[];}>>([]);
+  interface CurriculumTopic {
+    id: string;
+    title: string;
+    description: string;
+    resources: string[];
+  }
+
+  interface CurriculumWeek {
+    weekNumber: number;
+    title: string;
+    topics: CurriculumTopic[];
+  }
+
+  const [curriculum, setCurriculum] = useState<CurriculumWeek[]>([]);
   const [curriculumLoading, setCurriculumLoading] = useState(false);
   const [curriculumError, setCurriculumError] = useState<string | null>(null);
 
@@ -253,7 +266,12 @@ export function CourseDetailPage({
       const formatted = (data.weeks || []).map((week: any) => ({
         weekNumber: week.week_number,
         title: week.title,
-        topics: (week.topics || []).map((topic: any) => topic.title),
+        topics: (week.topics || []).map((topic: any) => ({
+          id: topic.id,
+          title: topic.title,
+          description: topic.description || "",
+          resources: topic.resources || [],
+        })),
       }));
       setCurriculum(formatted);
     } catch (err: any) {
@@ -996,11 +1014,12 @@ export function CourseDetailPage({
         {activeSection === "curriculum" && (
           <div>
             <Button
-              variant="primary"
+              variant="default"
+              size="lg"
               onClick={() => setShowGenerateModal(true)}
-              className="mb-6"
+              className="mb-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md hover:shadow-lg transition-all"
             >
-              <Sparkles className="h-4 w-4 mr-2" /> Generate Curriculum
+              <Sparkles className="h-5 w-5 mr-2" /> Generate Curriculum
             </Button>
             {curriculumError && (
               <div className="mb-6 p-4 rounded bg-red-50 text-red-700 border border-red-200 text-center">{curriculumError}</div>
@@ -1013,14 +1032,48 @@ export function CourseDetailPage({
               <div>
                 {curriculum.map((week) => (
                   <div key={week.weekNumber} className="mb-8">
-                    <h3 className="font-semibold text-lg mb-2">
+                    <h3 className="font-semibold text-lg mb-3">
                       Week {week.weekNumber}: {week.title}
                     </h3>
-                    <ul className="list-disc pl-8 text-base">
-                      {week.topics.map((topic, idx) => (
-                        <li key={idx}>{topic}</li>
+                    <div className="space-y-4">
+                      {week.topics.map((topic) => (
+                        <Card key={topic.id} className="mb-4">
+                          <CardHeader>
+                            <CardTitle className="text-base">{topic.title}</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            {topic.description && (
+                              <p className="text-sm text-muted-foreground mb-3">
+                                {topic.description}
+                              </p>
+                            )}
+                            {topic.resources && topic.resources.length > 0 && (
+                              <div className="mt-3">
+                                <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+                                  <LinkIcon className="h-4 w-4" />
+                                  Resources:
+                                </h4>
+                                <ul className="list-none space-y-1">
+                                  {topic.resources.map((resource, idx) => (
+                                    <li key={idx}>
+                                      <a
+                                        href={resource}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
+                                      >
+                                        <LinkIcon className="h-3 w-3" />
+                                        {resource}
+                                      </a>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
                       ))}
-                    </ul>
+                    </div>
                   </div>
                 ))}
               </div>
