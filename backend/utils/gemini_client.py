@@ -4,6 +4,7 @@ Google Gemini API client wrapper.
 import google.generativeai as genai
 from google.api_core.exceptions import NotFound
 from config import settings
+from typing import List
 
 
 class GeminiClient:
@@ -93,6 +94,7 @@ Requirements:
 - Each week should have a clear title and 3-5 topics
 - Each topic should have: id (format: "topic_[week]_[number]"), title, and a detailed description
 {resources_instruction}
+- For each resource, specify the type: "article" (links to read), "video" (videos to watch), "pdf" (PDF documents), or "course" (online courses)
 - Return the response as valid JSON only (no markdown, no extra text)
 
 JSON Format:
@@ -106,7 +108,16 @@ JSON Format:
           "id": "topic_1_1",
           "title": "Topic Title",
           "description": "Detailed description",
-          "resources": ["url1", "url2"]
+          "resources": [
+            {{
+              "url": "https://example.com/article",
+              "type": "article"
+            }},
+            {{
+              "url": "https://youtube.com/watch?v=example",
+              "type": "video"
+            }}
+          ]
         }}
       ]
     }}
@@ -114,5 +125,128 @@ JSON Format:
 }}
 
 Generate the comprehensive curriculum now:"""
+        
+        return prompt
+    
+    def generate_lesson_notes(
+        self,
+        topic_title: str,
+        topic_description: str,
+        topic_resources: List = None
+    ) -> str:
+        """
+        Call Gemini API to generate detailed lesson notes for a topic.
+        
+        Args:
+            topic_title: The title of the topic
+            topic_description: The description of the topic
+            topic_resources: Optional list of resources for the topic
+        
+        Returns:
+            Raw JSON string from Gemini
+        """
+        prompt = self._build_lesson_notes_prompt(
+            topic_title,
+            topic_description,
+            topic_resources or []
+        )
+        try:
+            response = self.model.generate_content(prompt)
+        except NotFound as exc:
+            raise RuntimeError(
+                f"Gemini model '{settings.gemini_model}' cannot generate content: {exc}"
+            ) from exc
+        return response.text
+    
+    def _build_lesson_notes_prompt(
+        self,
+        topic_title: str,
+        topic_description: str,
+        topic_resources: List
+    ) -> str:
+        """
+        Build the prompt for generating lesson notes.
+        
+        Args:
+            topic_title: Title of the topic
+            topic_description: Description of the topic
+            topic_resources: List of resources for the topic
+        
+        Returns:
+            Formatted prompt string
+        """
+        resources_context = ""
+        if topic_resources:
+            resources_context = "\n\nAvailable Resources:"
+            for resource in topic_resources:
+                if hasattr(resource, 'url') and hasattr(resource, 'type'):
+                    resources_context += f"\n- [{resource.type}] {resource.url}"
+                elif isinstance(resource, dict):
+                    resources_context += f"\n- [{resource.get('type', 'link')}] {resource.get('url', '')}"
+        
+        prompt = f"""You are an expert educator creating detailed lesson notes for a topic. Generate comprehensive lesson notes that will help teachers deliver an effective lesson.
+
+Topic: {topic_title}
+
+Description: {topic_description}
+{resources_context}
+
+Create detailed lesson notes with the following structure:
+1. **Introduction** - Brief overview and learning objectives
+2. **Detailed Explanation** - Core concepts and key points explained thoroughly
+3. **Practical Examples** - 2-3 concrete examples demonstrating the concepts
+4. **Learning Activities** - 2-3 hands-on activities or exercises for student engagement
+5. **Summary** - Key takeaways and recap
+
+Requirements:
+- Make content clear, engaging, and appropriate for teaching
+- Include specific examples that illustrate the concepts
+- Provide activities that promote active learning and understanding
+- Estimate the total lesson duration
+- Return the response as valid JSON only (no markdown, no extra text)
+
+JSON Format:
+{{
+  "sections": [
+    {{
+      "section_type": "introduction",
+      "title": "Introduction",
+      "content": "Overview and learning objectives..."
+    }},
+    {{
+      "section_type": "explanation",
+      "title": "Core Concepts",
+      "content": "Detailed explanation of key concepts..."
+    }},
+    {{
+      "section_type": "example",
+      "title": "Example 1: [Specific Example Title]",
+      "content": "Concrete example demonstrating the concept..."
+    }},
+    {{
+      "section_type": "example",
+      "title": "Example 2: [Another Example Title]",
+      "content": "Another practical example..."
+    }},
+    {{
+      "section_type": "activity",
+      "title": "Activity 1: [Activity Name]",
+      "content": "Hands-on activity description with instructions..."
+    }},
+    {{
+      "section_type": "activity",
+      "title": "Activity 2: [Another Activity Name]",
+      "content": "Another engaging activity..."
+    }},
+    {{
+      "section_type": "summary",
+      "title": "Key Takeaways",
+      "content": "Summary of main points and learning outcomes..."
+    }}
+  ],
+  "estimated_duration": "45 minutes"
+}}
+
+Generate the detailed lesson notes now:"""
         
         return prompt
