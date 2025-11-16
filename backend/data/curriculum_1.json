@@ -5,555 +5,430 @@
   "weeks": [
     {
       "week_number": 1,
-      "title": "Introduction to Computer Science & Computational Thinking",
+      "title": "The Dawn of Quantum Theory: Unveiling the Incomprehensible",
       "topics": [
         {
           "id": "topic_1_1",
-          "title": "What is Computer Science? A Historical Perspective",
-          "description": "Explore the fundamental questions and big ideas of computer science, its evolution from ancient calculating devices to modern computing, and its impact on society. Discuss the difference between computer science, computer engineering, and software development.",
+          "title": "The Crisis in Classical Physics",
+          "description": "Introduction to the limitations of classical physics (Newtonian mechanics and Maxwell's electromagnetism) in explaining phenomena at the atomic and subatomic level. Discussion of key experiments that challenged classical predictions, such as blackbody radiation and the photoelectric effect, setting the stage for a new paradigm.",
           "resources": [
-            "https://www.coursera.org/articles/what-is-computer-science",
-            "https://cs.stanford.edu/people/eroberts/cs105/chap1.html",
-            "https://www.youtube.com/watch?v=O5nskjZ_S2I"
+            "https://www.khanacademy.org/science/physics/quantum-physics/intro-to-quantum-physics/a/what-is-quantum-mechanics",
+            "https://www.youtube.com/watch?v=aUa_C03L928",
+            "https://press.rebus.community/quantummechanics/chapter/the-crisis-in-classical-physics/"
           ]
         },
         {
           "id": "topic_1_2",
-          "title": "Introduction to Computational Thinking",
-          "description": "Understand computational thinking as a problem-solving process that involves expressing problems and their solutions in ways that a computer can execute. Cover its four key pillars: decomposition, pattern recognition, abstraction, and algorithms.",
+          "title": "Blackbody Radiation and Planck's Quantum Hypothesis",
+          "description": "Detailed exploration of the problem of blackbody radiation and Lord Rayleigh's ultraviolet catastrophe. Explanation of Max Planck's revolutionary idea of energy quantization and the introduction of Planck's constant (h). Understanding the concept of a quantum of energy.",
           "resources": [
-            "https://www.cs.cmu.edu/~15110-s13/lectures/lecture01.pdf",
-            "https://www.edutopia.org/blog/computational-thinking-karen-reaser",
-            "https://www.youtube.com/watch?v=qE4T0lA4f3g"
+            "https://www.youtube.com/watch?v=Pq0aE2P6iXo",
+            "https://www.britannica.com/science/black-body-radiation",
+            "https://courses.lumenlearning.com/boundless-physics/chapter/blackbody-radiation/"
           ]
         },
         {
           "id": "topic_1_3",
-          "title": "Decomposition and Pattern Recognition",
-          "description": "Dive deeper into decomposition (breaking down complex problems into smaller, manageable parts) and pattern recognition (identifying similarities or trends among problems) as initial steps in computational thinking and problem-solving.",
+          "title": "The Photoelectric Effect and Einstein's Photons",
+          "description": "Analysis of the photoelectric effect, including experimental observations that contradicted classical wave theory. Albert Einstein's explanation using the concept of light quanta (photons). Discussion of the work function, threshold frequency, and the relationship between photon energy and electron kinetic energy.",
           "resources": [
-            "https://www.bbc.co.uk/bitesize/guides/zc9k3k7/revision/2",
-            "https://www.tynker.com/blog/articles/coding-concepts/computational-thinking-for-kids.html",
-            "https://www.youtube.com/watch?v=F0S18pWj-5c"
-          ]
-        },
-        {
-          "id": "topic_1_4",
-          "title": "Abstraction and Algorithms (Conceptual)",
-          "description": "Introduce abstraction (focusing on essential information while ignoring irrelevant details) and algorithms (step-by-step instructions to solve a problem) as the remaining pillars of computational thinking. Discuss these concepts conceptually before practical application.",
-          "resources": [
-            "https://www.bbc.co.uk/bitesize/guides/zc9k3k7/revision/3",
-            "https://code.org/curriculum/docs/k-5/unit3/U3_AbstractionAlgorithms",
-            "https://www.youtube.com/watch?v=V6P3u4V5iSg"
+            "https://www.khanacademy.org/science/physics/quantum-physics/photoelectric-effect/a/the-photoelectric-effect",
+            "https://www.youtube.com/watch?v=IXxZN2VX38s",
+            "https://www.nobelprize.org/prizes/physics/1921/einstein/lecture/"
           ]
         }
       ]
     },
     {
       "week_number": 2,
-      "title": "Problem Solving Strategies & Introduction to Programming",
+      "title": "The Wave Nature of Matter and the Bohr Model",
       "topics": [
         {
           "id": "topic_2_1",
-          "title": "Problem Solving Methodologies",
-          "description": "Explore systematic approaches to problem-solving, including understanding the problem, devising a plan, carrying out the plan, and looking back (Polya's method). Emphasize analytical thinking skills applicable beyond coding.",
+          "title": "De Broglie's Hypothesis: Waves of Matter",
+          "description": "Introduction to Louis de Broglie's groundbreaking proposal that matter, like light, exhibits wave-like properties. Explanation of the de Broglie wavelength and its dependence on momentum. Discussion of experimental evidence supporting wave-particle duality for matter, such as electron diffraction.",
           "resources": [
-            "https://en.wikipedia.org/wiki/How_to_Solve_It",
-            "https://www.mindtools.com/pages/article/newTMC_00.htm",
-            "https://www.youtube.com/watch?v=N_jJtP3kI9g"
+            "https://www.youtube.com/watch?v=t-T8n7uM52c",
+            "https://www.khanacademy.org/science/physics/quantum-physics/wave-particle-duality/a/de-broglie-wavelength",
+            "https://press.rebus.community/quantummechanics/chapter/de-broglies-wavelength/"
           ]
         },
         {
           "id": "topic_2_2",
-          "title": "Flowcharts and Pseudocode",
-          "description": "Learn to visually represent algorithms using flowcharts (symbols for steps and decisions) and textually represent them using pseudocode (a high-level, language-independent description of an algorithm). These tools help plan program logic before writing code.",
+          "title": "The Bohr Model of the Atom",
+          "description": "Examination of Niels Bohr's model of the atom, which successfully explained the line spectra of hydrogen. Discussion of quantized energy levels, electron orbits, and transitions between energy states leading to the emission or absorption of photons. Limitations of the Bohr model.",
           "resources": [
-            "https://www.lucidchart.com/pages/flowchart",
-            "https://www.geeksforgeeks.org/introduction-to-pseudocode-and-flowchart/",
-            "https://www.youtube.com/watch?v=wX8Q_l6oN28"
+            "https://www.khanacademy.org/science/physics/quantum-physics/atomic-energy-levels/a/the-bohr-model",
+            "https://www.youtube.com/watch?v=0s3W131nQ8c",
+            "https://www.britannica.com/science/Bohr-model"
           ]
         },
         {
           "id": "topic_2_3",
-          "title": "Introduction to Programming Environments",
-          "description": "Set up a basic programming environment. This includes installing a Python interpreter, understanding how to write and execute Python scripts, and getting familiar with an Integrated Development Environment (IDE) like VS Code or an online interpreter like repl.it.",
+          "title": "Atomic Spectra and Energy Level Diagrams",
+          "description": "Understanding how atomic spectra arise from electron transitions between quantized energy levels. Learning to interpret line spectra as fingerprints of elements. Constructing and interpreting energy level diagrams for simple atoms like hydrogen.",
           "resources": [
-            "https://www.python.org/downloads/",
-            "https://code.visualstudio.com/docs/python/python-tutorial",
-            "https://replit.com/"
-          ]
-        },
-        {
-          "id": "topic_2_4",
-          "title": "Your First Python Program: 'Hello World!'",
-          "description": "Write and execute your very first program in Python. Understand the basic structure of a Python script, the 'print()' function, and the concept of standard output. This marks the transition from theoretical concepts to practical coding.",
-          "resources": [
-            "https://www.w3schools.com/python/python_getstarted.asp",
-            "https://realpython.com/run-python-scripts/",
-            "https://www.youtube.com/watch?v=rfscVS0vtbw"
+            "https://www.youtube.com/watch?v=hK5f_8h5lH4",
+            "https://chem.libretexts.org/Bookshelves/General_Chemistry/Introduction_to_Quantum_Chemistry/01%3A_Atomic_Theory/1.04%3A_Atomic_Emission_and_Absorption_Spectra",
+            "https://phet.colorado.edu/en/simulations/hydrogen-atom"
           ]
         }
       ]
     },
     {
       "week_number": 3,
-      "title": "Python Fundamentals: Data Types & Variables",
+      "title": "The Formalism of Quantum Mechanics: Wave Functions and Probability",
       "topics": [
         {
           "id": "topic_3_1",
-          "title": "Basic Python Syntax and Comments",
-          "description": "Learn the fundamental rules of Python syntax, including indentation, statement terminators, and how to write single-line and multi-line comments to explain your code, improving readability and maintainability.",
+          "title": "The Wave Function (ψ)",
+          "description": "Introduction to the central concept of quantum mechanics: the wave function (ψ). Understanding that the wave function contains all the information about a quantum system. Discussion of its complex nature and the need for interpretation.",
           "resources": [
-            "https://www.w3schools.com/python/python_syntax.asp",
-            "https://realpython.com/python-comments-guide/",
-            "https://www.youtube.com/watch?v=kY0prW2gYF0"
+            "https://www.khanacademy.org/science/physics/quantum-physics/wave-particle-duality/a/the-wave-function",
+            "https://www.youtube.com/watch?v=NfS70M4jJ8E",
+            "https://press.rebus.community/quantummechanics/chapter/the-wave-function/"
           ]
         },
         {
           "id": "topic_3_2",
-          "title": "Variables and Assignment",
-          "description": "Understand what variables are: named storage locations for data. Learn how to declare variables, assign values to them, and the rules for naming variables in Python to make your code clear and effective.",
+          "title": "The Born Rule: Probability Amplitude and Probability Density",
+          "description": "Explanation of the Born rule, which connects the wave function to observable probabilities. Understanding the concept of probability amplitude (|ψ|²) and how it represents the probability density of finding a particle in a certain region of space.",
           "resources": [
-            "https://www.w3schools.com/python/python_variables.asp",
-            "https://realpython.com/python-variables/",
-            "https://www.youtube.com/watch?v=CqYf46GjK0o"
+            "https://www.youtube.com/watch?v=_03Q80mI3wQ",
+            "https://www.khanacademy.org/science/physics/quantum-physics/wave-particle-duality/a/the-born-rule",
+            "https://www.quantum-mechanics-explained.com/born-rule/"
           ]
         },
         {
           "id": "topic_3_3",
-          "title": "Fundamental Data Types: Integers, Floats, Strings",
-          "description": "Explore Python's core data types: integers (whole numbers), floats (decimal numbers), and strings (sequences of characters). Learn how to identify their types and perform basic operations unique to each type.",
+          "title": "Normalization of the Wave Function",
+          "description": "The principle of normalization: the total probability of finding a particle somewhere in space must be equal to 1. Learning how to normalize wave functions and the physical significance of this condition. Understanding the implications for probability distributions.",
           "resources": [
-            "https://www.w3schools.com/python/python_datatypes.asp",
-            "https://realpython.com/python-data-types/",
-            "https://www.youtube.com/watch?v=oV8g7r4Sg-Q"
-          ]
-        },
-        {
-          "id": "topic_3_4",
-          "title": "Basic Input/Output (I/O) Operations",
-          "description": "Learn how to interact with the user by taking input using the 'input()' function and displaying output using the 'print()' function. Understand type conversion when dealing with user input to ensure correct data handling.",
-          "resources": [
-            "https://www.w3schools.com/python/python_user_input.asp",
-            "https://realpython.com/python-print/",
-            "https://www.youtube.com/watch?v=f4_v1R2Pz_g"
+            "https://www.youtube.com/watch?v=38Y5w7uWJjA",
+            "https://phys.libretexts.org/Bookshelves/Quantum_Mechanics/Quantum_Mechanics_for_Everyone/02%3A_The_Wave_Function/2.03%3A_Normalization",
+            "https://www.physicsforums.com/threads/normalization-of-wave-function.849205/"
           ]
         }
       ]
     },
     {
       "week_number": 4,
-      "title": "Python Fundamentals: Operators & Expressions",
+      "title": "The Schrödinger Equation: The Heart of Quantum Mechanics",
       "topics": [
         {
           "id": "topic_4_1",
-          "title": "Arithmetic Operators",
-          "description": "Understand and apply arithmetic operators in Python: addition (+), subtraction (-), multiplication (*), division (/), floor division (//), modulus (%), and exponentiation (**). Practice using them to perform calculations.",
+          "title": "Time-Independent Schrödinger Equation (TISE)",
+          "description": "Introduction to the time-independent Schrödinger equation, the fundamental equation governing the behavior of quantum systems in stationary states. Understanding its form and the meaning of the terms involved. Discussion of its role in finding energy eigenvalues and eigenfunctions.",
           "resources": [
-            "https://www.w3schools.com/python/python_operators.asp",
-            "https://www.geeksforgeeks.org/python-arithmetic-operators/",
-            "https://www.youtube.com/watch?v=vV119h2-z0k"
+            "https://www.khanacademy.org/science/physics/quantum-physics/schrodinger-equation/a/the-schrodinger-equation",
+            "https://www.youtube.com/watch?v=d_9b_qI4m1A",
+            "https://www.britannica.com/science/Schrodinger-equation"
           ]
         },
         {
           "id": "topic_4_2",
-          "title": "Comparison (Relational) Operators",
-          "description": "Learn how to compare values using relational operators: equal to (==), not equal to (!=), greater than (>), less than (<), greater than or equal to (>=), and less than or equal to (<=). Understand that these operators return Boolean values.",
+          "title": "Solving the TISE for Simple Potentials: The Infinite Square Well",
+          "description": "Applying the TISE to solve for the allowed energy levels and wave functions of a particle confined to an infinite one-dimensional potential well. Exploring the concept of quantized energy levels and the forms of the corresponding wave functions. Visualizing probability distributions.",
           "resources": [
-            "https://www.w3schools.com/python/python_operators.asp",
-            "https://www.geeksforgeeks.org/python-comparison-operators/",
-            "https://www.youtube.com/watch?v=F0p7L1nU3D0"
+            "https://www.khanacademy.org/science/physics/quantum-physics/schrodinger-equation/a/particle-in-a-box",
+            "https://www.youtube.com/watch?v=rQ0m6x-t2pY",
+            "https://phys.libretexts.org/Bookshelves/Quantum_Mechanics/Quantum_Mechanics_for_Everyone/03%3A_Solving_the_Schrodinger_Equation/3.02%3A_Particle_in_a_Box"
           ]
         },
         {
           "id": "topic_4_3",
-          "title": "Logical Operators and Booleans",
-          "description": "Explore logical operators: 'and', 'or', 'not', and the Boolean data type (True/False). Understand how they combine or modify Boolean expressions to create more complex conditions in your programs.",
+          "title": "The Finite Square Well and Quantum Tunneling (Introduction)",
+          "description": "Brief introduction to the finite square well potential. Discussing how the wave function can penetrate the classically forbidden region. Initial exploration of the concept of quantum tunneling, where a particle can pass through a potential barrier even if it doesn't have enough energy classically.",
           "resources": [
-            "https://www.w3schools.com/python/python_operators.asp",
-            "https://www.geeksforgeeks.org/python-logical-operators/",
-            "https://www.youtube.com/watch?v=mQ6o-P3a14U"
-          ]
-        },
-        {
-          "id": "topic_4_4",
-          "title": "Operator Precedence and Associativity",
-          "description": "Understand the order in which operators are evaluated in an expression (precedence) and how they are grouped when they have the same precedence (associativity). Learn to use parentheses to explicitly control evaluation order.",
-          "resources": [
-            "https://www.w3schools.com/python/python_operators.asp",
-            "https://realpython.com/operator-precedence-python/",
-            "https://www.youtube.com/watch?v=S374I_yRGMY"
+            "https://www.youtube.com/watch?v=p4u9S7gQx2M",
+            "https://www.quantum-mechanics-explained.com/finite-square-well/",
+            "https://www.youtube.com/watch?v=q7T7W0D4u5o"
           ]
         }
       ]
     },
     {
       "week_number": 5,
-      "title": "Control Flow: Conditional Statements",
+      "title": "Operators, Observables, and Measurement in Quantum Mechanics",
       "topics": [
         {
           "id": "topic_5_1",
-          "title": "Introduction to Control Flow",
-          "description": "Understand the concept of control flow – the order in which individual statements or instructions are executed in a program. Introduce how programs can make decisions and repeat actions based on conditions.",
+          "title": "Quantum Operators",
+          "description": "Introduction to quantum mechanical operators as mathematical representations of physical observables (e.g., position, momentum, energy). Understanding how operators act on wave functions. Defining common operators like the position operator and the momentum operator.",
           "resources": [
-            "https://www.w3schools.com/python/python_conditions.asp",
-            "https://realpython.com/python-flow-control/",
-            "https://www.youtube.com/watch?v=XW_x0mQoVpY"
+            "https://www.khanacademy.org/science/physics/quantum-physics/schrodinger-equation/a/quantum-operators",
+            "https://www.youtube.com/watch?v=xRzK3d823v0",
+            "https://press.rebus.community/quantummechanics/chapter/operators/"
           ]
         },
         {
           "id": "topic_5_2",
-          "title": "The 'if' Statement",
-          "description": "Learn the basic 'if' statement to execute a block of code only if a specified condition is true. Focus on syntax, proper indentation, and writing simple conditional logic to steer program execution.",
+          "title": "Eigenvalues and Eigenfunctions",
+          "description": "Understanding the concept of eigenvalues and eigenfunctions as the result of applying an operator to a wave function. Discussing how eigenvalues represent the possible measured values of an observable and eigenfunctions represent the corresponding states.",
           "resources": [
-            "https://www.w3schools.com/python/python_conditions.asp",
-            "https://realpython.com/python-if-else-statements/",
-            "https://www.youtube.com/watch?v=s_vS5W2d0M8"
+            "https://www.youtube.com/watch?v=cLYtQ4d7L7A",
+            "https://www.physicsclassroom.com/class/quantum/Lesson-2/Eigenvalues-and-Eigenfunctions",
+            "https://quantummechanics.ucsd.edu/old_html/QM_lecture_10.html"
           ]
         },
         {
           "id": "topic_5_3",
-          "title": "'else' and 'elif' Statements",
-          "description": "Extend conditional logic with 'else' (executes if the 'if' condition is false) and 'elif' (else if, for multiple conditions). Understand how to build chains of conditional statements to handle various scenarios.",
+          "title": "The Measurement Problem and State Collapse",
+          "description": "Addressing the 'measurement problem' in quantum mechanics: how does a quantum system transition from a superposition of states to a single definite outcome upon measurement? Explanation of the concept of 'state collapse' and its implications for the probabilistic nature of quantum mechanics.",
           "resources": [
-            "https://www.w3schools.com/python/python_conditions.asp",
-            "https://realpython.com/python-if-else-statements/",
-            "https://www.youtube.com/watch?v=DZwmZ8kmVYM"
-          ]
-        },
-        {
-          "id": "topic_5_4",
-          "title": "Nested Conditionals and Complex Boolean Expressions",
-          "description": "Explore how to use conditional statements within other conditional statements (nesting) and how to construct more intricate conditions using logical operators ('and', 'or', 'not') for nuanced decision-making.",
-          "resources": [
-            "https://www.geeksforgeeks.org/nested-if-else-statement-in-python/",
-            "https://www.programiz.com/python-programming/nested-if",
-            "https://www.youtube.com/watch?v=EazJgM2c-6g"
+            "https://www.youtube.com/watch?v=pI5-4pT65tI",
+            "https://www.scientificamerican.com/article/what-is-the-measurement-problem-in-quantum-mechanics/",
+            "https://plato.stanford.edu/entries/qm/measure.html"
           ]
         }
       ]
     },
     {
       "week_number": 6,
-      "title": "Control Flow: Loops and Iteration",
+      "title": "The Heisenberg Uncertainty Principle and Complementarity",
       "topics": [
         {
           "id": "topic_6_1",
-          "title": "Introduction to Loops",
-          "description": "Understand the concept of iteration and why loops are essential for performing repetitive tasks efficiently in programming. Differentiate between definite (for) and indefinite (while) loops.",
+          "title": "The Heisenberg Uncertainty Principle",
+          "description": "Detailed explanation of Werner Heisenberg's Uncertainty Principle. Understanding the fundamental limits on the precision with which certain pairs of physical properties, like position and momentum, can be simultaneously known. Mathematical formulation and physical implications.",
           "resources": [
-            "https://www.w3schools.com/python/python_while_loops.asp",
-            "https://realpython.com/python-for-loop/",
-            "https://www.youtube.com/watch?v=gT_qNl1B5V4"
+            "https://www.khanacademy.org/science/physics/quantum-physics/uncertainty-principle/a/the-heisenberg-uncertainty-principle",
+            "https://www.youtube.com/watch?v=a0K2m7112-U",
+            "https://www.britannica.com/science/uncertainty-principle"
           ]
         },
         {
           "id": "topic_6_2",
-          "title": "The 'for' Loop",
-          "description": "Learn to use the 'for' loop for iterating over sequences (like strings and ranges of numbers). Understand the 'range()' function and how to use it to perform a fixed number of iterations.",
+          "title": "Implications of the Uncertainty Principle",
+          "description": "Exploring the consequences of the uncertainty principle on our understanding of atomic structure, particle behavior, and the limits of measurement. Discussion of how it prevents electrons from spiraling into the nucleus in a classical sense.",
           "resources": [
-            "https://www.w3schools.com/python/python_for_loops.asp",
-            "https://realpython.com/python-for-loop/",
-            "https://www.youtube.com/watch?v=wxp1WbN5-r8"
+            "https://www.youtube.com/watch?v=iN2H5zH8QzE",
+            "https://phys.libretexts.org/Bookshelves/Quantum_Mechanics/Quantum_Mechanics_for_Everyone/04%3A_The_Uncertainty_Principle/4.01%3A_Heisenberg's_Uncertainty_Principle",
+            "https://www.quora.com/What-are-the-implications-of-the-Heisenberg-Uncertainty-Principle"
           ]
         },
         {
           "id": "topic_6_3",
-          "title": "The 'while' Loop",
-          "description": "Learn to use the 'while' loop for indefinite iteration, where a block of code repeats as long as a certain condition is true. Emphasize the importance of loop termination conditions to avoid infinite loops.",
+          "title": "The Principle of Complementarity",
+          "description": "Introduction to Niels Bohr's principle of complementarity. Understanding how certain pairs of properties (e.g., wave and particle) are mutually exclusive but both necessary for a complete description of a quantum system. The role of the experimental setup in determining which property is observed.",
           "resources": [
-            "https://www.w3schools.com/python/python_while_loops.asp",
-            "https://realpython.com/python-while-loop/",
-            "https://www.youtube.com/watch?v=N80KkEa0h_A"
-          ]
-        },
-        {
-          "id": "topic_6_4",
-          "title": "Loop Control Statements: 'break' and 'continue'",
-          "description": "Understand how 'break' can exit a loop prematurely and 'continue' can skip the rest of the current iteration and proceed to the next one. Discuss practical scenarios for their use in optimizing loop behavior.",
-          "resources": [
-            "https://www.w3schools.com/python/python_for_loops.asp (Break/Continue section)",
-            "https://realpython.com/python-break-continue/",
-            "https://www.youtube.com/watch?v=q6gJ9b3_qJc"
+            "https://www.youtube.com/watch?v=W2u1z_7eS3U",
+            "https://www.iep.utm.edu/bohr-comp/",
+            "https://plato.stanford.edu/entries/qt-complementarity/"
           ]
         }
       ]
     },
     {
       "week_number": 7,
-      "title": "Functions & Program Modularity",
+      "title": "Applications of Quantum Mechanics: The Hydrogen Atom",
       "topics": [
         {
           "id": "topic_7_1",
-          "title": "Introduction to Functions: Why Use Them?",
-          "description": "Understand the concept of functions as reusable blocks of code designed to perform a specific task. Discuss the benefits of using functions: modularity, reusability, readability, and abstraction.",
+          "title": "The Schrödinger Equation in Three Dimensions",
+          "description": "Extending the Schrödinger equation to three dimensions. Introduction to spherical coordinates and the radial and angular parts of the wave function. Understanding how the potential energy function is represented in 3D.",
           "resources": [
-            "https://www.w3schools.com/python/python_functions.asp",
-            "https://realpython.com/defining-your-own-python-function/",
-            "https://www.youtube.com/watch?v=NSbI6F9Jj9Y"
+            "https://www.khanacademy.org/science/physics/quantum-physics/schrodinger-equation/a/schrodinger-equation-in-3d",
+            "https://www.youtube.com/watch?v=R30l2dF-nPs",
+            "https://www.physics.utah.edu/~u3220/lectures/schrodinger_3d.pdf"
           ]
         },
         {
           "id": "topic_7_2",
-          "title": "Defining and Calling Functions",
-          "description": "Learn the syntax for defining functions in Python using the 'def' keyword. Understand how to call (execute) a defined function and the flow of control when functions are invoked, returning control to the caller.",
+          "title": "Quantum Numbers for the Hydrogen Atom",
+          "description": "Defining the set of quantum numbers (n, l, m_l) that describe the state of an electron in the hydrogen atom. Explanation of the physical significance of each quantum number: principal, azimuthal (angular momentum), and magnetic. Relating them to energy levels, orbital shapes, and spatial orientation.",
           "resources": [
-            "https://www.w3schools.com/python/python_functions.asp",
-            "https://www.programiz.com/python-programming/function",
-            "https://www.youtube.com/watch?v=p_w9s9jI_gY"
+            "https://www.khanacademy.org/science/physics/quantum-physics/atomic-energy-levels/a/electron-shells-and-subshells",
+            "https://www.youtube.com/watch?v=t6LqL57H8wE",
+            "https://chem.libretexts.org/Bookshelves/General_Chemistry/Introduction_to_Quantum_Chemistry/02%3A_The_Hydrogen_Atom/2.02%3A_Quantum_Numbers_and_Atomic_Orbitals"
           ]
         },
         {
           "id": "topic_7_3",
-          "title": "Function Parameters and Return Values",
-          "description": "Explore how to pass data into functions using parameters (arguments) and how functions can send results back using the 'return' statement. Differentiate between positional and keyword arguments for flexible function calls.",
+          "title": "Atomic Orbitals (s, p, d)",
+          "description": "Visualizing and understanding the shapes and properties of atomic orbitals (s, p, d, etc.) derived from the solutions to the Schrödinger equation for the hydrogen atom. Discussing radial and angular probability distributions.",
           "resources": [
-            "https://www.w3schools.com/python/python_functions.asp",
-            "https://realpython.com/defining-your-own-python-function/#parameters-and-arguments",
-            "https://www.youtube.com/watch?v=kTc_b8W99rQ"
-          ]
-        },
-        {
-          "id": "topic_7_4",
-          "title": "Variable Scope (Local vs. Global)",
-          "description": "Understand the concept of variable scope: where a variable is accessible within a program. Differentiate between local variables (defined inside a function) and global variables (defined outside) and their implications.",
-          "resources": [
-            "https://www.w3schools.com/python/python_scope.asp",
-            "https://realpython.com/python-scope-legb-rule/",
-            "https://www.youtube.com/watch?v=kr0DNy4B8vI"
+            "https://www.youtube.com/watch?v=oNn02eE2z6Q",
+            "https://www.khanacademy.org/science/physics/quantum-physics/atomic-energy-levels/a/atomic-orbitals",
+            "https://phet.colorado.edu/en/simulations/atomic-orbitals"
           ]
         }
       ]
     },
     {
       "week_number": 8,
-      "title": "Introduction to Data Structures: Lists & Tuples",
+      "title": "Spin, Pauli Exclusion Principle, and Multi-Electron Atoms",
       "topics": [
         {
           "id": "topic_8_1",
-          "title": "Introduction to Data Structures",
-          "description": "Understand the concept of data structures as organized ways to store and manage data efficiently. Introduce the idea of collections of data and their importance in structuring complex programs.",
+          "title": "Electron Spin",
+          "description": "Introduction to the intrinsic angular momentum of the electron, known as spin. Understanding spin as a quantum property that doesn't have a classical analog. Defining the spin quantum number (m_s) and its possible values (+1/2, -1/2).",
           "resources": [
-            "https://www.geeksforgeeks.org/introduction-to-data-structures/",
-            "https://www.javatpoint.com/data-structure-introduction",
-            "https://www.youtube.com/watch?v=DFc2f4rFq1k"
+            "https://www.khanacademy.org/science/physics/quantum-physics/spin/a/electron-spin",
+            "https://www.youtube.com/watch?v=r4N0yYgS5r0",
+            "https://www.quantiki.org/wiki/Electron_spin"
           ]
         },
         {
           "id": "topic_8_2",
-          "title": "Lists: Creation and Basic Access",
-          "description": "Learn about Python lists, which are ordered, mutable collections of items. Understand how to create lists, access individual elements by index, and use slicing to extract sub-lists, fundamental for data manipulation.",
+          "title": "The Pauli Exclusion Principle",
+          "description": "Explanation of the Pauli Exclusion Principle, which states that no two identical fermions (like electrons) can occupy the same quantum state simultaneously. Understanding its crucial role in determining the electron configurations of atoms.",
           "resources": [
-            "https://www.w3schools.com/python/python_lists.asp",
-            "https://realpython.com/python-lists/",
-            "https://www.youtube.com/watch?v=CnwF5Z0Jm2Y"
+            "https://www.khanacademy.org/science/physics/quantum-physics/spin/a/pauli-exclusion-principle",
+            "https://www.youtube.com/watch?v=z-N2i1m0_vQ",
+            "https://www.britannica.com/science/Pauli-exclusion-principle"
           ]
         },
         {
           "id": "topic_8_3",
-          "title": "Lists: Manipulation Methods",
-          "description": "Explore common list methods for modifying lists: appending elements ('append()'), inserting ('insert()'), removing ('remove()', 'pop()'), and searching for elements. Practice these methods to dynamically manage list content.",
+          "title": "Electron Configurations and the Periodic Table",
+          "description": "Applying the principles of quantum mechanics (quantum numbers, spin, Pauli exclusion) to determine the electron configurations of multi-electron atoms. Understanding how these configurations explain the structure and trends observed in the periodic table.",
           "resources": [
-            "https://www.w3schools.com/python/python_lists_methods.asp",
-            "https://realpython.com/python-lists/#list-methods",
-            "https://www.youtube.com/watch?v=Uh2ebFW8OYM"
-          ]
-        },
-        {
-          "id": "topic_8_4",
-          "title": "Tuples: Immutable Sequences",
-          "description": "Introduce tuples as ordered, immutable collections. Understand their similarities and differences with lists, and when to use tuples (e.g., for fixed collections of items or as dictionary keys) due to their immutability.",
-          "resources": [
-            "https://www.w3schools.com/python/python_tuples.asp",
-            "https://realpython.com/python-tuples/",
-            "https://www.youtube.com/watch?v=NI26QU_bM1M"
+            "https://www.khanacademy.org/science/chemistry/electron-configuration-and-periodic-trends/electron-configuration-1/a/electron-configurations",
+            "https://www.youtube.com/watch?v=XX_8E27a0Sg",
+            "https://www.chemguide.co.uk/atoms/electronconfig.html"
           ]
         }
       ]
     },
     {
       "week_number": 9,
-      "title": "Hardware, Software, and Data Representation Basics",
+      "title": "Quantum Tunneling and its Applications",
       "topics": [
         {
           "id": "topic_9_1",
-          "title": "Computer Architecture Overview",
-          "description": "Gain a high-level understanding of the basic components of a computer system: Central Processing Unit (CPU), Memory (RAM), Input/Output (I/O) devices, and storage. Discuss the role of each component in the computing process.",
+          "title": "Quantum Tunneling Explained",
+          "description": "A deeper dive into quantum tunneling. Understanding the probability of a particle tunneling through a potential barrier as a function of the barrier's height, width, and the particle's energy. Mathematical derivation and graphical representation.",
           "resources": [
-            "https://www.cs.umd.edu/class/sum2003/cmsc311/Notes/CompOrg/co.html",
-            "https://www.techtarget.com/whatis/definition/computer-architecture",
-            "https://www.youtube.com/watch?v=cNN_tTXABUA"
+            "https://www.youtube.com/watch?v=3t0-b9S3mR0",
+            "https://www.khanacademy.org/science/physics/quantum-physics/tunneling/a/quantum-tunneling",
+            "https://physics.stackexchange.com/questions/11531/how-do-i-calculate-the-probability-of-quantum-tunneling"
           ]
         },
         {
           "id": "topic_9_2",
-          "title": "Operating Systems: The System Software",
-          "description": "Understand the role and purpose of an operating system (OS) as the core software that manages computer hardware and software resources. Discuss common OS functions like process management, memory management, and file system management.",
+          "title": "Applications: Scanning Tunneling Microscope (STM)",
+          "description": "Exploring the practical applications of quantum tunneling, focusing on the Scanning Tunneling Microscope (STM). Understanding how tunneling current is used to image surfaces at the atomic level and its significance in nanoscience and technology.",
           "resources": [
-            "https://www.geeksforgeeks.org/introduction-of-operating-system/",
-            "https://www.ibm.com/topics/operating-system",
-            "https://www.youtube.com/watch?v=ul0bYjMv-00"
+            "https://www.youtube.com/watch?v=a0u9fQ2mQ5g",
+            "https://www.nobelprize.org/prizes/physics/1986/summary/",
+            "https://www.olympus-ims.com/en/application-notes/sem/stm/"
           ]
         },
         {
           "id": "topic_9_3",
-          "title": "Software Layers: System vs. Application Software",
-          "description": "Differentiate between system software (e.g., operating systems, device drivers, utilities) and application software (e.g., web browsers, word processors, games). Understand how these layers interact to provide functionality to the user.",
+          "title": "Other Applications of Tunneling (e.g., Radioactive Decay, Tunnel Diodes)",
+          "description": "Brief overview of other phenomena where quantum tunneling plays a critical role, such as alpha decay in radioactive nuclei and the operation of tunnel diodes in electronics. Highlighting the diverse impact of this quantum effect.",
           "resources": [
-            "https://www.javatpoint.com/difference-between-system-software-and-application-software",
-            "https://www.geeksforgeeks.org/difference-between-system-software-and-application-software/",
-            "https://www.youtube.com/watch?v=kYJ3o48t36Q"
-          ]
-        },
-        {
-          "id": "topic_9_4",
-          "title": "Binary Representation: Bits and Bytes",
-          "description": "Introduce the fundamental concept of binary code (base-2) as the language of computers. Understand bits (binary digits) and bytes (groups of 8 bits) as the basic units of digital information. Explain why computers use binary.",
-          "resources": [
-            "https://www.cs.uky.edu/~jess/cs101/Binary.html",
-            "https://www.w3schools.com/python/python_datatypes_numbers.asp",
-            "https://www.youtube.com/watch?v=LqUu0nF4k18"
+            "https://www.youtube.com/watch?v=n6s5p3s9mFs",
+            "https://www.nuclear-power.com/nuclear-power/reactor-physics/nuclear-reactions/radioactive-decay/alpha-decay/",
+            "https://www.electronics-tutorials.ws/semiconductor/tunnel-diode.html"
           ]
         }
       ]
     },
     {
       "week_number": 10,
-      "title": "Deep Dive into Data Representation & Storage",
+      "title": "Quantum Entanglement and Bell's Theorem",
       "topics": [
         {
           "id": "topic_10_1",
-          "title": "Number Systems: Decimal, Binary, Hexadecimal",
-          "description": "Expand on binary by comparing it to the decimal system (base-10) and introducing hexadecimal (base-16) as a compact way to represent binary data, especially in memory addresses and color codes. Learn simple conversions.",
+          "title": "Introduction to Quantum Entanglement",
+          "description": "Defining quantum entanglement as a phenomenon where two or more particles become linked in such a way that they share the same fate, regardless of the distance separating them. Understanding the concept of a joint quantum state.",
           "resources": [
-            "https://www.tutorialspoint.com/computer_fundamentals/computer_fundamentals_number_system.htm",
-            "https://www.khanacademy.org/computing/computer-science/how-computers-work2/v/computer-science-binary-and-data",
-            "https://www.youtube.com/watch?v=VL-s8Qe0Q0k"
+            "https://www.khanacademy.org/science/physics/quantum-physics/quantum-entanglement/a/quantum-entanglement",
+            "https://www.youtube.com/watch?v=ZuvdHrlq-XQ",
+            "https://www.quantamagazine.org/tag/quantum-entanglement/"
           ]
         },
         {
           "id": "topic_10_2",
-          "title": "Representing Text: ASCII and Unicode",
-          "description": "Understand how text characters are stored in computers using encoding schemes like ASCII (American Standard Code for Information Interchange) and the more comprehensive Unicode standard, which supports a vast range of global languages and symbols.",
+          "title": "Bell's Theorem and Experimental Tests",
+          "description": "Explaining John Stewart Bell's theorem, which provides a way to experimentally distinguish between quantum mechanics and local hidden variable theories. Discussion of key experiments (e.g., Aspect experiments) that have confirmed the predictions of quantum mechanics and ruled out local realism.",
           "resources": [
-            "https://www.cs.mun.ca/~donald/cs1000/ascii.html",
-            "https://www.freecodecamp.org/news/what-is-unicode-the-ultimate-guide-to-character-encodings/",
-            "https://www.youtube.com/watch?v=MijmJ9D1w2o"
+            "https://www.youtube.com/watch?v=U1p59rN_e0I",
+            "https://www.quantiki.org/wiki/Bell_test",
+            "https://www.youtube.com/watch?v=z_8sJbJ-Q1s"
           ]
         },
         {
           "id": "topic_10_3",
-          "title": "Basics of Digital Images and Sound",
-          "description": "Get a conceptual understanding of how digital images (pixels, color models like RGB, resolution) and digital sound (sampling, amplitude, frequency) are represented and stored as binary data, enabling their manipulation and reproduction.",
+          "title": "Implications of Entanglement: Quantum Information and Computing",
+          "description": "Briefly exploring the mind-boggling implications of entanglement for future technologies, including quantum communication, quantum cryptography, and the burgeoning field of quantum computing. Understanding how entanglement is a key resource.",
           "resources": [
-            "https://www.cs.princeton.edu/courses/archive/fall12/cos109/readings/08_digitalmedia.pdf",
-            "https://www.techtarget.com/whatis/definition/digital-image",
-            "https://www.youtube.com/watch?v=1F0Q_oM3o1Q",
-            "https://www.youtube.com/watch?v=LqVp935L9oA"
-          ]
-        },
-        {
-          "id": "topic_10_4",
-          "title": "Memory Hierarchy and Storage Devices",
-          "description": "Explore different types of computer memory (RAM, ROM, Cache) and storage devices (Hard Disk Drives, Solid State Drives, Cloud Storage). Understand the trade-offs between speed, cost, and capacity in the memory hierarchy.",
-          "resources": [
-            "https://www.geeksforgeeks.org/memory-hierarchy-in-computer-architecture/",
-            "https://www.intel.com/content/www/us/en/docs/processors-for-data-centers/memory-and-storage/342981/memory-and-storage-overview.html",
-            "https://www.youtube.com/watch?v=W79u-z48qB8"
+            "https://www.youtube.com/watch?v=z4ZtVlT81aI",
+            "https://www.quantamagazine.org/tag/quantum-computing/",
+            "https://www.technologyreview.com/topic/quantum-computing/"
           ]
         }
       ]
     },
     {
       "week_number": 11,
-      "title": "Algorithms: Design, Analysis & Common Patterns",
+      "title": "Quantum Mechanics in Action: Applications and Future Directions",
       "topics": [
         {
           "id": "topic_11_1",
-          "title": "What is an Algorithm? Properties and Characteristics",
-          "description": "Revisit the formal definition of an algorithm as a well-defined sequence of steps to solve a problem. Discuss key properties such as finiteness, definiteness, input, output, and effectiveness, and why efficient algorithms are crucial.",
+          "title": "Lasers and their Quantum Basis",
+          "description": "Understanding the quantum mechanical principles behind the operation of lasers, including stimulated emission, population inversion, and coherent light. Exploring various applications of lasers in science, industry, and medicine.",
           "resources": [
-            "https://www.geeksforgeeks.org/introduction-to-algorithms/",
-            "https://www.cs.princeton.edu/~rs/AlgsDS07/01Intro.pdf",
-            "https://www.youtube.com/watch?v=V6P3u4V5iSg"
+            "https://www.khanacademy.org/science/physics/light-and-waves/laser-light/a/how-lasers-work",
+            "https://www.youtube.com/watch?v=yS0iX2b5m98",
+            "https://www.rp-photonics.com/laser_basics.html"
           ]
         },
         {
           "id": "topic_11_2",
-          "title": "Introduction to Algorithmic Efficiency (Big O Notation - Conceptual)",
-          "description": "Introduce the concept of algorithmic efficiency and why it matters for large datasets. Conceptually understand Big O notation as a way to describe how the runtime or space requirements of an algorithm grow with input size, without deep mathematical proofs.",
+          "title": "Quantum Superposition and its Role in Computing",
+          "description": "Revisiting the concept of quantum superposition and how it forms the basis of qubits in quantum computers. Contrasting classical bits with qubits and discussing the potential for exponential speedups in certain computational problems.",
           "resources": [
-            "https://www.freecodecamp.org/news/big-o-notation-explained-with-examples/",
-            "https://www.geeksforgeeks.org/complexity-analysis-of-algorithms-set-1-introduction/",
-            "https://www.youtube.com/watch?v=v4cd1O4zkGw"
+            "https://www.youtube.com/watch?v=g_jq3QJ98sk",
+            "https://www.ibm.com/quantum-computing/what-is-quantum-computing/",
+            "https://www.technologyreview.com/2021/11/02/1037024/quantum-computing-superposition-qubits-explained/"
           ]
         },
         {
           "id": "topic_11_3",
-          "title": "Searching Algorithms (Linear and Binary Search - Conceptual)",
-          "description": "Explore common searching algorithms. Understand Linear Search (sequential scan) and Binary Search (divide and conquer on sorted data) conceptually. Compare their efficiency and best-case/worst-case scenarios without deep implementation.",
+          "title": "The Future of Quantum Mechanics: Open Questions and Research Frontiers",
+          "description": "Discussion of current open questions and active research areas in quantum mechanics, such as the interpretation of quantum mechanics, quantum gravity, and the development of quantum technologies. Inspiring students to consider further study in physics and related fields.",
           "resources": [
-            "https://www.geeksforgeeks.org/searching-algorithms/",
-            "https://www.programiz.com/dsa/searching-algorithms",
-            "https://www.youtube.com/watch?v=C7XbK8f_oT4"
-          ]
-        },
-        {
-          "id": "topic_11_4",
-          "title": "Sorting Algorithms (Bubble and Selection Sort - Conceptual)",
-          "description": "Introduce basic sorting algorithms. Understand the ideas behind Bubble Sort (repeatedly stepping through the list, comparing adjacent elements and swapping them) and Selection Sort (repeatedly finding the minimum element and placing it at the beginning).",
-          "resources": [
-            "https://www.geeksforgeeks.org/sorting-algorithms/",
-            "https://www.programiz.com/dsa/sorting-algorithms",
-            "https://www.youtube.com/watch?v=kPRA0W1kECg",
-            "https://www.youtube.com/watch?v=g-PGLbMth_g"
+            "https://www.quantamagazine.org/tag/quantum-mechanics/",
+            "https://www.newscientist.com/article/mg24933283-100-is-quantum-mechanics-broken-and-how-could-we-fix-it/",
+            "https://www.youtube.com/watch?v=dC9Q3s6gG7Y"
           ]
         }
       ]
     },
     {
       "week_number": 12,
-      "title": "Networking, The Internet & Course Wrap-up",
+      "title": "Review, Consolidation, and Quantum Puzzles",
       "topics": [
         {
           "id": "topic_12_1",
-          "title": "Introduction to Computer Networks",
-          "description": "Understand what a computer network is and why it's essential for communication and resource sharing. Differentiate between local area networks (LANs) and wide area networks (WANs). Discuss basic network components like routers, switches, and cables.",
+          "title": "Comprehensive Review of Key Concepts",
+          "description": "A thorough review of all major topics covered throughout the course, including wave-particle duality, Schrödinger equation, operators, uncertainty principle, entanglement, and key applications. Facilitating student questions and clarifications.",
           "resources": [
-            "https://www.geeksforgeeks.org/basics-computer-networking/",
-            "https://www.javatpoint.com/computer-network-tutorial",
-            "https://www.youtube.com/watch?v=0ANXjtrE_q0"
+            "https://www.khanacademy.org/science/physics/quantum-physics",
+            "https://www.physicsforums.com/forums/quantum-physics.125/"
           ]
         },
         {
           "id": "topic_12_2",
-          "title": "The Internet: How it Works (IP, DNS, HTTP)",
-          "description": "Explore the fundamental principles of how the Internet works. Understand the roles of Internet Protocol (IP) addresses for identification, Domain Name System (DNS) for naming, and Hypertext Transfer Protocol (HTTP) for web communication.",
+          "title": "Problem-Solving Session and Practice Exercises",
+          "description": "Dedicated time for working through challenging practice problems that integrate concepts from different weeks. This will reinforce understanding and build problem-solving skills necessary for further study in quantum physics.",
           "resources": [
-            "https://www.khanacademy.org/computing/computer-science/internet-intro/internet-works-intro/v/the-internet-what-is-the-internet",
-            "https://www.cloudflare.com/learning/network-layer/what-is-the-internet/",
-            "https://www.youtube.com/watch?v=x3c1ih2NJEg",
-            "https://www.youtube.com/watch?v=ZT3C9h4Nfgo"
+            "https://press.rebus.community/quantummechanics/chapter/practice-problems/",
+            "https://www.physicsforums.com/threads/sample-problems-with-solutions.24430/"
           ]
         },
         {
           "id": "topic_12_3",
-          "title": "Introduction to Cybersecurity and Data Privacy",
-          "description": "Discuss basic concepts of cybersecurity, including common threats (malware, phishing), types of attacks, and fundamental defensive measures (strong passwords, software updates, data backups). Briefly touch upon the importance of data privacy in the digital age.",
+          "title": "Philosophical Implications and Quantum Paradoxes",
+          "description": "Exploring some of the more philosophical implications of quantum mechanics, such as interpretations of quantum mechanics (e.g., Copenhagen, Many-Worlds). Discussing famous quantum paradoxes (e.g., Schrödinger's Cat) and their role in shaping our understanding of reality.",
           "resources": [
-            "https://www.cisa.gov/resources-tools/resources/cybersecurity-basics",
-            "https://www.ibm.com/topics/cybersecurity",
-            "https://www.youtube.com/watch?v=in_bBq9E-3w"
-          ]
-        },
-        {
-          "id": "topic_12_4",
-          "title": "Course Review and Next Steps in Computer Science",
-          "description": "A comprehensive review of all key concepts covered throughout the 12 weeks, reinforcing understanding of computational thinking, programming fundamentals, hardware/software, data, algorithms, and networking basics. Provide guidance on further learning paths and specializations in computer science.",
-          "resources": [
-            "https://cs50.harvard.edu/x/2023/",
-            "https://www.freecodecamp.org/news/the-top-programming-languages-to-learn-in-2023/",
-            "https://www.coursera.org/browse/computer-science"
+            "https://www.youtube.com/watch?v=R18w-d80a_0",
+            "https://plato.stanford.edu/entries/qm/",
+            "https://www.youtube.com/watch?v=Yy_gW7oD7aI"
           ]
         }
       ]

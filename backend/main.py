@@ -8,6 +8,8 @@ from models import CurriculumGenerationRequest, CurriculumGenerationResponse, He
 from services.curriculum_service import CurriculumService
 from config import settings
 
+import uvicorn
+
 app = FastAPI(title="Teacher Dashboard Backend", version="1.0.0")
 
 # Initialize service
@@ -143,10 +145,4 @@ def get_curriculum(course_id: str) -> CurriculumGenerationResponse:
 
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(
-        "main:app",
-        host=settings.host,
-        port=settings.port,
-        reload=settings.debug
-    )
+    uvicorn.run("main:app", host=settings.host, port=settings.port, reload=True)
