@@ -9,6 +9,12 @@ venv/
 env/
 .env/
 
+# Environment files
+.env
+.env.*
+*.env
+**/.env
+
 # Node.js dependencies and logs
 node_modules/
 **/node_modules/
