@@ -220,11 +220,16 @@ export function CourseDetailPage({
   const [showSuccess, setShowSuccess] = useState(false);
 
   // Curriculum section logic
+  interface CurriculumResource {
+    url: string;
+    type?: string;
+  }
+
   interface CurriculumTopic {
     id: string;
     title: string;
     description: string;
-    resources: string[];
+    resources: CurriculumResource[];
   }
 
   interface CurriculumWeek {
@@ -250,6 +255,32 @@ export function CourseDetailPage({
     setSyllabusFileName(file.name);
   }
 
+  const normalizeResource = (resource: any): CurriculumResource | null => {
+    if (!resource) return null;
+    if (typeof resource === "string") {
+      return {
+        url: resource,
+        type: inferResourceType(resource),
+      };
+    }
+    if (typeof resource === "object" && resource.url) {
+      return {
+        url: resource.url,
+        type: resource.type || inferResourceType(resource.url),
+      };
+    }
+    return null;
+  };
+
+  const inferResourceType = (url: string): string => {
+    const value = url.toLowerCase();
+    if (/(youtube\.com|youtu\.be|vimeo\.com)/.test(value)) return "video";
+    if (value.endsWith(".pdf")) return "pdf";
+    if (/(coursera\.org|edx\.org|udemy\.com|khanacademy\.org)/.test(value)) return "course";
+    if (/(github\.com|gist\.github\.com)/.test(value)) return "code";
+    return "article";
+  };
+
   // Fetch curriculum from backend
   async function fetchCurriculum() {
     setCurriculumLoading(true);
@@ -263,14 +294,16 @@ export function CourseDetailPage({
       }
       if (!resp.ok) throw new Error("Failed to fetch curriculum");
       const data = await resp.json();
-      const formatted = (data.weeks || []).map((week: any) => ({
+      const formatted: CurriculumWeek[] = (data.weeks || []).map((week: any) => ({
         weekNumber: week.week_number,
         title: week.title,
         topics: (week.topics || []).map((topic: any) => ({
           id: topic.id,
           title: topic.title,
           description: topic.description || "",
-          resources: topic.resources || [],
+          resources: (topic.resources || [])
+            .map((resource: any) => normalizeResource(resource))
+            .filter((resource: CurriculumResource | null): resource is CurriculumResource => Boolean(resource)),
         })),
       }));
       setCurriculum(formatted);
@@ -1054,17 +1087,22 @@ export function CourseDetailPage({
                                   Resources:
                                 </h4>
                                 <ul className="list-none space-y-1">
-                                  {topic.resources.map((resource, idx) => (
-                                    <li key={idx}>
+                                  {topic.resources.map((resource) => (
+                                    <li key={resource.url} className="flex items-center justify-between gap-3">
                                       <a
-                                        href={resource}
+                                        href={resource.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-sm text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
                                       >
                                         <LinkIcon className="h-3 w-3" />
-                                        {resource}
+                                        {resource.url}
                                       </a>
+                                      {resource.type && (
+                                        <Badge variant="outline" className="text-xs capitalize">
+                                          {resource.type}
+                                        </Badge>
+                                      )}
                                     </li>
                                   ))}
                                 </ul>
