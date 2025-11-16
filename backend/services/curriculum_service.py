@@ -2,8 +2,8 @@
 Service for processing and parsing curriculum generation responses.
 """
 import json
-from typing import Dict, Any
-from models import CurriculumGenerationResponse, Week, Topic
+from typing import Dict, Any, List, Union
+from models import CurriculumGenerationResponse, Week, Topic, Resource
 from utils.gemini_client import GeminiClient
 from storage.curriculum_storage import CurriculumStorage
 
@@ -88,6 +88,33 @@ class CurriculumService:
         """Retrieve stored curriculum for a course."""
         return self.storage.load(course_id)
     
+    def _infer_resource_type(self, url: str) -> str:
+        """
+        Infer resource type from URL patterns.
+        
+        Args:
+            url: The resource URL
+        
+        Returns:
+            Resource type: "video", "pdf", "course", or "article" (default)
+        """
+        url_lower = url.lower()
+        
+        # Video platforms
+        if any(domain in url_lower for domain in ['youtube.com', 'youtu.be', 'vimeo.com']):
+            return "video"
+        
+        # PDF documents
+        if url_lower.endswith('.pdf'):
+            return "pdf"
+        
+        # Online course platforms
+        if any(domain in url_lower for domain in ['coursera.org', 'edx.org', 'udemy.com', 'khanacademy.org']):
+            return "course"
+        
+        # Default to article
+        return "article"
+    
     def _parse_gemini_response(self, response_text: str) -> list[Week]:
         """
         Parse Gemini's JSON response into Week objects.
@@ -112,7 +139,7 @@ class CurriculumService:
                     id=topic.get("id", f"topic_{week_data['week_number']}_0"),
                     title=topic.get("title", ""),
                     description=topic.get("description", ""),
-                    resources=topic.get("resources", [])
+                    resources=self._parse_resources(topic.get("resources", []))
                 )
                 for topic in week_data.get("topics", [])
             ]
@@ -125,6 +152,38 @@ class CurriculumService:
             weeks.append(week)
         
         return weeks
+    
+    def _parse_resources(self, resources_data: List[Union[str, Dict[str, Any]]]) -> List[Resource]:
+        """
+        Parse resources from various formats into Resource objects.
+        
+        Args:
+            resources_data: List of resource data (can be strings or dicts)
+        
+        Returns:
+            List of Resource objects with type classification
+        """
+        resources = []
+        
+        for resource in resources_data:
+            if isinstance(resource, dict):
+                # Gemini provided structured data
+                url = resource.get("url", "")
+                resource_type = resource.get("type", "")
+                
+                # If type is missing or invalid, infer from URL
+                if resource_type not in ["article", "video", "pdf", "course"]:
+                    resource_type = self._infer_resource_type(url)
+                
+                resources.append(Resource(url=url, type=resource_type))
+            
+            elif isinstance(resource, str):
+                # Fallback: Gemini provided plain string URL
+                url = resource
+                resource_type = self._infer_resource_type(url)
+                resources.append(Resource(url=url, type=resource_type))
+        
+        return resources
     
     def _extract_json(self, text: str) -> str:
         """
