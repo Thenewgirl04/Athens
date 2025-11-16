@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect, useMemo } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
   BookOpen,
@@ -54,13 +55,6 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Alert, AlertDescription } from "./ui/alert";
-
-interface CourseDetailPageProps {
-  courseId: string;
-  courseName: string;
-  courseCode: string;
-  onBack: () => void;
-}
 
 interface Lesson {
   id: string;
@@ -194,12 +188,20 @@ const mockStudents: EnrolledStudent[] = [
   },
 ];
 
-export function CourseDetailPage({
-  courseId,
-  courseName,
-  courseCode,
-  onBack,
-}: CourseDetailPageProps) {
+export function CourseDetailPage() {
+  const navigate = useNavigate();
+  const { courseId: routeCourseId } = useParams<{ courseId?: string }>();
+  const location = useLocation();
+  const state = location.state as
+    | {
+        courseName?: string;
+        courseCode?: string;
+      }
+    | undefined;
+
+  const courseId = routeCourseId ?? "course-demo";
+  const courseName = state?.courseName ?? "Course Overview";
+  const courseCode = state?.courseCode ?? courseId.toUpperCase();
   const [activeSection, setActiveSection] = useState<
     "lessons" | "assignments" | "quizzes" | "students" | "curriculum"
   >("lessons");
@@ -410,7 +412,11 @@ export function CourseDetailPage({
       {/* Left Sidebar Navigation */}
       <aside className="w-64 bg-white border-r border-gray-200">
         <div className="p-6">
-          <Button variant="ghost" onClick={onBack} className="mb-4 -ml-3">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/courses")}
+            className="mb-4 -ml-3"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Courses
           </Button>

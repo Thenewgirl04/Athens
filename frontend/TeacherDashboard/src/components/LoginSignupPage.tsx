@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { GraduationCap, Mail, Lock, User, UserCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -19,6 +20,7 @@ interface LoginSignupPageProps {
 }
 
 export function LoginSignupPage({ onLogin }: LoginSignupPageProps) {
+  const navigate = useNavigate();
   // Login state
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -35,6 +37,7 @@ export function LoginSignupPage({ onLogin }: LoginSignupPageProps) {
     // In a real app, this would make an API call
     console.log("Logging in...", { loginEmail, loginPassword });
     onLogin();
+    navigate("/dashboard", { replace: true });
   };
 
   const handleSignup = (e: React.FormEvent) => {
@@ -51,6 +54,7 @@ export function LoginSignupPage({ onLogin }: LoginSignupPageProps) {
       role,
     });
     onLogin();
+    navigate("/dashboard", { replace: true });
   };
 
   return (

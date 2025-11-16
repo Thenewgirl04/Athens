@@ -139,16 +139,13 @@ const mockSubmissions: Submission[] = [
   },
 ];
 
-interface AssignmentManagementPageProps {
-  onCreateAssignment?: () => void;
-}
-
-export function AssignmentManagementPage({ onCreateAssignment }: AssignmentManagementPageProps) {
+export function AssignmentManagementPage() {
   const [selectedCourse, setSelectedCourse] = useState<string>("all");
   const [viewingAssignment, setViewingAssignment] = useState<Assignment | null>(null);
   const [gradingSubmission, setGradingSubmission] = useState<Submission | null>(null);
   const [gradeInput, setGradeInput] = useState("");
   const [feedbackInput, setFeedbackInput] = useState("");
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   const filteredAssignments = selectedCourse === "all" 
     ? assignments 
@@ -389,11 +386,83 @@ export function AssignmentManagementPage({ onCreateAssignment }: AssignmentManag
           <h1 className="text-3xl mb-2">Assignments</h1>
           <p className="text-gray-600">Create, view, and grade assignments</p>
         </div>
-        <Button onClick={onCreateAssignment} size="lg">
+        <Button onClick={() => setShowCreateForm(true)} size="lg">
           <Plus className="h-5 w-5 mr-2" />
           Create Assignment
         </Button>
       </div>
+
+      {showCreateForm && (
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Create New Assignment</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="new-assignment-title">Assignment Title</Label>
+                <Input
+                  id="new-assignment-title"
+                  placeholder="e.g., Week 3 Programming Exercise"
+                  className="mt-2"
+                />
+              </div>
+              <div>
+                <Label htmlFor="new-assignment-course">Course</Label>
+                <Select defaultValue="CS101">
+                  <SelectTrigger id="new-assignment-course" className="mt-2">
+                    <SelectValue placeholder="Choose course" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="CS101">CS101</SelectItem>
+                    <SelectItem value="CS201">CS201</SelectItem>
+                    <SelectItem value="CS105">CS105</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="new-assignment-due-date">Due Date</Label>
+                <Input id="new-assignment-due-date" type="date" className="mt-2" />
+              </div>
+              <div>
+                <Label htmlFor="new-assignment-points">Points</Label>
+                <Input
+                  id="new-assignment-points"
+                  type="number"
+                  placeholder="100"
+                  className="mt-2"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="new-assignment-description">Description</Label>
+              <Textarea
+                id="new-assignment-description"
+                placeholder="Describe the assignment requirements..."
+                rows={4}
+                className="mt-2"
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <Button type="button" onClick={() => setShowCreateForm(false)}>
+                Save Assignment
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowCreateForm(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Filter */}
       <div className="mb-6">
@@ -482,7 +551,7 @@ export function AssignmentManagementPage({ onCreateAssignment }: AssignmentManag
               ? "Get started by creating your first assignment"
               : "No assignments for this course yet"}
           </p>
-          <Button onClick={onCreateAssignment}>
+          <Button onClick={() => setShowCreateForm(true)}>
             <Plus className="h-5 w-5 mr-2" />
             Create Assignment
           </Button>
