@@ -22,11 +22,13 @@ import {
   Briefcase,
   CalendarClock,
   Award,
+  X,
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+import { Alert, AlertDescription } from './ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import {
   Accordion,
@@ -47,6 +49,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { LockedCourseOverlay } from './LockedCourseOverlay';
 import { PretestModal } from './PretestModal';
 import { PretestAnalysis } from './PretestAnalysis';
+import { WeeklyQuizHub } from './WeeklyQuizHub';
+import { QuizTakingPage } from './QuizTakingPage';
+import { QuizAnalysisPage } from './QuizAnalysisPage';
 import { api, Pretest, PretestResultResponse, CurriculumResponse } from '../services/api';
 
 interface Lesson {
@@ -680,8 +685,18 @@ export function StudentCourseView() {
   const [curriculum, setCurriculum] = useState<CurriculumResponse | null>(null);
   const [loadingCurriculum, setLoadingCurriculum] = useState(false);
   
+  // Quiz state
+  const [currentQuiz, setCurrentQuiz] = useState<any>(null);
+  const [quizType, setQuizType] = useState<'main' | 'refresher' | 'dynamic'>('main');
+  const [currentWeek, setCurrentWeek] = useState<number>(1);
+  const [showQuizTaking, setShowQuizTaking] = useState(false);
+  const [showQuizAnalysis, setShowQuizAnalysis] = useState(false);
+  const [quizResult, setQuizResult] = useState<any>(null);
+  const [weekLockStatus, setWeekLockStatus] = useState<Record<number, boolean>>({});
+  
   const courseIdNum = courseId ? parseInt(courseId, 10) : 1;
   const courseData = getCourseData(courseIdNum);
+  const studentId = user?.id || '';
 
   // Check pretest status on mount
   useEffect(() => {
@@ -696,6 +711,15 @@ export function StudentCourseView() {
       loadCurriculum();
     }
   }, [courseId]);
+
+  // Check week lock status for all weeks
+  useEffect(() => {
+    if (courseId && studentId && curriculum?.weeks) {
+      curriculum.weeks.forEach((week) => {
+        checkWeekLock(week.week_number);
+      });
+    }
+  }, [courseId, studentId, curriculum]);
 
   const loadCurriculum = async () => {
     if (!courseId) return;
@@ -777,6 +801,151 @@ export function StudentCourseView() {
 
   const handleContinueFromAnalysis = () => {
     setShowAnalysis(false);
+  };
+
+  // Quiz handlers
+  const checkWeekLock = async (weekNumber: number) => {
+    if (!courseId || !studentId) return;
+    
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/quiz/week-lock-status/${studentId}/${courseId}/${weekNumber}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setWeekLockStatus(prev => ({ ...prev, [weekNumber]: data.isLocked }));
+      }
+    } catch (error) {
+      console.error('Error checking week lock status:', error);
+    }
+  };
+
+  const handleStartQuiz = async (weekNumber: number, quizType: 'main' | 'refresher' | 'dynamic') => {
+    if (!courseId || !studentId) return;
+    
+    try {
+      setCurrentWeek(weekNumber);
+      setQuizType(quizType);
+      
+      // For refresher and dynamic, they're generated on demand
+      // For main, check if it exists first, if not generate it
+      let quiz;
+      
+      if (quizType === 'main') {
+        // Try to get existing main quiz first
+        const getResponse = await fetch(
+          `http://localhost:8000/api/quiz/get/${courseId}/${weekNumber}/main`
+        );
+        
+        if (getResponse.ok) {
+          quiz = await getResponse.json();
+        } else {
+          // Generate main quiz if it doesn't exist
+          const genResponse = await fetch(
+            `http://localhost:8000/api/quiz/generate-main/${courseId}/${weekNumber}`,
+            { method: 'POST' }
+          );
+          if (genResponse.ok) {
+            quiz = await genResponse.json();
+          }
+        }
+      } else if (quizType === 'refresher') {
+        // Refresher quiz is generated each time
+        const genResponse = await fetch(
+          `http://localhost:8000/api/quiz/generate-refresher/${courseId}/${weekNumber}`,
+          { method: 'POST' }
+        );
+        if (genResponse.ok) {
+          quiz = await genResponse.json();
+        }
+      } else if (quizType === 'dynamic') {
+        // Dynamic quiz is generated per student
+        const genResponse = await fetch(
+          `http://localhost:8000/api/quiz/generate-dynamic/${courseId}/${weekNumber}/${studentId}`,
+          { method: 'POST' }
+        );
+        if (genResponse.ok) {
+          quiz = await genResponse.json();
+        } else {
+          // Get error message from response
+          const errorData = await genResponse.json().catch(() => ({ detail: 'Failed to generate dynamic quiz' }));
+          throw new Error(errorData.detail || `Failed to generate dynamic quiz: ${genResponse.status} ${genResponse.statusText}`);
+        }
+      }
+      
+      if (quiz) {
+        setCurrentQuiz(quiz);
+        setShowQuizTaking(true);
+      } else {
+        throw new Error('Failed to retrieve quiz. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error starting quiz:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to start quiz. Please try again.';
+      alert(errorMessage);
+    }
+  };
+
+  const handleQuizSubmit = async (answers: Record<string, number>) => {
+    if (!courseId || !studentId || !currentQuiz) return;
+    
+    try {
+      // Convert answers to the format expected by backend (question ID -> answer index)
+      const formattedAnswers: Record<string, number> = {};
+      Object.keys(answers).forEach(key => {
+        formattedAnswers[key] = answers[key];
+      });
+      
+      const response = await fetch('http://localhost:8000/api/quiz/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          studentId: studentId,
+          courseId: courseId,
+          weekNumber: currentWeek,
+          quizId: currentQuiz.id,
+          quizType: quizType,
+          answers: formattedAnswers,
+        }),
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        setQuizResult(result);
+        setShowQuizTaking(false);
+        setShowQuizAnalysis(true);
+        
+        // Refresh lock status for current week and next week
+        // (completing dynamic quiz unlocks next week, failing main quiz locks next week)
+        checkWeekLock(currentWeek);
+        if (curriculum?.weeks) {
+          const nextWeek = currentWeek + 1;
+          const hasNextWeek = curriculum.weeks.some(w => w.week_number === nextWeek);
+          if (hasNextWeek) {
+            checkWeekLock(nextWeek);
+          }
+        }
+      } else {
+        const error = await response.json();
+        alert(error.detail || 'Failed to submit quiz');
+      }
+    } catch (error) {
+      console.error('Error submitting quiz:', error);
+      alert('Failed to submit quiz. Please try again.');
+    }
+  };
+
+  const handleQuizBack = () => {
+    setShowQuizTaking(false);
+    setCurrentQuiz(null);
+  };
+
+  const handleAnalysisBack = () => {
+    setShowQuizAnalysis(false);
+    setQuizResult(null);
+    setCurrentQuiz(null);
   };
 
   const navItems = [
@@ -869,6 +1038,65 @@ export function StudentCourseView() {
             <PretestAnalysis
               result={pretestResult}
               onContinue={handleContinueFromAnalysis}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Quiz Taking Modal */}
+      {showQuizTaking && currentQuiz && (
+        <div 
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto"
+          onClick={handleQuizBack}
+        >
+          <div 
+            className="bg-white rounded-lg max-w-5xl w-full my-8 max-h-[90vh] overflow-y-auto relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={handleQuizBack}
+              className="absolute top-4 right-4 z-10 p-2 rounded-lg hover:bg-slate-100 transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5 text-slate-600" />
+            </button>
+            <QuizTakingPage
+              quiz={{
+                title: currentQuiz.title,
+                questions: currentQuiz.questions.map((q: any, idx: number) => ({
+                  id: q.id || idx,
+                  questionText: q.question,
+                  options: q.options || [],
+                  correctAnswer: q.correctAnswer || 0,
+                  isBonus: q.isBonus || false,
+                })),
+                totalPoints: currentQuiz.maxScore,
+                quizType: quizType,
+              }}
+              onSubmit={handleQuizSubmit}
+              onBack={handleQuizBack}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Quiz Analysis Modal */}
+      {showQuizAnalysis && quizResult && (
+        <div 
+          className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 p-4 overflow-y-auto"
+          onClick={handleAnalysisBack}
+        >
+          <div 
+            className="bg-white rounded-lg shadow-2xl max-w-5xl w-full my-4 max-h-[95vh] overflow-y-auto relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <QuizAnalysisPage
+              analysis={quizResult.analysis}
+              quizType={quizType}
+              weekNumber={currentWeek}
+              onBack={handleAnalysisBack}
+              showDynamicQuizMessage={quizType === 'main' && quizResult.analysis.percentage < 60}
             />
           </div>
         </div>
@@ -1098,9 +1326,44 @@ export function StudentCourseView() {
                           <ChevronDown className="w-5 h-5 text-slate-400 transition-transform duration-200 flex-shrink-0" />
                         </div>
                       </AccordionTrigger>
-                      <AccordionContent className="px-6 pb-6">
-                        <div className="pl-16 space-y-4">
-                          {week.topics.map((topic) => (
+                        <AccordionContent className="px-6 pb-6">
+                        <div className="pl-16 space-y-6">
+                          {/* Week Lock Warning */}
+                          {weekLockStatus[week.week_number] && (
+                            <Alert className="bg-amber-50 border-amber-200">
+                              <AlertCircle className="h-4 w-4 text-amber-600" />
+                              <AlertDescription className="text-amber-800">
+                                This week is locked. Complete the Dynamic Quiz from Week {week.week_number - 1} to unlock this content.
+                              </AlertDescription>
+                            </Alert>
+                          )}
+                          
+                          {/* Weekly Quiz Hub - Only show if week is not locked */}
+                          {!weekLockStatus[week.week_number] && courseId && studentId && (
+                            <div className="bg-white rounded-lg border border-slate-200 p-4">
+                              <WeeklyQuizHub
+                                courseId={courseId}
+                                weekNumber={week.week_number}
+                                studentId={studentId}
+                                onStartQuiz={(quizType) => handleStartQuiz(week.week_number, quizType)}
+                              />
+                            </div>
+                          )}
+                          
+                          {/* Show message if week is locked */}
+                          {weekLockStatus[week.week_number] && (
+                            <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 text-center">
+                              <p className="text-slate-600 mb-2">This week's content is locked.</p>
+                              <p className="text-sm text-slate-500">
+                                Please complete the Dynamic Quiz from Week {week.week_number - 1} to access this week's materials.
+                              </p>
+                            </div>
+                          )}
+                          
+                          {/* Topics - Only show if week is not locked */}
+                          {!weekLockStatus[week.week_number] && (
+                          <div className="space-y-4">
+                            {week.topics.map((topic) => (
                             <div key={topic.id} className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-lg p-6">
                               <h5 className="text-slate-900 font-semibold mb-2">{topic.title}</h5>
                               <p className="text-slate-700 mb-4 whitespace-pre-wrap">{topic.description}</p>
@@ -1143,6 +1406,8 @@ export function StudentCourseView() {
                               )}
                             </div>
                           ))}
+                          </div>
+                          )}
                         </div>
                       </AccordionContent>
                     </AccordionItem>

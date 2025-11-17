@@ -25,13 +25,18 @@ from models import (
     StudentQuizResponse,
     Pretest,
     PretestSubmissionRequest,
-    PretestResultResponse
+    PretestResultResponse,
+    WeeklyQuiz,
+    QuizSubmissionRequest,
+    QuizSubmissionResponse,
+    QuizAvailabilityResponse
 )
 from services.curriculum_service import CurriculumService
 from services.lesson_service import LessonService
 from services.auth_service import AuthService
 from services.student_service import StudentService
 from services.pretest_service import PretestService
+from services.quiz_service import QuizService
 from config import settings
 
 import uvicorn
@@ -44,6 +49,7 @@ lesson_service = LessonService()
 auth_service = AuthService()
 student_service = StudentService()
 pretest_service = PretestService()
+quiz_service = QuizService()
 
 
 def _coerce_bool(value: bool | str | None, default: bool) -> bool:
@@ -824,6 +830,223 @@ def get_pretest_results(course_id: str, student_id: str) -> PretestResultRespons
         raise HTTPException(
             status_code=500,
             detail=f"Error retrieving pretest results: {str(e)}"
+        )
+
+
+# Weekly Quiz Endpoints
+
+@app.post("/api/quiz/generate-main/{course_id}/{week_number}", response_model=WeeklyQuiz, tags=["Quiz"])
+def generate_main_quiz(course_id: str, week_number: int) -> WeeklyQuiz:
+    """
+    Generate main quiz for a specific week.
+    
+    Args:
+        course_id: Course identifier
+        week_number: Week number
+    
+    Returns:
+        Generated WeeklyQuiz object
+    """
+    try:
+        quiz = quiz_service.generate_main_quiz_for_week(course_id, week_number)
+        return quiz
+    except ValueError as e:
+        raise HTTPException(
+            status_code=404,
+            detail=str(e)
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error generating main quiz: {str(e)}"
+        )
+
+
+@app.get("/api/quiz/get/{course_id}/{week_number}/{quiz_type}", response_model=WeeklyQuiz, tags=["Quiz"])
+def get_quiz(course_id: str, week_number: int, quiz_type: str) -> WeeklyQuiz:
+    """
+    Get a quiz by course, week, and type.
+    
+    Args:
+        course_id: Course identifier
+        week_number: Week number
+        quiz_type: Quiz type ('main', 'refresher', or 'dynamic')
+    
+    Returns:
+        WeeklyQuiz object
+    """
+    try:
+        quiz = quiz_service.storage.get_quiz(course_id, week_number, quiz_type)
+        if not quiz:
+            raise HTTPException(
+                status_code=404,
+                detail=f"No {quiz_type} quiz found for course {course_id}, week {week_number}"
+            )
+        return quiz
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error retrieving quiz: {str(e)}"
+        )
+
+
+@app.post("/api/quiz/generate-refresher/{course_id}/{week_number}", response_model=WeeklyQuiz, tags=["Quiz"])
+def generate_refresher_quiz(course_id: str, week_number: int) -> WeeklyQuiz:
+    """
+    Generate a new refresher quiz for a week.
+    
+    Args:
+        course_id: Course identifier
+        week_number: Week number
+    
+    Returns:
+        Generated WeeklyQuiz object
+    """
+    try:
+        quiz = quiz_service.generate_refresher_quiz(course_id, week_number)
+        return quiz
+    except ValueError as e:
+        raise HTTPException(
+            status_code=404,
+            detail=str(e)
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error generating refresher quiz: {str(e)}"
+        )
+
+
+@app.post("/api/quiz/generate-dynamic/{course_id}/{week_number}/{student_id}", response_model=WeeklyQuiz, tags=["Quiz"])
+def generate_dynamic_quiz(course_id: str, week_number: int, student_id: str) -> WeeklyQuiz:
+    """
+    Generate dynamic quiz targeting student's weak areas.
+    
+    Args:
+        course_id: Course identifier
+        week_number: Week number
+        student_id: Student identifier
+    
+    Returns:
+        Generated WeeklyQuiz object
+    """
+    try:
+        quiz = quiz_service.generate_dynamic_quiz(course_id, week_number, student_id)
+        return quiz
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+    except Exception as e:
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"Error generating dynamic quiz: {error_trace}")  # Log full traceback
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error generating dynamic quiz: {str(e)}"
+        )
+
+
+@app.post("/api/quiz/submit", response_model=QuizSubmissionResponse, tags=["Quiz"])
+def submit_quiz(request: QuizSubmissionRequest) -> QuizSubmissionResponse:
+    """
+    Submit quiz answers and get results with analysis.
+    
+    Args:
+        request: QuizSubmissionRequest with student answers
+    
+    Returns:
+        QuizSubmissionResponse with analysis
+    """
+    try:
+        result = quiz_service.submit_quiz(request)
+        return result
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error submitting quiz: {str(e)}"
+        )
+
+
+@app.get("/api/quiz/availability/{student_id}/{course_id}/{week_number}", response_model=QuizAvailabilityResponse, tags=["Quiz"])
+def get_quiz_availability(student_id: str, course_id: str, week_number: int) -> QuizAvailabilityResponse:
+    """
+    Get quiz availability status for a student.
+    
+    Args:
+        student_id: Student identifier
+        course_id: Course identifier
+        week_number: Week number
+    
+    Returns:
+        QuizAvailabilityResponse with availability status
+    """
+    try:
+        availability = quiz_service.get_quiz_availability(student_id, course_id, week_number)
+        return availability
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error checking quiz availability: {str(e)}"
+        )
+
+
+@app.get("/api/quiz/week-lock-status/{student_id}/{course_id}/{week_number}", tags=["Quiz"])
+def check_week_lock_status(student_id: str, course_id: str, week_number: int) -> dict:
+    """
+    Check if a week is locked due to incomplete dynamic quiz.
+    
+    Args:
+        student_id: Student identifier
+        course_id: Course identifier
+        week_number: Week number to check
+    
+    Returns:
+        Dict with lock status
+    """
+    try:
+        is_locked = quiz_service.check_week_lock_status(student_id, course_id, week_number)
+        return {
+            "studentId": student_id,
+            "courseId": course_id,
+            "weekNumber": week_number,
+            "isLocked": is_locked
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error checking week lock status: {str(e)}"
+        )
+
+
+@app.get("/api/quiz/student-performance/{student_id}/{course_id}", tags=["Quiz"])
+def get_student_performance(student_id: str, course_id: str) -> dict:
+    """
+    Get student's strengths and weaknesses for a course.
+    Backend only - no frontend UI needed.
+    
+    Args:
+        student_id: Student identifier
+        course_id: Course identifier
+    
+    Returns:
+        Dict with strengths and weaknesses
+    """
+    try:
+        performance = quiz_service.performance_storage.get_student_performance(student_id, course_id)
+        return performance.model_dump()
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error retrieving student performance: {str(e)}"
         )
 
 

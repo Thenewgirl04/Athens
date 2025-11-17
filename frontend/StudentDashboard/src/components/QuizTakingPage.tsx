@@ -11,6 +11,7 @@ import { Card, CardContent } from './ui/card';
 import { Progress } from './ui/progress';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Label } from './ui/label';
+import { Badge } from './ui/badge';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,10 +24,11 @@ import {
 } from './ui/alert-dialog';
 
 export interface QuizQuestion {
-  id: number;
+  id: number | string;
   questionText: string;
   options: string[];
   correctAnswer: number; // index of correct option
+  isBonus?: boolean;
 }
 
 export interface QuizData {
@@ -34,17 +36,18 @@ export interface QuizData {
   questions: QuizQuestion[];
   timeLimit?: number; // in minutes
   totalPoints: number;
+  quizType?: 'main' | 'refresher' | 'dynamic';
 }
 
 interface QuizTakingPageProps {
   quiz: QuizData;
-  onSubmit: (answers: Record<number, number>) => void;
+  onSubmit: (answers: Record<string, number>) => void;
   onBack: () => void;
 }
 
 export function QuizTakingPage({ quiz, onSubmit, onBack }: QuizTakingPageProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [answers, setAnswers] = useState<Record<string, number>>({});
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(quiz.timeLimit ? quiz.timeLimit * 60 : null);
 
@@ -79,7 +82,7 @@ export function QuizTakingPage({ quiz, onSubmit, onBack }: QuizTakingPageProps) 
   const handleAnswerSelect = (optionIndex: number) => {
     setAnswers({
       ...answers,
-      [currentQuestion.id]: optionIndex,
+      [String(currentQuestion.id)]: optionIndex,
     });
   };
 
@@ -99,8 +102,8 @@ export function QuizTakingPage({ quiz, onSubmit, onBack }: QuizTakingPageProps) 
     onSubmit(answers);
   };
 
-  const isQuestionAnswered = (questionId: number) => {
-    return questionId in answers;
+  const isQuestionAnswered = (questionId: number | string) => {
+    return String(questionId) in answers;
   };
 
   return (
@@ -159,9 +162,16 @@ export function QuizTakingPage({ quiz, onSubmit, onBack }: QuizTakingPageProps) 
                   {currentQuestionIndex + 1}
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-slate-900 mb-1">
-                    Question {currentQuestionIndex + 1}
-                  </h3>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="text-slate-900">
+                      Question {currentQuestionIndex + 1}
+                    </h3>
+                    {currentQuestion.isBonus && (
+                      <Badge className="bg-purple-100 text-purple-700 border-purple-300">
+                        Bonus
+                      </Badge>
+                    )}
+                  </div>
                   <p className="text-slate-700">{currentQuestion.questionText}</p>
                 </div>
                 {isQuestionAnswered(currentQuestion.id) && (
@@ -171,7 +181,7 @@ export function QuizTakingPage({ quiz, onSubmit, onBack }: QuizTakingPageProps) 
             </div>
 
             <RadioGroup
-              value={answers[currentQuestion.id]?.toString()}
+              value={answers[String(currentQuestion.id)]?.toString()}
               onValueChange={(value) => handleAnswerSelect(parseInt(value))}
             >
               <div className="space-y-3">
@@ -179,7 +189,7 @@ export function QuizTakingPage({ quiz, onSubmit, onBack }: QuizTakingPageProps) 
                   <div
                     key={index}
                     className={`flex items-start gap-3 p-4 border rounded-lg transition-all cursor-pointer ${
-                      answers[currentQuestion.id] === index
+                      answers[String(currentQuestion.id)] === index
                         ? 'border-indigo-600 bg-indigo-50'
                         : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                     }`}

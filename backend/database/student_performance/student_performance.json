@@ -1,0 +1,33 @@
+[
+  {
+    "studentId": "stu_001",
+    "courseId": "cs101",
+    "strengths": [],
+    "weaknesses": [
+      "topic_1_2",
+      "topic_1_3",
+      "topic_1_4",
+      "topic_2_1",
+      "topic_2_4",
+      "topic_3_1",
+      "topic_3_2",
+      "topic_3_3",
+      "topic_3_4"
+    ],
+    "topicPerformance": {
+      "topic_1_1": 50.0,
+      "topic_1_2": 40.0,
+      "topic_1_3": 33.33333333333333,
+      "topic_1_4": 40.0,
+      "topic_2_1": 33.33333333333333,
+      "topic_2_2": 50.0,
+      "topic_2_3": 50.0,
+      "topic_2_4": 28.57142857142857,
+      "topic_3_1": 0.0,
+      "topic_3_2": 0.0,
+      "topic_3_3": 0.0,
+      "topic_3_4": 0.0
+    },
+    "lastUpdated": "2025-11-17T18:12:52.105480Z"
+  }
+]

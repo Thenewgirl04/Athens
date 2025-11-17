@@ -1,6 +1,8 @@
 """
 Pydantic models for request and response validation.
 """
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict
 
@@ -199,6 +201,8 @@ class Student(BaseModel):
     completedAssignments: List[CompletedAssignment] = Field(default_factory=list)
     quizAttempts: List[QuizAttempt] = Field(default_factory=list)
     grades: List[dict] = Field(default_factory=list)
+    strengthsWeaknesses: Dict[str, "StudentStrengthWeakness"] = Field(default_factory=dict, description="Course ID -> StudentStrengthWeakness")
+    weeklyQuizProgress: Dict[str, Dict[int, "QuizProgress"]] = Field(default_factory=dict, description="Course ID -> Week Number -> QuizProgress")
 
 
 class Teacher(BaseModel):
@@ -405,3 +409,124 @@ class PretestResultResponse(BaseModel):
     attempt: PretestAttempt
     analysis: PretestAnalysis
     recommendation: Optional[TopicRecommendation] = Field(None, description="Only present if score < 85%")
+
+
+# Weekly Quiz Models
+
+class WeeklyQuizQuestion(BaseModel):
+    """Enhanced quiz question for weekly quizzes."""
+    id: str
+    question: str
+    type: str = Field(default="multiple_choice", description="Question type: 'multiple_choice', 'true_false', etc.")
+    options: List[str] = Field(..., description="List of answer options (typically 4)")
+    correctAnswer: int = Field(..., description="Index of correct answer")
+    topicId: Optional[str] = Field(None, description="Topic ID from curriculum this question relates to")
+    topicTitle: Optional[str] = Field(None, description="Topic title for analysis")
+    conceptId: Optional[str] = Field(None, description="Specific concept within the topic")
+    difficultyLevel: Optional[str] = Field(default="medium", description="Difficulty: 'easy', 'medium', 'hard'")
+    isBonus: bool = Field(default=False, description="Whether this is a bonus question (main quiz only)")
+
+
+class WeeklyQuiz(BaseModel):
+    """Weekly quiz model for main, refresher, and dynamic quizzes."""
+    id: str
+    courseId: str
+    weekNumber: int
+    quizType: str = Field(..., description="Quiz type: 'main', 'refresher', or 'dynamic'")
+    title: str
+    description: Optional[str] = None
+    questions: List[WeeklyQuizQuestion] = Field(default_factory=list, max_length=10)
+    topicIds: List[str] = Field(default_factory=list, description="Topic IDs covered in this quiz")
+    createdAt: str
+    maxScore: int
+
+
+class QuizTopicPerformance(BaseModel):
+    """Performance breakdown for a specific topic in a quiz."""
+    topicId: str
+    topicTitle: str
+    questionsCount: int
+    correctCount: int
+    incorrectCount: int
+    percentage: float
+    performanceLevel: str = Field(..., description="'strong', 'moderate', or 'weak'")
+
+
+class QuizAnalysis(BaseModel):
+    """Short SAT-style performance analysis for quizzes."""
+    overallScore: float
+    maxScore: float
+    percentage: float
+    performanceLevel: str = Field(..., description="'fail' (0-59%), 'below_moderate' (60-84%), 'moderate_plus' (85-100%)")
+    topicBreakdown: List[QuizTopicPerformance] = Field(default_factory=list)
+    correctCount: int
+    incorrectCount: int
+
+
+class WeeklyQuizAttempt(BaseModel):
+    """Student's weekly quiz attempt."""
+    id: str
+    studentId: str
+    courseId: str
+    weekNumber: int
+    quizId: str
+    quizType: str = Field(..., description="Quiz type: 'main', 'refresher', or 'dynamic'")
+    answers: Dict[str, int] = Field(..., description="Question ID -> selected answer index")
+    score: float
+    maxScore: float
+    percentage: float
+    completedAt: str
+    analysis: Optional[QuizAnalysis] = None
+
+
+class QuizProgress(BaseModel):
+    """Track student's quiz progress for a week."""
+    weekNumber: int
+    mainQuizCompleted: bool = False
+    mainQuizScore: Optional[float] = None
+    mainQuizAttemptId: Optional[str] = None
+    refresherQuizAttempts: List[str] = Field(default_factory=list, description="List of refresher quiz attempt IDs")
+    dynamicQuizCompleted: bool = False
+    dynamicQuizAttemptId: Optional[str] = None
+
+
+class StudentStrengthWeakness(BaseModel):
+    """Track student's strengths and weaknesses per course."""
+    studentId: str
+    courseId: str
+    strengths: List[str] = Field(default_factory=list, description="List of topic IDs where student is strong (>75%)")
+    weaknesses: List[str] = Field(default_factory=list, description="List of topic IDs where student is weak (<50%)")
+    topicPerformance: Dict[str, float] = Field(default_factory=dict, description="Topic ID -> performance percentage")
+    lastUpdated: str
+
+
+# Quiz Request/Response Models
+
+class QuizSubmissionRequest(BaseModel):
+    """Request to submit quiz answers."""
+    studentId: str
+    courseId: str
+    weekNumber: int
+    quizId: str
+    quizType: str = Field(..., description="Quiz type: 'main', 'refresher', or 'dynamic'")
+    answers: Dict[str, int] = Field(..., description="Question ID -> selected answer index")
+
+
+class QuizSubmissionResponse(BaseModel):
+    """Response from quiz submission."""
+    success: bool
+    message: str
+    attempt: WeeklyQuizAttempt
+    analysis: QuizAnalysis
+
+
+class QuizAvailabilityResponse(BaseModel):
+    """Response showing quiz availability for a student."""
+    weekNumber: int
+    mainQuizAvailable: bool
+    mainQuizCompleted: bool
+    mainQuizScore: Optional[float] = None
+    refresherQuizAvailable: bool
+    dynamicQuizAvailable: bool
+    dynamicQuizRequired: bool = False
+    dynamicQuizCompleted: bool = False

@@ -4,7 +4,7 @@ Google Gemini API client wrapper.
 import google.generativeai as genai
 from google.api_core.exceptions import NotFound
 from config import settings
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 
 class GeminiClient:
@@ -408,5 +408,261 @@ JSON Format:
 Resource types: "article" (articles, tutorials, documentation), "video" (YouTube, educational videos), "course" (online courses like Coursera, Khan Academy), or "pdf" (PDF documents)
 
 Generate the recommendation now:"""
+        
+        return prompt
+    
+    def generate_main_quiz(
+        self,
+        week_number: int,
+        current_week_topics: List[Dict[str, Any]],
+        previous_week_topics: Optional[List[Dict[str, Any]]] = None
+    ) -> str:
+        """
+        Generate main quiz questions for a week.
+        
+        Args:
+            week_number: Week number
+            current_week_topics: List of topics for the current week
+            previous_week_topics: Optional list of topics from previous week (for bonus questions)
+            
+        Returns:
+            Raw JSON string from Gemini with quiz questions
+        """
+        prompt = self._build_main_quiz_prompt(week_number, current_week_topics, previous_week_topics)
+        try:
+            response = self.model.generate_content(prompt)
+        except NotFound as exc:
+            raise RuntimeError(
+                f"Gemini model '{settings.gemini_model}' cannot generate content: {exc}"
+            ) from exc
+        return response.text
+    
+    def _build_main_quiz_prompt(
+        self,
+        week_number: int,
+        current_week_topics: List[Dict[str, Any]],
+        previous_week_topics: Optional[List[Dict[str, Any]]] = None
+    ) -> str:
+        """Build prompt for main quiz generation."""
+        current_topics_text = "\n".join([
+            f"- {t.get('id', '')}: {t.get('title', '')} - {t.get('description', '')}"
+            for t in current_week_topics
+        ])
+        
+        bonus_instruction = ""
+        if previous_week_topics:
+            previous_topics_text = "\n".join([
+                f"- {t.get('id', '')}: {t.get('title', '')} - {t.get('description', '')}"
+                for t in previous_week_topics
+            ])
+            bonus_instruction = f"""
+- Include 1-2 bonus questions from the previous week's topics (these should be marked with isBonus: true)
+Previous Week Topics:
+{previous_topics_text}"""
+        
+        prompt = f"""You are an expert quiz creator. Generate a main quiz for Week {week_number} of a course.
+
+Current Week Topics:
+{current_topics_text}
+{bonus_instruction}
+
+Requirements:
+- Generate exactly 8 questions on the current week's topics
+- Maximum 10 questions total (8 current week + 1-2 bonus from previous week)
+- Each question must have exactly 4 multiple choice options
+- Questions should test understanding of what students have learned this week
+- Mix of difficulty levels (easy, medium, hard)
+- For each question, specify the topicId it relates to
+- Bonus questions should be marked with isBonus: true
+- Return the response as valid JSON only (no markdown, no extra text)
+
+JSON Format:
+{{
+  "questions": [
+    {{
+      "id": "q1",
+      "question": "What is the primary purpose of React hooks?",
+      "options": [
+        "To manage component state and side effects",
+        "To style React components",
+        "To handle routing in React applications",
+        "To optimize React component rendering"
+      ],
+      "correctAnswer": 0,
+      "topicId": "topic_1_1",
+      "topicTitle": "Introduction to React",
+      "conceptId": "hooks_basics",
+      "difficultyLevel": "medium",
+      "isBonus": false
+    }}
+  ]
+}}
+
+Generate the main quiz questions now:"""
+        
+        return prompt
+    
+    def generate_refresher_quiz(
+        self,
+        week_number: int,
+        topics: List[Dict[str, Any]]
+    ) -> str:
+        """
+        Generate refresher quiz questions for a week.
+        Questions change each time but cover the same concepts.
+        
+        Args:
+            week_number: Week number
+            topics: List of topics for the week
+            
+        Returns:
+            Raw JSON string from Gemini with quiz questions
+        """
+        prompt = self._build_refresher_quiz_prompt(week_number, topics)
+        try:
+            response = self.model.generate_content(prompt)
+        except NotFound as exc:
+            raise RuntimeError(
+                f"Gemini model '{settings.gemini_model}' cannot generate content: {exc}"
+            ) from exc
+        return response.text
+    
+    def _build_refresher_quiz_prompt(
+        self,
+        week_number: int,
+        topics: List[Dict[str, Any]]
+    ) -> str:
+        """Build prompt for refresher quiz generation."""
+        topics_text = "\n".join([
+            f"- {t.get('id', '')}: {t.get('title', '')} - {t.get('description', '')}"
+            for t in topics
+        ])
+        
+        prompt = f"""You are an expert quiz creator. Generate a refresher quiz for Week {week_number} of a course.
+
+Week Topics:
+{topics_text}
+
+Requirements:
+- Generate exactly 10 questions solely on this week's topics
+- Each question must have exactly 4 multiple choice options
+- Questions should test understanding of the week's concepts but from different angles than previous quizzes
+- Vary the question types and approaches while covering the same concepts
+- Mix of difficulty levels (easy, medium, hard)
+- For each question, specify the topicId it relates to
+- No bonus questions (isBonus should always be false)
+- Return the response as valid JSON only (no markdown, no extra text)
+
+JSON Format:
+{{
+  "questions": [
+    {{
+      "id": "q1",
+      "question": "Which React hook is used to manage component state?",
+      "options": [
+        "useState",
+        "useEffect",
+        "useContext",
+        "useReducer"
+      ],
+      "correctAnswer": 0,
+      "topicId": "topic_1_1",
+      "topicTitle": "React Hooks",
+      "conceptId": "state_management",
+      "difficultyLevel": "easy",
+      "isBonus": false
+    }}
+  ]
+}}
+
+Generate fresh refresher quiz questions now (different from any previous quizzes but covering the same concepts):"""
+        
+        return prompt
+    
+    def generate_dynamic_quiz(
+        self,
+        week_number: int,
+        topics: List[Dict[str, Any]],
+        student_weaknesses: List[str]
+    ) -> str:
+        """
+        Generate dynamic quiz targeting student's weak areas.
+        
+        Args:
+            week_number: Week number
+            topics: List of topics for the week
+            student_weaknesses: List of topic IDs where student is weak
+            
+        Returns:
+            Raw JSON string from Gemini with quiz questions
+        """
+        prompt = self._build_dynamic_quiz_prompt(week_number, topics, student_weaknesses)
+        try:
+            response = self.model.generate_content(prompt)
+        except NotFound as exc:
+            raise RuntimeError(
+                f"Gemini model '{settings.gemini_model}' cannot generate content: {exc}"
+            ) from exc
+        return response.text
+    
+    def _build_dynamic_quiz_prompt(
+        self,
+        week_number: int,
+        topics: List[Dict[str, Any]],
+        student_weaknesses: List[str]
+    ) -> str:
+        """Build prompt for dynamic quiz generation."""
+        topics_text = "\n".join([
+            f"- {t.get('id', '')}: {t.get('title', '')} - {t.get('description', '')}"
+            for t in topics
+        ])
+        
+        weaknesses_text = ", ".join(student_weaknesses) if student_weaknesses else "None identified yet"
+        
+        # Adjust prompt based on whether weaknesses exist
+        if student_weaknesses:
+            focus_instruction = f"- Focus on topics where the student struggled (topic IDs: {weaknesses_text})\n- Questions should address common misconceptions and reinforce understanding"
+        else:
+            focus_instruction = "- Focus on all topics from this week to provide comprehensive practice\n- Questions should cover foundational concepts and common areas where students typically struggle"
+        
+        prompt = f"""You are an expert quiz creator. Generate a dynamic quiz for Week {week_number} to help a student improve.
+
+Week Topics:
+{topics_text}
+
+Student's Weak Areas (Topic IDs): {weaknesses_text}
+
+Requirements:
+- Generate exactly 10 questions from this week's topics
+{focus_instruction}
+- Adaptive difficulty - start with foundational concepts, then build up
+- Each question must have exactly 4 multiple choice options
+- For each question, specify the topicId it relates to
+- Questions should help identify and correct misunderstandings
+- Return the response as valid JSON only (no markdown, no extra text)
+
+JSON Format:
+{{
+  "questions": [
+    {{
+      "id": "q1",
+      "question": "Which of the following correctly demonstrates useState hook usage?",
+      "options": [
+        "const [count] = useState(0);",
+        "const [count, setCount] = useState(0);",
+        "const count = useState(0);",
+        "const {{count}} = useState(0);"
+      ],
+      "correctAnswer": 1,
+      "topicId": "topic_1_1",
+      "topicTitle": "React Hooks",
+      "conceptId": "useState_syntax",
+      "difficultyLevel": "medium",
+      "isBonus": false
+    }}
+  ]
+}}
+
+Generate the dynamic quiz questions targeting the student's weak areas:"""
         
         return prompt
