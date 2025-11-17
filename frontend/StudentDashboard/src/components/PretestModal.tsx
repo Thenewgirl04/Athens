@@ -99,46 +99,49 @@ export function PretestModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col p-0">
-        <DialogHeader className="px-6 pt-6 pb-4 border-b">
-          <div className="flex items-center justify-between">
-            <DialogTitle>Course Pretest</DialogTitle>
-            <div className="flex items-center gap-2 text-sm text-slate-600">
-              <Clock className="w-4 h-4" />
-              <span className="font-mono">{formatTime(timeRemaining)}</span>
+      <DialogContent className="max-w-3xl max-h-[95vh] overflow-hidden flex flex-col p-0">
+        {/* Header - Sticky at top */}
+        <div className="sticky top-0 z-10 bg-white border-b">
+          <DialogHeader className="px-6 pt-6 pb-3">
+            <div className="flex items-center justify-between">
+              <DialogTitle>Course Pretest</DialogTitle>
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <Clock className="w-4 h-4" />
+                <span className="font-mono">{formatTime(timeRemaining)}</span>
+              </div>
             </div>
-          </div>
-        </DialogHeader>
+          </DialogHeader>
 
-        {/* Progress Bar - Fixed at top */}
-        <div className="px-6 pt-4 pb-2 space-y-2 border-b bg-white">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-600">
-              Question {currentQuestionIndex + 1} of {pretest.questions.length}
-            </span>
-            <div className="flex items-center gap-4">
+          {/* Progress Bar - Fixed at top */}
+          <div className="px-6 pb-3 space-y-2">
+            <div className="flex items-center justify-between text-sm">
               <span className="text-slate-600">
-                Answered: {answeredCount}/{pretest.questions.length}
+                Question {currentQuestionIndex + 1} of {pretest.questions.length}
               </span>
-              <span className="text-slate-600">{Math.round(progress)}%</span>
+              <div className="flex items-center gap-4">
+                <span className="text-slate-600">
+                  Answered: {answeredCount}/{pretest.questions.length}
+                </span>
+                <span className="text-slate-600">{Math.round(progress)}%</span>
+              </div>
             </div>
+            <Progress value={progress} className="h-2" />
+            {!allAnswered && (
+              <div className="pt-1">
+                <Alert className="py-2">
+                  <AlertCircle className="h-4 w-4 text-amber-500" />
+                  <AlertDescription className="text-xs text-amber-700">
+                    {unansweredCount} question{unansweredCount !== 1 ? 's' : ''} unanswered. 
+                    Unanswered questions will be marked as incorrect.
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
           </div>
-          <Progress value={progress} className="h-2" />
-          {!allAnswered && (
-            <div className="pt-1">
-              <Alert className="py-2">
-                <AlertCircle className="h-4 w-4 text-amber-500" />
-                <AlertDescription className="text-xs text-amber-700">
-                  {unansweredCount} question{unansweredCount !== 1 ? 's' : ''} unanswered. 
-                  Unanswered questions will be marked as incorrect.
-                </AlertDescription>
-              </Alert>
-            </div>
-          )}
         </div>
 
         {/* Question - Scrollable */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="flex-1 overflow-y-auto px-6 py-4 min-h-0">
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-6">
             <h3 className="text-lg font-semibold mb-4">
               {currentQuestion.question}
@@ -167,9 +170,9 @@ export function PretestModal({
           </div>
         </div>
 
-        {/* Question Number Navigation - Fixed in middle */}
-        <div className="px-6 py-3 border-y bg-slate-50">
-          <div className="flex gap-2 overflow-x-auto pb-2 justify-center flex-wrap">
+        {/* Question Number Navigation - Compact */}
+        <div className="px-6 py-2 border-y bg-slate-50 overflow-x-auto">
+          <div className="flex gap-1.5 justify-center flex-wrap min-w-max">
             {pretest.questions.map((_, index) => {
               const isCurrent = index === currentQuestionIndex;
               const isAnswered = answers[pretest.questions[index].id] !== undefined;
@@ -194,7 +197,7 @@ export function PretestModal({
                 <button
                   key={index}
                   onClick={() => setCurrentQuestionIndex(index)}
-                  className={`w-8 h-8 rounded text-xs flex-shrink-0 font-semibold transition-all ${
+                  className={`w-7 h-7 rounded text-xs flex-shrink-0 font-semibold transition-all ${
                     isCurrent
                       ? 'ring-2 ring-indigo-600 ring-offset-1 shadow-md'
                       : isAnswered
@@ -202,8 +205,8 @@ export function PretestModal({
                       : 'border-2 hover:bg-slate-100'
                   }`}
                   style={{
-                    minWidth: '32px',
-                    minHeight: '32px',
+                    minWidth: '28px',
+                    minHeight: '28px',
                     backgroundColor: bgColor,
                     color: textColor,
                     borderColor: borderColor,
@@ -217,7 +220,7 @@ export function PretestModal({
         </div>
 
         {/* Navigation Buttons - Fixed at bottom */}
-        <div className="px-6 py-4 border-t bg-white flex items-center justify-between">
+        <div className="sticky bottom-0 bg-white border-t px-6 py-3 flex items-center justify-between">
           <Button
             variant="outline"
             onClick={handlePrevious}
@@ -227,32 +230,41 @@ export function PretestModal({
             Previous
           </Button>
           
-          {currentQuestionIndex < pretest.questions.length - 1 ? (
-            <Button 
-              onClick={handleNext} 
-              className="bg-indigo-600 hover:bg-indigo-700 text-white"
-              style={{ backgroundColor: '#4f46e5', color: '#ffffff' }}
-            >
-              Next
-              <ChevronRight className="w-4 h-4 ml-2" />
-            </Button>
-          ) : (
+          <div className="flex items-center gap-2">
             <Button
-              onClick={handleSubmit}
-              disabled={loading || answeredCount === 0}
-              className={`font-semibold ${
-                loading || answeredCount === 0
-                  ? 'bg-slate-400 text-white cursor-not-allowed'
-                  : 'bg-green-600 hover:bg-green-700 text-white'
-              }`}
-              style={{ 
-                backgroundColor: (loading || answeredCount === 0) ? '#94a3b8' : '#16a34a', 
-                color: '#ffffff',
-              }}
+              variant="outline"
+              onClick={onClose}
+              className="text-slate-600"
             >
-              {loading ? 'Submitting...' : 'Submit Pretest'}
+              Close
             </Button>
-          )}
+            {currentQuestionIndex < pretest.questions.length - 1 ? (
+              <Button 
+                onClick={handleNext} 
+                className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                style={{ backgroundColor: '#4f46e5', color: '#ffffff' }}
+              >
+                Next
+                <ChevronRight className="w-4 h-4 ml-2" />
+              </Button>
+            ) : (
+              <Button
+                onClick={handleSubmit}
+                disabled={loading || answeredCount === 0}
+                className={`font-semibold ${
+                  loading || answeredCount === 0
+                    ? 'bg-slate-400 text-white cursor-not-allowed'
+                    : 'bg-green-600 hover:bg-green-700 text-white'
+                }`}
+                style={{ 
+                  backgroundColor: (loading || answeredCount === 0) ? '#94a3b8' : '#16a34a', 
+                  color: '#ffffff',
+                }}
+              >
+                {loading ? 'Submitting...' : 'Submit Pretest'}
+              </Button>
+            )}
+          </div>
         </div>
       </DialogContent>
 

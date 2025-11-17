@@ -70,62 +70,65 @@ export function PretestAnalysis({ result, onContinue }: PretestAnalysisProps) {
   };
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-8 py-8">
       {/* Overall Score Card */}
-      <Card>
-        <CardHeader>
+      <Card className="border-0 shadow-lg">
+        <CardHeader className="pb-6">
           <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-2xl">Pretest Results</CardTitle>
-              <CardDescription className="mt-2">
-                Your performance analysis and recommendations
-              </CardDescription>
-            </div>
-            <Badge className={`text-lg px-4 py-2 ${getPerformanceColor(performanceLevel)}`}>
+            <CardDescription className="text-base text-slate-600">
+              Your performance analysis and recommendations
+            </CardDescription>
+            <Badge className={`text-lg px-5 py-2.5 ${getPerformanceColor(performanceLevel)}`}>
               {getPerformanceLabel(performanceLevel)}
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-8">
           {/* Score Display */}
-          <div className="text-center space-y-2">
-            <div className="text-5xl font-bold text-indigo-600">
+          <div className="text-center space-y-4">
+            <div className="text-6xl font-bold text-indigo-600">
               {Math.round(percentage)}%
             </div>
-            <div className="text-slate-600">
+            <div className="text-lg text-slate-600">
               {analysis.overallScore} out of {analysis.maxScore} questions correct
             </div>
-            <Progress value={percentage} className="h-3 mt-4" />
+            <Progress value={percentage} className="h-4 mt-2" />
           </div>
 
           {/* Strengths and Weaknesses */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {strengths.length > 0 && (
-              <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle2 className="w-5 h-5 text-green-600" />
-                  <h4 className="font-semibold text-green-900 dark:text-green-100">
+              <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-6 border border-green-100">
+                <div className="flex items-center gap-3 mb-4">
+                  <CheckCircle2 className="w-6 h-6 text-green-600" />
+                  <h4 className="text-lg font-semibold text-green-900 dark:text-green-100">
                     Strengths
                   </h4>
                 </div>
-                <ul className="space-y-1 text-sm text-green-800 dark:text-green-200">
+                <ul className="space-y-2.5 text-base text-green-800 dark:text-green-200">
                   {strengths.map((strength, index) => (
-                    <li key={index}>• {strength}</li>
+                    <li key={index} className="flex items-start gap-2">
+                      <span className="text-green-600 mt-1">•</span>
+                      <span>{strength}</span>
+                    </li>
                   ))}
                 </ul>
               </div>
             )}
             {weaknesses.length > 0 && (
-              <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <AlertCircle className="w-5 h-5 text-red-600" />
-                  <h4 className="font-semibold text-red-900 dark:text-red-100">
+              <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-6 border border-red-100">
+                <div className="flex items-center gap-3 mb-4">
+                  <AlertCircle className="w-6 h-6 text-red-600" />
+                  <h4 className="text-lg font-semibold text-red-900 dark:text-red-100">
                     Areas for Improvement
                   </h4>
                 </div>
-                <ul className="space-y-1 text-sm text-red-800 dark:text-red-200">
+                <ul className="space-y-2.5 text-base text-red-800 dark:text-red-200">
                   {weaknesses.map((weakness, index) => (
-                    <li key={index}>• {weakness}</li>
+                    <li key={index} className="flex items-start gap-2">
+                      <span className="text-red-600 mt-1">•</span>
+                      <span>{weakness}</span>
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -135,43 +138,41 @@ export function PretestAnalysis({ result, onContinue }: PretestAnalysisProps) {
       </Card>
 
       {/* Topic Breakdown */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5" />
+      <Card className="border-0 shadow-lg">
+        <CardHeader className="pb-6">
+          <CardTitle className="flex items-center gap-3 text-xl">
+            <TrendingUp className="w-6 h-6" />
             Topic-by-Topic Performance
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-base mt-2">
             Detailed breakdown of your performance across different topics
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="space-y-5">
             {topicBreakdown.map((topic: TopicPerformance) => (
-              <div key={topic.topicId} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-sm">{topic.topicTitle}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-slate-600">
+              <div key={topic.topicId} className="space-y-3 p-4 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
+                <div className="flex items-center justify-between gap-4">
+                  <span className="font-medium text-base flex-1">{topic.topicTitle}</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-semibold text-slate-700 min-w-[3rem] text-right">
                       {topic.correctCount}/{topic.questionsCount}
                     </span>
                     <Badge
                       variant="outline"
-                      className={`text-xs ${getPerformanceColor(topic.performanceLevel)}`}
+                      className={`text-xs px-3 py-1 ${getPerformanceColor(topic.performanceLevel)}`}
                     >
                       {topic.performanceLevel}
                     </Badge>
+                    <span className="text-sm font-semibold text-slate-600 w-12 text-right">
+                      {Math.round(topic.percentage)}%
+                    </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Progress
-                    value={topic.percentage}
-                    className="flex-1 h-2"
-                  />
-                  <span className="text-xs text-slate-600 w-12 text-right">
-                    {Math.round(topic.percentage)}%
-                  </span>
-                </div>
+                <Progress
+                  value={topic.percentage}
+                  className="h-2.5"
+                />
               </div>
             ))}
           </div>
@@ -180,26 +181,26 @@ export function PretestAnalysis({ result, onContinue }: PretestAnalysisProps) {
 
       {/* Recommendation */}
       {recommendation && (
-        <Card className="border-indigo-200 dark:border-indigo-800 bg-indigo-50/50 dark:bg-indigo-900/10">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-indigo-600" />
+        <Card className="border-indigo-200 dark:border-indigo-800 bg-indigo-50/50 dark:bg-indigo-900/10 border-2 shadow-lg">
+          <CardHeader className="pb-6">
+            <CardTitle className="flex items-center gap-3 text-xl">
+              <BookOpen className="w-6 h-6 text-indigo-600" />
               Recommended Resource
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-base mt-2">
               We've identified an area where you could benefit from additional study
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <div>
-              <h4 className="font-semibold mb-2">{recommendation.topicTitle}</h4>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
+              <h4 className="font-semibold text-lg mb-3">{recommendation.topicTitle}</h4>
+              <p className="text-base text-slate-700 dark:text-slate-300 leading-relaxed">
                 {recommendation.recommendation}
               </p>
             </div>
             <Button
               asChild
-              className="w-full"
+              className="w-full h-12 text-base"
               variant="outline"
             >
               <a
@@ -208,9 +209,9 @@ export function PretestAnalysis({ result, onContinue }: PretestAnalysisProps) {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2"
               >
-                <span>{getResourceIcon(recommendation.resourceType)}</span>
+                <span className="text-xl">{getResourceIcon(recommendation.resourceType)}</span>
                 <span>Open Resource</span>
-                <ExternalLink className="w-4 h-4" />
+                <ExternalLink className="w-5 h-5" />
               </a>
             </Button>
           </CardContent>
@@ -218,8 +219,8 @@ export function PretestAnalysis({ result, onContinue }: PretestAnalysisProps) {
       )}
 
       {/* Continue Button */}
-      <div className="flex justify-end">
-        <Button onClick={onContinue} size="lg" className="bg-indigo-600 hover:bg-indigo-700">
+      <div className="flex justify-end pt-4">
+        <Button onClick={onContinue} size="lg" className="bg-indigo-600 hover:bg-indigo-700 text-base px-8 py-6">
           Continue to Course
         </Button>
       </div>
