@@ -71,71 +71,81 @@ export function PretestAnalysis({ result, onContinue }: PretestAnalysisProps) {
 
   return (
     <div className="space-y-8 py-8">
-      {/* Overall Score Card */}
-      <Card className="border-0 shadow-lg">
-        <CardHeader className="pb-6">
-          <div className="flex items-center justify-between">
-            <CardDescription className="text-base text-slate-600">
-              Your performance analysis and recommendations
-            </CardDescription>
-            <Badge className={`text-lg px-5 py-2.5 ${getPerformanceColor(performanceLevel)}`}>
-              {getPerformanceLabel(performanceLevel)}
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-8">
-          {/* Score Display */}
-          <div className="text-center space-y-4">
-            <div className="text-6xl font-bold text-indigo-600">
-              {Math.round(percentage)}%
+      {/* Top Row: Score, Strengths, Weaknesses - 3 columns on large screens */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Score Card */}
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="pb-6">
+            <div className="flex items-center justify-between mb-4">
+              <CardDescription className="text-base text-slate-600 font-medium">
+                Overall Score
+              </CardDescription>
+              <Badge className={`text-lg px-4 py-2 ${getPerformanceColor(performanceLevel)}`}>
+                {getPerformanceLabel(performanceLevel)}
+              </Badge>
             </div>
-            <div className="text-lg text-slate-600">
-              {analysis.overallScore} out of {analysis.maxScore} questions correct
+          </CardHeader>
+          <CardContent>
+            <div className="text-center space-y-4">
+              <div className="text-6xl font-bold text-indigo-600">
+                {Math.round(percentage)}%
+              </div>
+              <div className="text-base text-slate-600">
+                {analysis.overallScore} / {analysis.maxScore} questions
+              </div>
+              <Progress value={percentage} className="h-4 mt-2" />
             </div>
-            <Progress value={percentage} className="h-4 mt-2" />
-          </div>
+          </CardContent>
+        </Card>
 
-          {/* Strengths and Weaknesses */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {strengths.length > 0 && (
-              <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-6 border border-green-100">
-                <div className="flex items-center gap-3 mb-4">
-                  <CheckCircle2 className="w-6 h-6 text-green-600" />
-                  <h4 className="text-lg font-semibold text-green-900 dark:text-green-100">
-                    Strengths
-                  </h4>
-                </div>
-                <ul className="space-y-2.5 text-base text-green-800 dark:text-green-200">
-                  {strengths.map((strength, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <span className="text-green-600 mt-1">•</span>
-                      <span>{strength}</span>
-                    </li>
-                  ))}
-                </ul>
+        {/* Strengths Card */}
+        {strengths.length > 0 && (
+          <Card className="border-0 shadow-lg bg-green-50 dark:bg-green-900/20">
+            <CardHeader className="pb-6">
+              <div className="flex items-center gap-3 mb-4">
+                <CheckCircle2 className="w-6 h-6 text-green-600" />
+                <CardTitle className="text-xl font-semibold text-green-900 dark:text-green-100">
+                  Strengths
+                </CardTitle>
               </div>
-            )}
-            {weaknesses.length > 0 && (
-              <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-6 border border-red-100">
-                <div className="flex items-center gap-3 mb-4">
-                  <AlertCircle className="w-6 h-6 text-red-600" />
-                  <h4 className="text-lg font-semibold text-red-900 dark:text-red-100">
-                    Areas for Improvement
-                  </h4>
-                </div>
-                <ul className="space-y-2.5 text-base text-red-800 dark:text-red-200">
-                  {weaknesses.map((weakness, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <span className="text-red-600 mt-1">•</span>
-                      <span>{weakness}</span>
-                    </li>
-                  ))}
-                </ul>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3 text-base text-green-800 dark:text-green-200">
+                {strengths.map((strength, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <span className="text-green-600 mt-1 text-lg">•</span>
+                    <span className="flex-1 leading-relaxed">{strength}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Weaknesses Card */}
+        {weaknesses.length > 0 && (
+          <Card className="border-0 shadow-lg bg-red-50 dark:bg-red-900/20">
+            <CardHeader className="pb-6">
+              <div className="flex items-center gap-3 mb-4">
+                <AlertCircle className="w-6 h-6 text-red-600" />
+                <CardTitle className="text-xl font-semibold text-red-900 dark:text-red-100">
+                  Areas for Improvement
+                </CardTitle>
               </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3 text-base text-red-800 dark:text-red-200">
+                {weaknesses.map((weakness, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <span className="text-red-600 mt-1 text-lg">•</span>
+                    <span className="flex-1 leading-relaxed">{weakness}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        )}
+      </div>
 
       {/* Topic Breakdown */}
       <Card className="border-0 shadow-lg">

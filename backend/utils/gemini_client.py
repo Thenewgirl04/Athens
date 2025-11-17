@@ -307,7 +307,7 @@ Generate the detailed lesson notes now:"""
             f"- {t['id']}: {t['title']} - {t['description']}"
             for t in first_week_topics
         ]) if first_week_topics else "None"
-        
+
         prompt = f"""You are an expert test creator. Generate a SHORT pretest to assess students' readiness for this course.
 
 Full Curriculum Topics (for reference):

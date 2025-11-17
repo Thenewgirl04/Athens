@@ -1035,7 +1035,7 @@ export function StudentCourseView() {
       {/* Pretest Analysis */}
       {showAnalysis && pretestResult && (
         <Dialog open={showAnalysis} onOpenChange={handleContinueFromAnalysis}>
-          <DialogContent className="max-w-6xl max-h-[95vh] p-0 !grid-cols-1 flex flex-col overflow-hidden">
+          <DialogContent className="w-[90vw] max-w-[1440px] max-h-[95vh] p-0 !grid-cols-1 flex flex-col overflow-hidden">
             <DialogHeader className="px-8 pt-8 pb-6 border-b flex-shrink-0">
               <DialogTitle className="text-2xl">Pretest Results</DialogTitle>
             </DialogHeader>
