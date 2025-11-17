@@ -7,6 +7,12 @@ import {
   BookOpen,
   Clock,
   CheckCircle,
+  Download,
+  Link as LinkIcon,
+  Video,
+  FileText,
+  Sparkles,
+  ExternalLink,
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
@@ -24,6 +30,7 @@ interface NoteDetailPageProps {
   onPrevious: () => void;
   canGoNext: boolean;
   canGoPrevious: boolean;
+  courseId?: string;
 }
 
 export function NoteDetailPage({
@@ -36,8 +43,219 @@ export function NoteDetailPage({
   onPrevious,
   canGoNext,
   canGoPrevious,
+  courseId = "1",
 }: NoteDetailPageProps) {
   const progress = (currentNoteNumber / totalNotes) * 100;
+
+  // Markdown parser function to convert markdown to HTML
+  const parseMarkdown = (text: string): string => {
+    if (!text) return "";
+    
+    // Escape HTML to prevent XSS
+    const escapeHtml = (str: string) => {
+      const map: { [key: string]: string } = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+      };
+      return str.replace(/[&<>"']/g, (m) => map[m]);
+    };
+    
+    // Split into lines for processing
+    const lines = text.split('\n');
+    const processedLines: string[] = [];
+    let inList = false;
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      
+      // Check if this is a bullet list item
+      if (line.match(/^\* (.+)$/)) {
+        const listContent = line.replace(/^\* (.+)$/, '$1');
+        if (!inList) {
+          processedLines.push('<ul>');
+          inList = true;
+        }
+        // Process bold and italic within list items
+        let processedContent = escapeHtml(listContent);
+        processedContent = processedContent.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+        processedLines.push(`<li>${processedContent}</li>`);
+      } else {
+        // Close list if we were in one
+        if (inList) {
+          processedLines.push('</ul>');
+          inList = false;
+        }
+        
+        // Process regular lines
+        if (line) {
+          let processedLine = escapeHtml(line);
+          // Convert **bold** to <strong>bold</strong> first
+          processedLine = processedLine.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+          // Convert *italic* to <em>italic</em> (simple match, avoiding **)
+          processedLine = processedLine.replace(/([^*]|^)\*([^*\n]+?)\*([^*]|$)/g, "$1<em>$2</em>$3");
+          processedLines.push(`<p>${processedLine}</p>`);
+        } else {
+          // Empty line - add paragraph break
+          processedLines.push('');
+        }
+      }
+    }
+    
+    // Close list if still open
+    if (inList) {
+      processedLines.push('</ul>');
+    }
+    
+    // Join and clean up
+    let html = processedLines.join('\n');
+    
+    // Remove empty paragraphs
+    html = html.replace(/<p><\/p>/g, '');
+    html = html.replace(/\n\n+/g, '\n');
+    
+    return html.trim();
+  };
+
+  const getLessonTypeIcon = () => {
+    switch (note.type) {
+      case "ai_generated":
+        return <Sparkles className="w-5 h-5 text-purple-600" />;
+      case "file_video":
+        return <Video className="w-5 h-5 text-purple-600" />;
+      case "file_pdf":
+        return <FileText className="w-5 h-5 text-red-600" />;
+      case "link":
+        return <LinkIcon className="w-5 h-5 text-blue-600" />;
+      case "file_document":
+      case "manual_rich_text":
+      default:
+        return <FileText className="w-5 h-5 text-slate-600" />;
+    }
+  };
+
+  const getLessonTypeLabel = () => {
+    switch (note.type) {
+      case "ai_generated":
+        return "AI Generated";
+      case "file_video":
+        return "Video";
+      case "file_pdf":
+        return "PDF Document";
+      case "link":
+        return "External Link";
+      case "file_document":
+        return "Document";
+      case "manual_rich_text":
+        return "Rich Text";
+      default:
+        return "Lesson";
+    }
+  };
+
+  // Render file-based lesson
+  const renderFileLesson = () => {
+    const API_BASE_URL = 'http://localhost:8000';
+    const fileUrl = note.file_url
+      ? `${API_BASE_URL}/api/lessons/file/${courseId}/${note.id}/${note.file_url.split("/").pop()}`
+      : null;
+
+    return (
+      <div className="space-y-4">
+        <div className="text-center py-8">
+          {getLessonTypeIcon()}
+          <h3 className="text-lg font-semibold mt-4 mb-2">{note.title}</h3>
+          <p className="text-slate-600 mb-6">
+            {getLessonTypeLabel()} - Click below to download or view
+          </p>
+          {fileUrl && (
+            <Button
+              size="lg"
+              className="gap-2"
+              asChild
+            >
+              <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                <Download className="w-5 h-5" />
+                {note.type === "file_video" ? "Watch Video" : "Download File"}
+              </a>
+            </Button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // Render link-based lesson
+  const renderLinkLesson = () => {
+    return (
+      <div className="space-y-4">
+        <div className="text-center py-8">
+          <LinkIcon className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mt-4 mb-2">{note.title}</h3>
+          <p className="text-slate-600 mb-6">
+            This lesson is an external resource. Click the link below to access it.
+          </p>
+          {note.external_url && (
+            <Button
+              size="lg"
+              className="gap-2"
+              asChild
+            >
+              <a href={note.external_url} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="w-5 h-5" />
+                Open External Link
+              </a>
+            </Button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // Render structured content (AI-generated or manual rich text)
+  const renderStructuredContent = () => {
+    const sections = note.notes?.sections || [];
+
+    if (sections.length === 0) {
+      return (
+        <div className="prose prose-slate max-w-none">
+          <p className="text-slate-700 leading-relaxed">
+            No content available for this lesson.
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="prose prose-slate max-w-none">
+        {sections.map((section, index) => (
+          <div key={index} className="mb-8">
+            <h3 className="text-slate-900 mt-6 mb-3 text-xl font-semibold">
+              {section.title}
+            </h3>
+            <div
+              className="text-slate-700 leading-relaxed prose prose-slate max-w-none"
+              dangerouslySetInnerHTML={{ __html: parseMarkdown(section.content) }}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // Determine which renderer to use
+  const renderContent = () => {
+    if (note.type === "link" && note.external_url) {
+      return renderLinkLesson();
+    }
+    if ((note.type === "file_pdf" || note.type === "file_video" || note.type === "file_document") && note.file_url) {
+      return renderFileLesson();
+    }
+    // AI-generated or manual rich text
+    return renderStructuredContent();
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 -m-6">
@@ -105,60 +323,20 @@ export function NoteDetailPage({
                   </div>
                 </div>
               </div>
-
-              {/* Subtitle/Description */}
-              <p className="text-slate-600">
-                Learn essential concepts and practical applications in this lesson.
-              </p>
             </div>
+
+            {/* Lesson Type Badge */}
+            {note.type && (
+              <div className="mb-4">
+                <Badge variant="outline" className="gap-1.5">
+                  {getLessonTypeIcon()}
+                  {getLessonTypeLabel()}
+                </Badge>
+              </div>
+            )}
 
             {/* Main Content Area */}
-            <div className="prose prose-slate max-w-none">
-              <p className="text-slate-700 leading-relaxed mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-              </p>
-
-              <p className="text-slate-700 leading-relaxed mb-4">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-
-              <h3 className="text-slate-900 mt-6 mb-3">Key Concepts</h3>
-              
-              <p className="text-slate-700 leading-relaxed mb-4">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-              </p>
-
-              <ul className="space-y-2 mb-4">
-                <li className="text-slate-700">
-                  Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit
-                </li>
-                <li className="text-slate-700">
-                  Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet
-                </li>
-                <li className="text-slate-700">
-                  Consectetur, adipisci velit, sed quia non numquam eius modi tempora
-                </li>
-                <li className="text-slate-700">
-                  Ut aliquid ex ea commodi consequatur quis autem vel eum iure
-                </li>
-              </ul>
-
-              <h3 className="text-slate-900 mt-6 mb-3">Practical Applications</h3>
-              
-              <p className="text-slate-700 leading-relaxed mb-4">
-                At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.
-              </p>
-
-              <p className="text-slate-700 leading-relaxed mb-4">
-                Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.
-              </p>
-
-              <h3 className="text-slate-900 mt-6 mb-3">Summary</h3>
-              
-              <p className="text-slate-700 leading-relaxed mb-4">
-                Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.
-              </p>
-            </div>
+            {renderContent()}
           </CardContent>
         </Card>
 

@@ -2,8 +2,9 @@
 FastAPI application for Teacher Dashboard Backend.
 """
 from typing import List
-from fastapi import FastAPI, HTTPException, Request, Query
+from fastapi import FastAPI, HTTPException, Request, Query, File, Form
 from fastapi.datastructures import UploadFile
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from models import (
     CurriculumGenerationRequest,
@@ -12,6 +13,10 @@ from models import (
     LessonGenerationRequest,
     LessonGenerationResponse,
     Lesson,
+    LessonCreateRequest,
+    LessonCreateResponse,
+    LessonUpdateRequest,
+    LessonsByTopicResponse,
     LoginRequest,
     AuthResponse,
     StudentProfileResponse,
@@ -252,6 +257,245 @@ def get_lesson(lesson_id: str, course_id: str = None) -> Lesson:
         raise HTTPException(
             status_code=500,
             detail=f"Error retrieving lesson: {str(e)}"
+        )
+
+
+@app.post("/api/lessons/manual/create", response_model=LessonCreateResponse, tags=["Lessons"])
+def create_manual_lesson(request: LessonCreateRequest) -> LessonCreateResponse:
+    """
+    Create a manual lesson (rich text or link).
+    
+    Args:
+        request: LessonCreateRequest with lesson data
+    
+    Returns:
+        LessonCreateResponse with created lesson
+    """
+    try:
+        response = lesson_service.create_manual_lesson(request)
+        if not response.success:
+            raise HTTPException(
+                status_code=400,
+                detail=response.message
+            )
+        return response
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error creating lesson: {str(e)}"
+        )
+
+
+@app.post("/api/lessons/file/create", response_model=LessonCreateResponse, tags=["Lessons"])
+async def create_file_lesson(
+    course_id: str = Form(...),
+    title: str = Form(...),
+    topic_id: str = Form(None),
+    content_type: str = Form(...),
+    file: UploadFile = File(...)
+) -> LessonCreateResponse:
+    """
+    Create a file-based lesson (PDF, video, document).
+    
+    Args:
+        course_id: Course identifier
+        title: Lesson title
+        topic_id: Optional topic ID
+        content_type: Content type (file_pdf, file_video, file_document)
+        file: Uploaded file
+    
+    Returns:
+        LessonCreateResponse with created lesson
+    """
+    try:
+        response = lesson_service.create_file_lesson(
+            course_id=course_id,
+            title=title,
+            topic_id=topic_id if topic_id and topic_id != "null" else None,
+            file=file,
+            content_type=content_type
+        )
+        if not response.success:
+            raise HTTPException(
+                status_code=400,
+                detail=response.message
+            )
+        return response
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error creating file lesson: {str(e)}"
+        )
+
+
+@app.put("/api/lessons/{lesson_id}", response_model=LessonCreateResponse, tags=["Lessons"])
+def update_lesson(lesson_id: str, request: LessonUpdateRequest, course_id: str = None) -> LessonCreateResponse:
+    """
+    Update an existing lesson.
+    
+    Args:
+        lesson_id: Lesson identifier
+        request: LessonUpdateRequest with update data
+        course_id: Optional course identifier
+    
+    Returns:
+        LessonCreateResponse with updated lesson
+    """
+    try:
+        response = lesson_service.update_lesson(lesson_id, request, course_id)
+        if not response.success:
+            raise HTTPException(
+                status_code=404 if "not found" in response.message.lower() else 400,
+                detail=response.message
+            )
+        return response
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error updating lesson: {str(e)}"
+        )
+
+
+@app.delete("/api/lessons/{lesson_id}", tags=["Lessons"])
+def delete_lesson(lesson_id: str, course_id: str = None) -> dict:
+    """
+    Delete a lesson.
+    
+    Args:
+        lesson_id: Lesson identifier
+        course_id: Optional course identifier
+    
+    Returns:
+        Success message
+    """
+    try:
+        success = lesson_service.delete_lesson(lesson_id, course_id)
+        if not success:
+            raise HTTPException(
+                status_code=404,
+                detail="Lesson not found"
+            )
+        return {"success": True, "message": "Lesson deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error deleting lesson: {str(e)}"
+        )
+
+
+@app.post("/api/lessons/generate-from-topic", response_model=LessonGenerationResponse, tags=["Lessons"])
+def generate_lesson_from_topic(request: LessonGenerationRequest) -> LessonGenerationResponse:
+    """
+    Generate AI lesson notes from a curriculum topic.
+    
+    Args:
+        request: LessonGenerationRequest with course_id and topic_id
+    
+    Returns:
+        LessonGenerationResponse with generated lesson
+    """
+    try:
+        response = lesson_service.generate_lesson_notes(
+            course_id=request.course_id,
+            topic_id=request.topic_id
+        )
+        if not response.success:
+            raise HTTPException(
+                status_code=500,
+                detail=response.message
+            )
+        return response
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error generating lesson: {str(e)}"
+        )
+
+
+@app.get("/api/lessons/by-topic/{course_id}", response_model=LessonsByTopicResponse, tags=["Lessons"])
+def get_lessons_by_topic(course_id: str) -> LessonsByTopicResponse:
+    """
+    Get all lessons for a course grouped by topics.
+    
+    Args:
+        course_id: Course identifier
+    
+    Returns:
+        LessonsByTopicResponse with lessons grouped by topics
+    """
+    try:
+        return lesson_service.get_lessons_by_topic(course_id)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error retrieving lessons: {str(e)}"
+        )
+
+
+@app.get("/api/topics/{course_id}", tags=["Lessons"])
+def get_topics(course_id: str) -> List[dict]:
+    """
+    Get all topics for a course (from curriculum) plus Miscellaneous.
+    
+    Args:
+        course_id: Course identifier
+    
+    Returns:
+        List of topic dictionaries
+    """
+    try:
+        return lesson_service.get_topics_for_course(course_id)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error retrieving topics: {str(e)}"
+        )
+
+
+@app.get("/api/lessons/file/{course_id}/{lesson_id}/{filename:path}", tags=["Lessons"])
+def get_lesson_file(course_id: str, lesson_id: str, filename: str):
+    """
+    Serve lesson file.
+    
+    Args:
+        course_id: Course identifier
+        lesson_id: Lesson identifier
+        filename: Filename (path relative to lesson directory)
+    
+    Returns:
+        File response
+    """
+    try:
+        # Extract just the filename from the path
+        import os
+        actual_filename = os.path.basename(filename)
+        file_path = lesson_service.file_storage.get_file_path(f"{course_id}/{lesson_id}/{actual_filename}")
+        if not file_path.exists():
+            raise HTTPException(
+                status_code=404,
+                detail="File not found"
+            )
+        return FileResponse(
+            path=str(file_path),
+            filename=actual_filename,
+            media_type='application/octet-stream'
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error retrieving file: {str(e)}"
         )
 
 

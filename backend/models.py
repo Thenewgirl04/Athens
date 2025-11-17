@@ -80,12 +80,15 @@ class Lesson(BaseModel):
     """Represents a lesson/module with its notes."""
     
     id: str
-    topic_id: str
+    topic_id: str = Field(default="miscellaneous", description="Topic ID or 'miscellaneous' for unassigned lessons")
     course_id: str
     title: str
-    notes: LessonNote
+    notes: Optional[LessonNote] = Field(None, description="Structured notes for AI-generated or manual rich text lessons")
     created_at: str
-    type: str = Field(default="generated_notes", description="To distinguish from uploaded materials")
+    type: str = Field(default="ai_generated", description="Lesson type: 'ai_generated', 'manual_rich_text', 'file_pdf', 'file_video', 'file_document', 'link'")
+    file_url: Optional[str] = Field(None, description="URL/path for file-based lessons")
+    file_size: Optional[str] = Field(None, description="File size for file-based lessons")
+    external_url: Optional[str] = Field(None, description="External URL for link-type lessons")
 
 
 class LessonGenerationRequest(BaseModel):
@@ -103,6 +106,58 @@ class LessonGenerationResponse(BaseModel):
     success: bool
     message: str
     lesson: Optional[Lesson] = None
+
+
+# Manual Lesson Creation Models
+
+class LessonCreateRequest(BaseModel):
+    """Request to create a manual lesson."""
+    
+    course_id: str = Field(..., description="Course identifier")
+    title: str = Field(..., description="Lesson title")
+    topic_id: Optional[str] = Field(default="miscellaneous", description="Topic ID from curriculum or 'miscellaneous'")
+    content_type: str = Field(..., description="Content type: 'manual_rich_text', 'file_pdf', 'file_video', 'file_document', 'link'")
+    # For rich text lessons
+    sections: Optional[List[LessonSection]] = Field(None, description="Structured sections for rich text lessons")
+    estimated_duration: Optional[str] = Field(None, description="Estimated duration for rich text lessons")
+    # For link lessons
+    external_url: Optional[str] = Field(None, description="External URL for link-type lessons")
+
+
+class LessonUpdateRequest(BaseModel):
+    """Request to update an existing lesson."""
+    
+    title: Optional[str] = None
+    topic_id: Optional[str] = None
+    sections: Optional[List[LessonSection]] = None
+    estimated_duration: Optional[str] = None
+    external_url: Optional[str] = None
+
+
+class LessonCreateResponse(BaseModel):
+    """Response from lesson creation."""
+    
+    success: bool
+    message: str
+    lesson: Optional[Lesson] = None
+
+
+class TopicWithLessons(BaseModel):
+    """Topic with its associated lessons."""
+    
+    topic_id: str
+    topic_title: str
+    topic_description: Optional[str] = None
+    week_number: Optional[int] = None
+    week_title: Optional[str] = None
+    lessons: List[Lesson] = Field(default_factory=list)
+
+
+class LessonsByTopicResponse(BaseModel):
+    """Response containing lessons grouped by topics."""
+    
+    course_id: str
+    topics: List[TopicWithLessons] = Field(default_factory=list)
 
 
 # Student Database Models

@@ -1047,7 +1047,7 @@ export function StudentCourseView() {
 
             {/* Lessons Tab */}
             <TabsContent value="lessons" className="space-y-4">
-              <ModulesTab modules={courseData.modules || []} />
+              <ModulesTab courseId={courseId || "1"} modules={courseData.modules || []} />
             </TabsContent>
 
             {/* Assignments Tab */}

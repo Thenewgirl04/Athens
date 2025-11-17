@@ -10,11 +10,18 @@ from models import (
     LessonNote,
     LessonSection,
     LessonGenerationRequest,
-    LessonGenerationResponse
+    LessonGenerationResponse,
+    LessonCreateRequest,
+    LessonCreateResponse,
+    LessonUpdateRequest,
+    TopicWithLessons,
+    LessonsByTopicResponse
 )
 from utils.gemini_client import GeminiClient
 from storage.lesson_storage import LessonStorage
 from storage.curriculum_storage import CurriculumStorage
+from storage.file_storage import FileStorage
+from fastapi import UploadFile
 
 
 class LessonService:
@@ -25,6 +32,7 @@ class LessonService:
         self.gemini_client = GeminiClient()
         self.lesson_storage = LessonStorage()
         self.curriculum_storage = CurriculumStorage()
+        self.file_storage = FileStorage()
     
     def generate_lesson_notes(
         self,
@@ -91,7 +99,7 @@ class LessonService:
                 title=topic.title,
                 notes=lesson_note,
                 created_at=datetime.utcnow().isoformat(),
-                type="generated_notes"
+                type="ai_generated"
             )
             
             # 5. Store lesson in storage
@@ -258,4 +266,318 @@ class LessonService:
         # For now, just return the cleaned string
         
         return json_str
+    
+    def create_manual_lesson(self, request: LessonCreateRequest) -> LessonCreateResponse:
+        """
+        Create a manual lesson (rich text or link).
+        
+        Args:
+            request: LessonCreateRequest with lesson data
+        
+        Returns:
+            LessonCreateResponse with created lesson
+        """
+        try:
+            lesson_id = str(uuid.uuid4())
+            
+            # Create lesson notes if sections provided
+            lesson_note = None
+            if request.sections:
+                lesson_note = LessonNote(
+                    topic_id=request.topic_id or "miscellaneous",
+                    topic_title=request.title,
+                    sections=request.sections,
+                    estimated_duration=request.estimated_duration
+                )
+            
+            # Create lesson object
+            lesson = Lesson(
+                id=lesson_id,
+                topic_id=request.topic_id or "miscellaneous",
+                course_id=request.course_id,
+                title=request.title,
+                notes=lesson_note,
+                created_at=datetime.utcnow().isoformat(),
+                type=request.content_type,
+                external_url=request.external_url
+            )
+            
+            # Save lesson
+            self.lesson_storage.save(lesson)
+            
+            return LessonCreateResponse(
+                success=True,
+                message="Lesson created successfully",
+                lesson=lesson
+            )
+        
+        except Exception as e:
+            return LessonCreateResponse(
+                success=False,
+                message=f"Error creating lesson: {str(e)}",
+                lesson=None
+            )
+    
+    def create_file_lesson(
+        self,
+        course_id: str,
+        title: str,
+        topic_id: Optional[str],
+        file: UploadFile,
+        content_type: str
+    ) -> LessonCreateResponse:
+        """
+        Create a file-based lesson (PDF, video, document).
+        
+        Args:
+            course_id: Course identifier
+            title: Lesson title
+            topic_id: Optional topic ID
+            file: Uploaded file
+            content_type: Content type (file_pdf, file_video, file_document)
+        
+        Returns:
+            LessonCreateResponse with created lesson
+        """
+        try:
+            lesson_id = str(uuid.uuid4())
+            
+            # Save file
+            file_path = self.file_storage.save_file(course_id, lesson_id, file)
+            
+            # Get file size
+            file_size_bytes = self.file_storage.get_file_size(file_path)
+            file_size_str = self.file_storage.format_file_size(file_size_bytes) if file_size_bytes else None
+            
+            # Create lesson object
+            lesson = Lesson(
+                id=lesson_id,
+                topic_id=topic_id or "miscellaneous",
+                course_id=course_id,
+                title=title,
+                notes=None,
+                created_at=datetime.utcnow().isoformat(),
+                type=content_type,
+                file_url=file_path,
+                file_size=file_size_str
+            )
+            
+            # Save lesson
+            self.lesson_storage.save(lesson)
+            
+            return LessonCreateResponse(
+                success=True,
+                message="File lesson created successfully",
+                lesson=lesson
+            )
+        
+        except Exception as e:
+            return LessonCreateResponse(
+                success=False,
+                message=f"Error creating file lesson: {str(e)}",
+                lesson=None
+            )
+    
+    def update_lesson(
+        self,
+        lesson_id: str,
+        request: LessonUpdateRequest,
+        course_id: Optional[str] = None
+    ) -> LessonCreateResponse:
+        """
+        Update an existing lesson.
+        
+        Args:
+            lesson_id: Lesson identifier
+            request: LessonUpdateRequest with update data
+            course_id: Optional course identifier to narrow search
+        
+        Returns:
+            LessonCreateResponse with updated lesson
+        """
+        try:
+            # Load existing lesson
+            lesson = self.lesson_storage.load_one(lesson_id, course_id)
+            if not lesson:
+                return LessonCreateResponse(
+                    success=False,
+                    message="Lesson not found",
+                    lesson=None
+                )
+            
+            # Update fields
+            if request.title is not None:
+                lesson.title = request.title
+            if request.topic_id is not None:
+                lesson.topic_id = request.topic_id
+            if request.external_url is not None:
+                lesson.external_url = request.external_url
+            
+            # Update notes if sections provided
+            if request.sections is not None:
+                if lesson.notes:
+                    lesson.notes.sections = request.sections
+                    if request.estimated_duration:
+                        lesson.notes.estimated_duration = request.estimated_duration
+                else:
+                    # Create new notes
+                    lesson.notes = LessonNote(
+                        topic_id=lesson.topic_id,
+                        topic_title=lesson.title,
+                        sections=request.sections,
+                        estimated_duration=request.estimated_duration
+                    )
+            
+            # Save updated lesson
+            self.lesson_storage.save(lesson)
+            
+            return LessonCreateResponse(
+                success=True,
+                message="Lesson updated successfully",
+                lesson=lesson
+            )
+        
+        except Exception as e:
+            return LessonCreateResponse(
+                success=False,
+                message=f"Error updating lesson: {str(e)}",
+                lesson=None
+            )
+    
+    def delete_lesson(self, lesson_id: str, course_id: Optional[str] = None) -> bool:
+        """
+        Delete a lesson.
+        
+        Args:
+            lesson_id: Lesson identifier
+            course_id: Optional course identifier
+        
+        Returns:
+            True if deleted, False if not found
+        """
+        try:
+            # Load lesson to get course_id if not provided
+            if not course_id:
+                lesson = self.lesson_storage.load_one(lesson_id)
+                if not lesson:
+                    return False
+                course_id = lesson.course_id
+            
+            # Delete file if it's a file-based lesson
+            lesson = self.lesson_storage.load_one(lesson_id, course_id)
+            if lesson and lesson.file_url:
+                self.file_storage.delete_lesson_directory(course_id, lesson_id)
+            
+            # Delete lesson from storage
+            return self.lesson_storage.delete(lesson_id, course_id)
+        
+        except Exception as e:
+            print(f"Error deleting lesson: {str(e)}")
+            return False
+    
+    def get_lessons_by_topic(self, course_id: str) -> LessonsByTopicResponse:
+        """
+        Get all lessons for a course grouped by topics.
+        
+        Args:
+            course_id: Course identifier
+        
+        Returns:
+            LessonsByTopicResponse with lessons grouped by topics
+        """
+        # Get all lessons for course
+        lessons = self.get_lessons_for_course(course_id)
+        
+        # Get curriculum to get topic information
+        curriculum = self.curriculum_storage.load(course_id)
+        
+        # Build topic map
+        topic_map: dict[str, TopicWithLessons] = {}
+        
+        # Add topics from curriculum
+        if curriculum:
+            for week in curriculum.weeks:
+                for topic in week.topics:
+                    topic_map[topic.id] = TopicWithLessons(
+                        topic_id=topic.id,
+                        topic_title=topic.title,
+                        topic_description=topic.description,
+                        week_number=week.week_number,
+                        week_title=week.title,
+                        lessons=[]
+                    )
+        
+        # Add miscellaneous topic
+        topic_map["miscellaneous"] = TopicWithLessons(
+            topic_id="miscellaneous",
+            topic_title="Miscellaneous",
+            topic_description="Lessons not assigned to a specific topic",
+            week_number=None,
+            week_title=None,
+            lessons=[]
+        )
+        
+        # Group lessons by topic
+        for lesson in lessons:
+            topic_id = lesson.topic_id or "miscellaneous"
+            if topic_id not in topic_map:
+                # Topic doesn't exist in curriculum, create placeholder
+                topic_map[topic_id] = TopicWithLessons(
+                    topic_id=topic_id,
+                    topic_title=topic_id.replace("_", " ").title(),
+                    topic_description=None,
+                    week_number=None,
+                    week_title=None,
+                    lessons=[]
+                )
+            topic_map[topic_id].lessons.append(lesson)
+        
+        # Convert to list and sort by week number
+        topics_list = list(topic_map.values())
+        topics_list.sort(key=lambda t: (
+            t.week_number if t.week_number is not None else 999,
+            t.topic_title
+        ))
+        
+        return LessonsByTopicResponse(
+            course_id=course_id,
+            topics=topics_list
+        )
+    
+    def get_topics_for_course(self, course_id: str) -> List[dict]:
+        """
+        Get all topics for a course (from curriculum) plus Miscellaneous.
+        
+        Args:
+            course_id: Course identifier
+        
+        Returns:
+            List of topic dictionaries with id, title, description, week_number, week_title
+        """
+        topics = []
+        
+        # Get curriculum
+        curriculum = self.curriculum_storage.load(course_id)
+        
+        if curriculum:
+            for week in curriculum.weeks:
+                for topic in week.topics:
+                    topics.append({
+                        "id": topic.id,
+                        "title": topic.title,
+                        "description": topic.description,
+                        "week_number": week.week_number,
+                        "week_title": week.title
+                    })
+        
+        # Add Miscellaneous option
+        topics.append({
+            "id": "miscellaneous",
+            "title": "Miscellaneous",
+            "description": "Lessons not assigned to a specific topic",
+            "week_number": None,
+            "week_title": None
+        })
+        
+        return topics
 

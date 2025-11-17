@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ChevronRight,
   BookOpen,
@@ -7,6 +7,11 @@ import {
   CheckCircle,
   HelpCircle,
   Award,
+  Sparkles,
+  Video,
+  Link as LinkIcon,
+  Download,
+  Loader2,
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
@@ -20,10 +25,21 @@ import { Badge } from './ui/badge';
 import { NoteDetailPage } from './NoteDetailPage';
 
 export interface Note {
-  id: number;
+  id: string;
   title: string;
   duration?: string;
   completed?: boolean;
+  type?: string;
+  file_url?: string;
+  external_url?: string;
+  notes?: {
+    sections?: Array<{
+      section_type: string;
+      title: string;
+      content: string;
+    }>;
+    estimated_duration?: string;
+  };
 }
 
 export interface Quiz {
@@ -37,23 +53,103 @@ export interface Quiz {
 }
 
 export interface Module {
-  id: number;
+  id: string;
   title: string;
   description: string;
   notes: Note[];
   quiz?: Quiz;
 }
 
-interface ModulesTabProps {
-  modules: Module[];
+interface TopicWithLessons {
+  topic_id: string;
+  topic_title: string;
+  topic_description?: string;
+  week_number?: number;
+  week_title?: string;
+  lessons: Array<{
+    id: string;
+    title: string;
+    type: string;
+    created_at: string;
+    file_url?: string;
+    file_size?: string;
+    external_url?: string;
+    course_id: string;
+    notes?: {
+      sections?: Array<{
+        section_type: string;
+        title: string;
+        content: string;
+      }>;
+      estimated_duration?: string;
+    };
+  }>;
 }
 
-export function ModulesTab({ modules }: ModulesTabProps) {
+interface ModulesTabProps {
+  courseId: string;
+  modules?: Module[]; // Keep for backward compatibility
+}
+
+export function ModulesTab({ courseId, modules: propModules }: ModulesTabProps) {
+  const [modules, setModules] = useState<Module[]>(propModules || []);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [selectedNote, setSelectedNote] = useState<{
     note: Note;
     moduleIndex: number;
     noteIndex: number;
   } | null>(null);
+
+  // Fetch lessons from API
+  useEffect(() => {
+    const fetchLessons = async () => {
+      if (!courseId) return;
+      
+      setLoading(true);
+      setError(null);
+      try {
+        const API_BASE_URL = 'http://localhost:8000';
+        const resp = await fetch(`${API_BASE_URL}/api/lessons/by-topic/${courseId}`);
+        if (!resp.ok) {
+          const errorText = await resp.text();
+          throw new Error(`Failed to fetch lessons: ${errorText.substring(0, 100)}`);
+        }
+        const data = await resp.json();
+        
+        // Convert API response to Module format
+        const convertedModules: Module[] = (data.topics || []).map((topic: TopicWithLessons) => ({
+          id: topic.topic_id,
+          title: topic.week_title
+            ? `Week ${topic.week_number}: ${topic.topic_title}`
+            : topic.topic_title,
+          description: topic.topic_description || "",
+          notes: topic.lessons.map((lesson) => ({
+            id: lesson.id,
+            title: lesson.title,
+            duration: lesson.notes?.estimated_duration,
+            type: lesson.type,
+            file_url: lesson.file_url,
+            external_url: lesson.external_url,
+            notes: lesson.notes,
+            completed: false, // TODO: Track completion status
+          })),
+        }));
+        
+        setModules(convertedModules);
+      } catch (err: any) {
+        setError(err.message || "Error fetching lessons");
+        // Fallback to prop modules if available
+        if (propModules) {
+          setModules(propModules);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLessons();
+  }, [courseId, propModules]);
 
   // Handle note selection
   const handleNoteClick = (note: Note, moduleIndex: number, noteIndex: number) => {
@@ -159,6 +255,7 @@ export function ModulesTab({ modules }: ModulesTabProps) {
         onPrevious={handlePrevious}
         canGoNext={canGoNext()}
         canGoPrevious={canGoPrevious()}
+        courseId={courseId}
       />
     );
   }
@@ -169,6 +266,75 @@ export function ModulesTab({ modules }: ModulesTabProps) {
     const total = module.notes.length;
     return { completed, total };
   };
+
+  const getLessonIcon = (type?: string) => {
+    switch (type) {
+      case "ai_generated":
+        return <Sparkles className="w-4 h-4 text-purple-600" />;
+      case "file_video":
+        return <Video className="w-4 h-4 text-purple-600" />;
+      case "file_pdf":
+        return <FileText className="w-4 h-4 text-red-600" />;
+      case "link":
+        return <LinkIcon className="w-4 h-4 text-blue-600" />;
+      case "file_document":
+      case "manual_rich_text":
+      default:
+        return <FileText className="w-4 h-4 text-slate-600" />;
+    }
+  };
+
+  const getLessonTypeLabel = (type?: string) => {
+    switch (type) {
+      case "ai_generated":
+        return "AI";
+      case "file_video":
+        return "Video";
+      case "file_pdf":
+        return "PDF";
+      case "link":
+        return "Link";
+      case "file_document":
+        return "Doc";
+      case "manual_rich_text":
+        return "Text";
+      default:
+        return "";
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <div className="mb-6">
+          <h3 className="text-slate-900 mb-2">Course Modules</h3>
+          <p className="text-slate-600">
+            Explore the course content organized into modules. Click on any note to start learning.
+          </p>
+        </div>
+        <div className="p-8 text-center">
+          <Loader2 className="w-8 h-8 mx-auto mb-4 animate-spin text-slate-400" />
+          <p className="text-slate-500">Loading lessons...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <div className="mb-6">
+          <h3 className="text-slate-900 mb-2">Course Modules</h3>
+          <p className="text-slate-600">
+            Explore the course content organized into modules. Click on any note to start learning.
+          </p>
+        </div>
+        <div className="p-8 text-center text-red-600">
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -200,12 +366,14 @@ export function ModulesTab({ modules }: ModulesTabProps) {
                     </div>
                     <div className="flex-1">
                       <h4 className="text-slate-900 mb-1">
-                        Module {moduleIndex + 1}: {module.title}
+                        {module.title}
                       </h4>
-                      <p className="text-sm text-slate-600">{module.description}</p>
+                      {module.description && (
+                        <p className="text-sm text-slate-600">{module.description}</p>
+                      )}
                       <div className="flex items-center gap-4 mt-2">
                         <span className="text-sm text-slate-500">
-                          {stats.total} {stats.total === 1 ? 'note' : 'notes'}
+                          {stats.total} {stats.total === 1 ? 'lesson' : 'lessons'}
                         </span>
                         {stats.completed > 0 && (
                           <Badge variant="outline" className="text-emerald-600 border-emerald-600">
@@ -233,14 +401,21 @@ export function ModulesTab({ modules }: ModulesTabProps) {
                             </div>
                           ) : (
                             <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-indigo-100 transition-colors">
-                              <FileText className="w-4 h-4 text-slate-600 group-hover:text-indigo-600 transition-colors" />
+                              {getLessonIcon(note.type)}
                             </div>
                           )}
                         </div>
-                        <div className="text-left">
-                          <p className="text-slate-900 group-hover:text-indigo-600 transition-colors">
-                            {note.title}
-                          </p>
+                        <div className="text-left flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="text-slate-900 group-hover:text-indigo-600 transition-colors">
+                              {note.title}
+                            </p>
+                            {note.type && (
+                              <Badge variant="outline" className="text-xs">
+                                {getLessonTypeLabel(note.type)}
+                              </Badge>
+                            )}
+                          </div>
                           {note.duration && (
                             <div className="flex items-center gap-1 text-sm text-slate-500 mt-1">
                               <Clock className="w-3 h-3" />
@@ -249,7 +424,33 @@ export function ModulesTab({ modules }: ModulesTabProps) {
                           )}
                         </div>
                       </div>
-                      <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-indigo-600 transition-colors flex-shrink-0" />
+                      {note.external_url || note.file_url ? (
+                        <div className="flex gap-2">
+                          {note.external_url && (
+                            <a
+                              href={note.external_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="p-2 hover:bg-indigo-100 rounded"
+                            >
+                              <LinkIcon className="w-4 h-4 text-blue-600" />
+                            </a>
+                          )}
+                          {note.file_url && (
+                            <a
+                              href={`http://localhost:8000/api/lessons/file/${courseId}/${note.id}/${note.file_url.split("/").pop()}`}
+                              target="_blank"
+                              onClick={(e) => e.stopPropagation()}
+                              className="p-2 hover:bg-indigo-100 rounded"
+                            >
+                              <Download className="w-4 h-4 text-purple-600" />
+                            </a>
+                          )}
+                        </div>
+                      ) : (
+                        <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-indigo-600 transition-colors flex-shrink-0" />
+                      )}
                     </button>
                   ))}
                   
