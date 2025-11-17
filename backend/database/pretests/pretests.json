@@ -1,0 +1,205 @@
+[
+  {
+    "id": "pretest_cs101_e7dcbccc",
+    "courseId": "cs101",
+    "questions": [
+      {
+        "id": "q1",
+        "question": "Which of the following best describes the core of computer science?",
+        "options": [
+          "The study of computer hardware and its manufacturing.",
+          "The study of computation, algorithms, and information.",
+          "The practice of building websites and mobile applications.",
+          "The design and development of operating systems exclusively."
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_1_1",
+        "topicTitle": "What is Computer Science?"
+      },
+      {
+        "id": "q2",
+        "question": "What is a key design philosophy of the Go programming language that makes it appealing for beginners?",
+        "options": [
+          "Extreme flexibility and a vast number of features.",
+          "Simplicity and ease of learning.",
+          "Heavy reliance on complex object-oriented paradigms.",
+          "Extensive use of manual memory management."
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_1_2",
+        "topicTitle": "Introduction to the Go Programming Language"
+      },
+      {
+        "id": "q3",
+        "question": "Which of the following is a fundamental command-line operation for navigating directories in a terminal?",
+        "options": [
+          "ls",
+          "cd",
+          "mkdir",
+          "rm"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_1_3",
+        "topicTitle": "Setting up Your Development Environment (VS Code & Terminal)"
+      },
+      {
+        "id": "q4",
+        "question": "In a basic Go program, which package must always be imported to run an executable program?",
+        "options": [
+          "fmt",
+          "errors",
+          "main",
+          "os"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_1_4",
+        "topicTitle": "Your First Go Program: 'Hello, World!'"
+      },
+      {
+        "id": "q5",
+        "question": "What is the fundamental difference between `int` and `uint` data types in Go?",
+        "options": [
+          "`int` can store floating-point numbers, `uint` cannot.",
+          "`int` can store negative numbers, `uint` cannot.",
+          "`uint` has a larger range than `int`.",
+          "`int` uses more memory than `uint`."
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_1",
+        "topicTitle": "Understanding Data Types (Integers, Floats, Booleans)"
+      },
+      {
+        "id": "q6",
+        "question": "Which of the following Go syntax examples correctly declares and initializes a variable named `count` with the integer value 10?",
+        "options": [
+          "var count = 10",
+          "count := 10",
+          "let count = 10",
+          "count = 10"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_2",
+        "topicTitle": "Declaring and Using Variables"
+      },
+      {
+        "id": "q7",
+        "question": "What keyword is used in Go to declare a constant value that cannot be changed during program execution?",
+        "options": [
+          "var",
+          "let",
+          "const",
+          "final"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_2_3",
+        "topicTitle": "Constants and Their Usage"
+      },
+      {
+        "id": "q8",
+        "question": "In Go, which operator is used to check if two values are *not* equal?",
+        "options": [
+          "==",
+          "!=",
+          "===",
+          "=/="
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_4",
+        "topicTitle": "Basic Arithmetic and Logical Operators"
+      },
+      {
+        "id": "q9",
+        "question": "Consider the following Go code snippet. What will be printed to the console if `score` is 85?",
+        "options": [
+          "A",
+          "B",
+          "C",
+          "Nothing"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_3_1",
+        "topicTitle": "Conditional Statements: `if`, `else if`, `else`"
+      },
+      {
+        "id": "q10",
+        "question": "What is the primary function of the `break` statement within a loop in Go?",
+        "options": [
+          "To start the next iteration of the loop immediately.",
+          "To terminate the loop entirely.",
+          "To skip the current iteration and proceed to the next.",
+          "To declare a new variable within the loop."
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_3_4",
+        "topicTitle": "`break` and `continue` Statements"
+      },
+      {
+        "id": "q11",
+        "question": "What is a key characteristic of Go arrays?",
+        "options": [
+          "They can dynamically resize after creation.",
+          "Their size is fixed at the time of declaration.",
+          "They can store elements of different data types.",
+          "They are primarily used for key-value storage."
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_4_1",
+        "topicTitle": "Arrays in Go"
+      },
+      {
+        "id": "q12",
+        "question": "Which of the following is NOT a core component of a Go slice?",
+        "options": [
+          "Pointer to the underlying array",
+          "Length of the slice",
+          "Capacity of the slice",
+          "Key for accessing elements"
+        ],
+        "correctAnswer": 3,
+        "topicId": "topic_4_2",
+        "topicTitle": "Introduction to Slices"
+      },
+      {
+        "id": "q13",
+        "question": "When using `append` to add an element to a slice, what might happen if the slice's capacity is exceeded?",
+        "options": [
+          "The program will immediately crash.",
+          "A new underlying array will be allocated, and elements copied.",
+          "The new element will be ignored.",
+          "The original slice remains unchanged and the element is lost."
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_4_3",
+        "topicTitle": "Slice Operations: `append` and `copy`"
+      },
+      {
+        "id": "q14",
+        "question": "In Go, what is the primary purpose of a `map`?",
+        "options": [
+          "To store ordered sequences of elements.",
+          "To represent fixed-size collections of elements.",
+          "To store key-value pairs.",
+          "To define custom data structures with named fields."
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_5_1",
+        "topicTitle": "Maps in Go"
+      },
+      {
+        "id": "q15",
+        "question": "What keyword is used in Go to define a custom data type that groups related fields together?",
+        "options": [
+          "type",
+          "struct",
+          "class",
+          "enum"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_5_2",
+        "topicTitle": "Structs: Defining Custom Data Types"
+      }
+    ],
+    "createdAt": "2025-11-17T15:29:44.724384Z",
+    "maxScore": 15
+  }
+]

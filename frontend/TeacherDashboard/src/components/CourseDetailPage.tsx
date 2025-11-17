@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect, useMemo } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
   BookOpen,
@@ -11,6 +12,7 @@ import {
   Download,
   Edit,
   Trash2,
+  X,
   MessageSquare,
   Eye,
   CheckCircle,
@@ -19,6 +21,8 @@ import {
   File,
   Sparkles,
   Loader2,
+  ExternalLink,
+  Clock,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -54,20 +58,25 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Alert, AlertDescription } from "./ui/alert";
-
-interface CourseDetailPageProps {
-  courseId: string;
-  courseName: string;
-  courseCode: string;
-  onBack: () => void;
-}
+import { LessonEditor } from "./LessonEditor";
 
 interface Lesson {
   id: string;
   title: string;
-  type: "video" | "pdf" | "link" | "document";
-  uploadedDate: string;
-  size?: string;
+  type: string;
+  topic_id: string;
+  course_id: string;
+  created_at: string;
+  file_url?: string;
+  file_size?: string;
+  external_url?: string;
+  notes?: {
+    sections?: Array<{
+      section_type: string;
+      title: string;
+      content: string;
+    }>;
+  };
 }
 
 interface Assignment {
@@ -95,35 +104,22 @@ interface EnrolledStudent {
   lastActive: string;
 }
 
-const mockLessons: Lesson[] = [
-  {
-    id: "1",
-    title: "Introduction to Variables and Data Types",
-    type: "video",
-    uploadedDate: "2025-10-15",
-    size: "125 MB",
-  },
-  {
-    id: "2",
-    title: "Control Structures - Lecture Notes",
-    type: "pdf",
-    uploadedDate: "2025-10-18",
-    size: "2.5 MB",
-  },
-  {
-    id: "3",
-    title: "Python Documentation",
-    type: "link",
-    uploadedDate: "2025-10-20",
-  },
-  {
-    id: "4",
-    title: "Functions and Modules",
-    type: "document",
-    uploadedDate: "2025-10-25",
-    size: "1.8 MB",
-  },
-];
+interface TopicWithLessons {
+  topic_id: string;
+  topic_title: string;
+  topic_description?: string;
+  week_number?: number;
+  week_title?: string;
+  lessons: Lesson[];
+}
+
+interface Topic {
+  id: string;
+  title: string;
+  description?: string;
+  week_number?: number;
+  week_title?: string;
+}
 
 const mockAssignments: Assignment[] = [
   {
@@ -194,18 +190,143 @@ const mockStudents: EnrolledStudent[] = [
   },
 ];
 
-export function CourseDetailPage({
-  courseId,
-  courseName,
-  courseCode,
-  onBack,
-}: CourseDetailPageProps) {
+// Markdown parser function to convert markdown to HTML
+function parseMarkdown(text: string): string {
+  if (!text) return "";
+  
+  // Escape HTML to prevent XSS
+  const escapeHtml = (str: string) => {
+    const map: { [key: string]: string } = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;",
+    };
+    return str.replace(/[&<>"']/g, (m) => map[m]);
+  };
+  
+  // Split into lines for processing
+  const lines = text.split('\n');
+  const processedLines: string[] = [];
+  let inList = false;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    
+    // Check if this is a bullet list item
+    if (line.match(/^\* (.+)$/)) {
+      const listContent = line.replace(/^\* (.+)$/, '$1');
+      if (!inList) {
+        processedLines.push('<ul>');
+        inList = true;
+      }
+      // Process bold and italic within list items
+      let processedContent = escapeHtml(listContent);
+      processedContent = processedContent.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      processedLines.push(`<li>${processedContent}</li>`);
+    } else {
+      // Close list if we were in one
+      if (inList) {
+        processedLines.push('</ul>');
+        inList = false;
+      }
+      
+      // Process regular lines
+      if (line) {
+        let processedLine = escapeHtml(line);
+        // Convert **bold** to <strong>bold</strong> first
+        processedLine = processedLine.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+        // Convert *italic* to <em>italic</em> (simple match, avoiding **)
+        // Match single * that's not part of **
+        processedLine = processedLine.replace(/([^*]|^)\*([^*\n]+?)\*([^*]|$)/g, "$1<em>$2</em>$3");
+        processedLines.push(`<p>${processedLine}</p>`);
+      } else {
+        // Empty line - add paragraph break
+        processedLines.push('');
+      }
+    }
+  }
+  
+  // Close list if still open
+  if (inList) {
+    processedLines.push('</ul>');
+  }
+  
+  // Join and clean up
+  let html = processedLines.join('\n');
+  
+  // Remove empty paragraphs
+  html = html.replace(/<p><\/p>/g, '');
+  html = html.replace(/\n\n+/g, '\n');
+  
+  return html.trim();
+}
+
+export function CourseDetailPage() {
+  const navigate = useNavigate();
+  const { courseId: routeCourseId } = useParams<{ courseId?: string }>();
+  const location = useLocation();
+  const state = location.state as
+    | {
+        courseName?: string;
+        courseCode?: string;
+      }
+    | undefined;
+
+  const courseId = routeCourseId ?? "course-demo";
+  const courseName = state?.courseName ?? "Course Overview";
+  const courseCode = state?.courseCode ?? courseId.toUpperCase();
   const [activeSection, setActiveSection] = useState<
     "lessons" | "assignments" | "quizzes" | "students" | "curriculum"
   >("lessons");
   const [showAddLesson, setShowAddLesson] = useState(false);
   const [showAddAssignment, setShowAddAssignment] = useState(false);
   const [showAddQuiz, setShowAddQuiz] = useState(false);
+  
+  // Lessons state
+  const [lessonsByTopic, setLessonsByTopic] = useState<TopicWithLessons[]>([]);
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [lessonsLoading, setLessonsLoading] = useState(false);
+  const [lessonsError, setLessonsError] = useState<string | null>(null);
+  
+  // Add lesson form state
+  const [lessonTitle, setLessonTitle] = useState("");
+  const [selectedTopicId, setSelectedTopicId] = useState<string>("miscellaneous");
+  const [lessonType, setLessonType] = useState<string>("manual_rich_text");
+  const [lessonFile, setLessonFile] = useState<File | null>(null);
+  const [lessonUrl, setLessonUrl] = useState("");
+  const [showRichTextEditor, setShowRichTextEditor] = useState(false);
+  const [isGeneratingLesson, setIsGeneratingLesson] = useState(false);
+  const [selectedTopicForGeneration, setSelectedTopicForGeneration] = useState<string>("");
+  const [selectedLessonForView, setSelectedLessonForView] = useState<Lesson | null>(null);
+  const [loadingLessonDetails, setLoadingLessonDetails] = useState(false);
+  
+  // Fetch full lesson details when viewing
+  const handleViewLesson = async (lesson: Lesson) => {
+    setLoadingLessonDetails(true);
+    setSelectedLessonForView(null); // Clear previous lesson
+    try {
+      // Fetch full lesson details from API
+      const resp = await fetch(`/api/lesson/${lesson.id}?course_id=${lesson.course_id}`);
+      if (resp.ok) {
+        const fullLesson = await resp.json();
+        console.log("Fetched lesson details:", fullLesson);
+        setSelectedLessonForView(fullLesson);
+      } else {
+        // If fetch fails, use the lesson data we already have
+        console.warn("Failed to fetch full lesson details, using available data:", lesson);
+        setSelectedLessonForView(lesson);
+      }
+    } catch (err) {
+      console.error("Error fetching lesson details:", err);
+      // Use the lesson data we already have
+      console.log("Using lesson data from list:", lesson);
+      setSelectedLessonForView(lesson);
+    } finally {
+      setLoadingLessonDetails(false);
+    }
+  };
 
   // Generate Curriculum Modal State
   const [showGenerateModal, setShowGenerateModal] = useState(false);
@@ -292,7 +413,19 @@ export function CourseDetailPage({
         setCurriculumError(null);
         return;
       }
-      if (!resp.ok) throw new Error("Failed to fetch curriculum");
+      if (!resp.ok) {
+        let errorMsg = `Failed to fetch curriculum (${resp.status})`;
+        try {
+          const errorData = await resp.json();
+          errorMsg = errorData.detail || errorMsg;
+        } catch {
+          const errorText = await resp.text();
+          if (errorText && !errorText.startsWith('<!DOCTYPE')) {
+            errorMsg = errorText.substring(0, 100);
+          }
+        }
+        throw new Error(errorMsg);
+      }
       const data = await resp.json();
       const formatted: CurriculumWeek[] = (data.weeks || []).map((week: any) => ({
         weekNumber: week.week_number,
@@ -322,16 +455,244 @@ export function CourseDetailPage({
     }
   }, [activeSection]);
 
-  const getLessonIcon = (type: Lesson["type"]) => {
+  // Fetch lessons from API
+  const fetchLessons = async () => {
+    setLessonsLoading(true);
+    setLessonsError(null);
+    try {
+      const resp = await fetch(`/api/lessons/by-topic/${courseId}`);
+      if (!resp.ok) {
+        const errorText = await resp.text();
+        throw new Error(`Failed to fetch lessons: ${errorText.substring(0, 100)}`);
+      }
+      const data = await resp.json();
+      setLessonsByTopic(data.topics || []);
+    } catch (err: any) {
+      setLessonsError(err.message || "Error fetching lessons");
+      setLessonsByTopic([]);
+    } finally {
+      setLessonsLoading(false);
+    }
+  };
+
+  // Fetch topics from API
+  const fetchTopics = async () => {
+    try {
+      const resp = await fetch(`/api/topics/${courseId}`);
+      if (!resp.ok) throw new Error("Failed to fetch topics");
+      const data = await resp.json();
+      setTopics(data || []);
+    } catch (err: any) {
+      console.error("Error fetching topics:", err);
+      setTopics([]);
+    }
+  };
+
+  // Load lessons and topics when lessons section is active
+  useEffect(() => {
+    if (activeSection === "lessons") {
+      fetchLessons();
+      fetchTopics();
+    }
+  }, [activeSection, courseId]);
+
+  const getLessonIcon = (type: string) => {
     switch (type) {
-      case "video":
+      case "ai_generated":
+        return <Sparkles className="h-4 w-4 text-purple-600" />;
+      case "file_video":
         return <Video className="h-4 w-4 text-purple-600" />;
-      case "pdf":
+      case "file_pdf":
         return <File className="h-4 w-4 text-red-600" />;
       case "link":
         return <LinkIcon className="h-4 w-4 text-blue-600" />;
-      case "document":
+      case "file_document":
+      case "manual_rich_text":
         return <FileText className="h-4 w-4 text-gray-600" />;
+      default:
+        return <FileText className="h-4 w-4 text-gray-600" />;
+    }
+  };
+
+  const getLessonTypeLabel = (type: string) => {
+    switch (type) {
+      case "ai_generated":
+        return "AI Generated";
+      case "file_video":
+        return "Video";
+      case "file_pdf":
+        return "PDF";
+      case "link":
+        return "Link";
+      case "file_document":
+        return "Document";
+      case "manual_rich_text":
+        return "Rich Text";
+      default:
+        return "Lesson";
+    }
+  };
+
+  // Handle manual lesson creation
+  const handleCreateManualLesson = async (
+    sections: Array<{ section_type: string; title: string; content: string }>,
+    estimatedDuration: string
+  ) => {
+    try {
+      const resp = await fetch("/api/lessons/manual/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          course_id: courseId,
+          title: lessonTitle,
+          topic_id: selectedTopicId,
+          content_type: "manual_rich_text",
+          sections: sections,
+          estimated_duration: estimatedDuration,
+        }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(err.detail || "Failed to create lesson");
+      }
+
+      setShowAddLesson(false);
+      setShowRichTextEditor(false);
+      setLessonTitle("");
+      setSelectedTopicId("miscellaneous");
+      fetchLessons();
+    } catch (err: any) {
+      alert(err.message || "Error creating lesson");
+    }
+  };
+
+  // Handle file lesson creation
+  const handleCreateFileLesson = async () => {
+    if (!lessonFile) {
+      alert("Please select a file");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("course_id", courseId);
+      formData.append("title", lessonTitle);
+      formData.append("topic_id", selectedTopicId);
+      formData.append("content_type", lessonType);
+      formData.append("file", lessonFile);
+
+      const resp = await fetch("/api/lessons/file/create", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(err.detail || "Failed to create file lesson");
+      }
+
+      setShowAddLesson(false);
+      setLessonTitle("");
+      setLessonFile(null);
+      setSelectedTopicId("miscellaneous");
+      fetchLessons();
+    } catch (err: any) {
+      alert(err.message || "Error creating file lesson");
+    }
+  };
+
+  // Handle link lesson creation
+  const handleCreateLinkLesson = async () => {
+    if (!lessonUrl) {
+      alert("Please enter a URL");
+      return;
+    }
+
+    try {
+      const resp = await fetch("/api/lessons/manual/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          course_id: courseId,
+          title: lessonTitle,
+          topic_id: selectedTopicId,
+          content_type: "link",
+          external_url: lessonUrl,
+        }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(err.detail || "Failed to create link lesson");
+      }
+
+      setShowAddLesson(false);
+      setLessonTitle("");
+      setLessonUrl("");
+      setSelectedTopicId("miscellaneous");
+      fetchLessons();
+    } catch (err: any) {
+      alert(err.message || "Error creating link lesson");
+    }
+  };
+
+  // Handle AI lesson generation from topic
+  const handleGenerateLessonFromTopic = async () => {
+    if (!selectedTopicForGeneration) {
+      alert("Please select a topic");
+      return;
+    }
+
+    setIsGeneratingLesson(true);
+    try {
+      // Find topic details
+      const topic = topics.find((t) => t.id === selectedTopicForGeneration);
+      if (!topic) throw new Error("Topic not found");
+
+      const resp = await fetch("/api/lessons/generate-from-topic", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          course_id: courseId,
+          topic_id: selectedTopicForGeneration,
+          topic_title: topic.title,
+          topic_description: topic.description || "",
+        }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(err.detail || "Failed to generate lesson");
+      }
+
+      setSelectedTopicForGeneration("");
+      fetchLessons();
+      alert("Lesson generated successfully!");
+    } catch (err: any) {
+      alert(err.message || "Error generating lesson");
+    } finally {
+      setIsGeneratingLesson(false);
+    }
+  };
+
+  // Handle lesson deletion
+  const handleDeleteLesson = async (lessonId: string) => {
+    if (!confirm("Are you sure you want to delete this lesson?")) return;
+
+    try {
+      const resp = await fetch(`/api/lessons/${lessonId}?course_id=${courseId}`, {
+        method: "DELETE",
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(err.detail || "Failed to delete lesson");
+      }
+
+      fetchLessons();
+    } catch (err: any) {
+      alert(err.message || "Error deleting lesson");
     }
   };
 
@@ -410,7 +771,11 @@ export function CourseDetailPage({
       {/* Left Sidebar Navigation */}
       <aside className="w-64 bg-white border-r border-gray-200">
         <div className="p-6">
-          <Button variant="ghost" onClick={onBack} className="mb-4 -ml-3">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/courses")}
+            className="mb-4 -ml-3"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Courses
           </Button>
@@ -681,11 +1046,65 @@ export function CourseDetailPage({
                   Manage course materials and learning resources
                 </p>
               </div>
-              <Button onClick={() => setShowAddLesson(!showAddLesson)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Lesson
-              </Button>
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={handleGenerateLessonFromTopic}
+                  disabled={isGeneratingLesson || topics.length === 0}
+                >
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  {isGeneratingLesson ? "Generating..." : "Generate from Topic"}
+                </Button>
+                <Button onClick={() => setShowAddLesson(!showAddLesson)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Lesson
+                </Button>
+              </div>
             </div>
+
+            {/* Generate from Topic Dialog */}
+            {topics.length > 0 && (
+              <Card className="mb-6">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <Label htmlFor="topic-select">Generate AI Lesson from Topic:</Label>
+                    <Select
+                      value={selectedTopicForGeneration}
+                      onValueChange={setSelectedTopicForGeneration}
+                    >
+                      <SelectTrigger id="topic-select" className="w-64">
+                        <SelectValue placeholder="Select a topic" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {topics.map((topic) => (
+                          <SelectItem key={topic.id} value={topic.id}>
+                            {topic.week_title
+                              ? `Week ${topic.week_number}: ${topic.title}`
+                              : topic.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      onClick={handleGenerateLessonFromTopic}
+                      disabled={!selectedTopicForGeneration || isGeneratingLesson}
+                    >
+                      {isGeneratingLesson ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="h-4 w-4 mr-2" />
+                          Generate
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Add Lesson Form */}
             {showAddLesson && (
@@ -699,114 +1118,503 @@ export function CourseDetailPage({
                     <Input
                       id="lesson-title"
                       placeholder="e.g., Introduction to Arrays"
+                      value={lessonTitle}
+                      onChange={(e) => setLessonTitle(e.target.value)}
                       className="mt-2"
                     />
                   </div>
 
                   <div>
+                    <Label htmlFor="topic-select-add">Topic</Label>
+                    <Select
+                      value={selectedTopicId}
+                      onValueChange={setSelectedTopicId}
+                    >
+                      <SelectTrigger id="topic-select-add" className="mt-2">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {topics.map((topic) => (
+                          <SelectItem key={topic.id} value={topic.id}>
+                            {topic.week_title
+                              ? `Week ${topic.week_number}: ${topic.title}`
+                              : topic.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
                     <Label>Material Type</Label>
-                    <Tabs defaultValue="video" className="mt-2">
+                    <Tabs
+                      value={lessonType}
+                      onValueChange={setLessonType}
+                      className="mt-2"
+                    >
                       <TabsList>
-                        <TabsTrigger value="video">Video</TabsTrigger>
-                        <TabsTrigger value="pdf">PDF</TabsTrigger>
+                        <TabsTrigger value="manual_rich_text">Rich Text</TabsTrigger>
+                        <TabsTrigger value="file_video">Video</TabsTrigger>
+                        <TabsTrigger value="file_pdf">PDF</TabsTrigger>
+                        <TabsTrigger value="file_document">Document</TabsTrigger>
                         <TabsTrigger value="link">Link</TabsTrigger>
-                        <TabsTrigger value="document">Document</TabsTrigger>
                       </TabsList>
-                      <TabsContent value="video" className="mt-4">
+                      <TabsContent value="manual_rich_text" className="mt-4">
+                        {showRichTextEditor ? (
+                          <LessonEditor
+                            onSave={handleCreateManualLesson}
+                            onCancel={() => setShowRichTextEditor(false)}
+                          />
+                        ) : (
+                          <Button
+                            variant="outline"
+                            onClick={() => setShowRichTextEditor(true)}
+                          >
+                            Open Rich Text Editor
+                          </Button>
+                        )}
+                      </TabsContent>
+                      <TabsContent value="file_video" className="mt-4">
                         <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                           <Upload className="h-8 w-8 mx-auto mb-3 text-gray-400" />
                           <p className="text-sm text-gray-600 mb-2">
                             Upload video file
                           </p>
-                          <Button variant="outline" size="sm">
-                            Choose File
+                          <Button variant="outline" size="sm" asChild>
+                            <label className="cursor-pointer">
+                              Choose File
+                              <input
+                                type="file"
+                                accept="video/*"
+                                className="hidden"
+                                onChange={(e) =>
+                                  setLessonFile(e.target.files?.[0] || null)
+                                }
+                              />
+                            </label>
                           </Button>
+                          {lessonFile && (
+                            <p className="text-sm text-gray-700 mt-3">
+                              Selected: {lessonFile.name}
+                            </p>
+                          )}
                         </div>
+                        <Button
+                          className="mt-4"
+                          onClick={handleCreateFileLesson}
+                          disabled={!lessonFile || !lessonTitle}
+                        >
+                          Upload Video Lesson
+                        </Button>
                       </TabsContent>
-                      <TabsContent value="pdf" className="mt-4">
+                      <TabsContent value="file_pdf" className="mt-4">
                         <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                           <Upload className="h-8 w-8 mx-auto mb-3 text-gray-400" />
                           <p className="text-sm text-gray-600 mb-2">
                             Upload PDF document
                           </p>
-                          <Button variant="outline" size="sm">
-                            Choose File
+                          <Button variant="outline" size="sm" asChild>
+                            <label className="cursor-pointer">
+                              Choose File
+                              <input
+                                type="file"
+                                accept=".pdf"
+                                className="hidden"
+                                onChange={(e) =>
+                                  setLessonFile(e.target.files?.[0] || null)
+                                }
+                              />
+                            </label>
                           </Button>
+                          {lessonFile && (
+                            <p className="text-sm text-gray-700 mt-3">
+                              Selected: {lessonFile.name}
+                            </p>
+                          )}
                         </div>
+                        <Button
+                          className="mt-4"
+                          onClick={handleCreateFileLesson}
+                          disabled={!lessonFile || !lessonTitle}
+                        >
+                          Upload PDF Lesson
+                        </Button>
                       </TabsContent>
-                      <TabsContent value="link" className="mt-4">
-                        <Input placeholder="Enter URL (e.g., https://...)" />
-                      </TabsContent>
-                      <TabsContent value="document" className="mt-4">
+                      <TabsContent value="file_document" className="mt-4">
                         <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                           <Upload className="h-8 w-8 mx-auto mb-3 text-gray-400" />
                           <p className="text-sm text-gray-600 mb-2">
                             Upload document
                           </p>
-                          <Button variant="outline" size="sm">
-                            Choose File
+                          <Button variant="outline" size="sm" asChild>
+                            <label className="cursor-pointer">
+                              Choose File
+                              <input
+                                type="file"
+                                accept=".doc,.docx,.txt"
+                                className="hidden"
+                                onChange={(e) =>
+                                  setLessonFile(e.target.files?.[0] || null)
+                                }
+                              />
+                            </label>
                           </Button>
+                          {lessonFile && (
+                            <p className="text-sm text-gray-700 mt-3">
+                              Selected: {lessonFile.name}
+                            </p>
+                          )}
                         </div>
+                        <Button
+                          className="mt-4"
+                          onClick={handleCreateFileLesson}
+                          disabled={!lessonFile || !lessonTitle}
+                        >
+                          Upload Document Lesson
+                        </Button>
+                      </TabsContent>
+                      <TabsContent value="link" className="mt-4">
+                        <Input
+                          placeholder="Enter URL (e.g., https://...)"
+                          value={lessonUrl}
+                          onChange={(e) => setLessonUrl(e.target.value)}
+                        />
+                        <Button
+                          className="mt-4"
+                          onClick={handleCreateLinkLesson}
+                          disabled={!lessonUrl || !lessonTitle}
+                        >
+                          Add Link Lesson
+                        </Button>
                       </TabsContent>
                     </Tabs>
                   </div>
 
-                  <div className="flex gap-3 pt-4">
-                    <Button>Add Lesson</Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowAddLesson(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
+                  {lessonType !== "manual_rich_text" && (
+                    <div className="flex gap-3 pt-4">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowAddLesson(false);
+                          setLessonTitle("");
+                          setLessonFile(null);
+                          setLessonUrl("");
+                          setSelectedTopicId("miscellaneous");
+                          setLessonType("manual_rich_text");
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )}
 
-            {/* Lessons List */}
-            <Card>
-              <CardContent className="p-6">
-                <div className="space-y-3">
-                  {mockLessons.map((lesson) => (
-                    <div
-                      key={lesson.id}
-                      className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="p-2 bg-gray-100 rounded-lg">
-                          {getLessonIcon(lesson.type)}
-                        </div>
+            {/* Lessons List Grouped by Topics */}
+            {lessonsLoading ? (
+              <div className="p-8 text-center">
+                <Loader2 className="h-8 w-8 mx-auto mb-4 animate-spin text-gray-400" />
+                <p className="text-gray-500">Loading lessons...</p>
+              </div>
+            ) : lessonsError ? (
+              <Alert className="mb-6 bg-red-50 border-red-200">
+                <AlertDescription className="text-red-800">
+                  {lessonsError}
+                </AlertDescription>
+              </Alert>
+            ) : lessonsByTopic.length === 0 ? (
+              <Card>
+                <CardContent className="p-8 text-center">
+                  <BookOpen className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                  <h3 className="text-lg font-semibold mb-2">No lessons yet</h3>
+                  <p className="text-gray-500">
+                    Start by generating a lesson from a curriculum topic or adding a manual lesson.
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-6">
+                {lessonsByTopic.map((topic) => (
+                  <Card key={topic.topic_id}>
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between">
                         <div>
-                          <p className="mb-1">{lesson.title}</p>
-                          <div className="flex items-center gap-3 text-xs text-gray-500">
-                            <span>
-                              Uploaded: {new Date(lesson.uploadedDate).toLocaleDateString()}
+                          {topic.week_title && (
+                            <span className="text-sm text-gray-500 mr-2">
+                              Week {topic.week_number}:
                             </span>
-                            {lesson.size && <span>• {lesson.size}</span>}
-                          </div>
+                          )}
+                          {topic.topic_title}
                         </div>
+                        <Badge variant="outline">
+                          {topic.lessons.length} {topic.lessons.length === 1 ? "lesson" : "lessons"}
+                        </Badge>
+                      </CardTitle>
+                      {topic.topic_description && (
+                        <p className="text-sm text-gray-600 mt-2">
+                          {topic.topic_description}
+                        </p>
+                      )}
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {topic.lessons.map((lesson) => (
+                          <div
+                            key={lesson.id}
+                            className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className="p-2 bg-gray-100 rounded-lg">
+                                {getLessonIcon(lesson.type)}
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <p className="font-medium">{lesson.title}</p>
+                                  <Badge variant="outline" className="text-xs">
+                                    {getLessonTypeLabel(lesson.type)}
+                                  </Badge>
+                                </div>
+                                <div className="flex items-center gap-3 text-xs text-gray-500 mt-1">
+                                  <span>
+                                    Created: {new Date(lesson.created_at).toLocaleDateString()}
+                                  </span>
+                                  {lesson.file_size && <span>• {lesson.file_size}</span>}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              {lesson.external_url && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  asChild
+                                >
+                                  <a
+                                    href={lesson.external_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <LinkIcon className="h-4 w-4 mr-2" />
+                                    Open
+                                  </a>
+                                </Button>
+                              )}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleViewLesson(lesson)}
+                                disabled={loadingLessonDetails}
+                              >
+                                <Eye className="h-4 w-4 mr-2" />
+                                {loadingLessonDetails ? "Loading..." : "View"}
+                              </Button>
+                              {lesson.file_url && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  asChild
+                                >
+                                  <a
+                                    href={`/api/lessons/file/${lesson.course_id}/${lesson.id}/${lesson.file_url.split("/").pop()}`}
+                                    target="_blank"
+                                  >
+                                    <Download className="h-4 w-4 mr-2" />
+                                    Download
+                                  </a>
+                                </Button>
+                              )}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDeleteLesson(lesson.id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
-                          <Eye className="h-4 w-4 mr-2" />
-                          View
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Edit className="h-4 w-4 mr-2" />
-                          Edit
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         )}
+
+        {/* Lesson Viewer Dialog */}
+        <Dialog open={!!selectedLessonForView} onOpenChange={(open) => {
+          if (!open) {
+            setSelectedLessonForView(null);
+            setLoadingLessonDetails(false);
+          }
+        }}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                {selectedLessonForView && getLessonIcon(selectedLessonForView.type)}
+                {selectedLessonForView?.title || "Lesson"}
+              </DialogTitle>
+              <DialogDescription>
+                {selectedLessonForView && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <Badge variant="outline">
+                      {getLessonTypeLabel(selectedLessonForView.type || "unknown")}
+                    </Badge>
+                    <span className="text-sm text-gray-500">
+                      Created: {selectedLessonForView.created_at ? new Date(selectedLessonForView.created_at).toLocaleDateString() : "Unknown"}
+                    </span>
+                  </div>
+                )}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="min-h-[200px]">
+
+            {loadingLessonDetails ? (
+              <div className="py-12 text-center">
+                <Loader2 className="h-8 w-8 mx-auto mb-4 animate-spin text-gray-400" />
+                <p className="text-gray-500">Loading lesson details...</p>
+              </div>
+            ) : selectedLessonForView ? (
+              <div className="mt-4">
+                {/* Debug info - remove in production */}
+                {process.env.NODE_ENV === 'development' && (
+                  <div className="mb-4 p-3 bg-gray-100 rounded text-xs">
+                    <details>
+                      <summary className="cursor-pointer font-semibold">Debug: Lesson Data</summary>
+                      <pre className="mt-2 overflow-auto max-h-40">
+                        {JSON.stringify(selectedLessonForView, null, 2)}
+                      </pre>
+                    </details>
+                  </div>
+                )}
+                {/* Render content based on lesson type */}
+                {(() => {
+                  // Link Lesson
+                  if (selectedLessonForView.type === "link" && selectedLessonForView.external_url) {
+                    return (
+                      <div className="text-center py-8">
+                        <LinkIcon className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+                        <p className="text-gray-600 mb-6">
+                          This lesson is an external resource. Click the link below to access it.
+                        </p>
+                        <Button size="lg" className="gap-2" asChild>
+                          <a href={selectedLessonForView.external_url} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="w-5 h-5" />
+                            Open External Link
+                          </a>
+                        </Button>
+                      </div>
+                    );
+                  }
+
+                  // File Lesson
+                  if ((selectedLessonForView.type === "file_pdf" || 
+                       selectedLessonForView.type === "file_video" || 
+                       selectedLessonForView.type === "file_document") && 
+                      selectedLessonForView.file_url) {
+                    return (
+                      <div className="text-center py-8">
+                        <div className="mb-4">{getLessonIcon(selectedLessonForView.type)}</div>
+                        <p className="text-gray-600 mb-6">
+                          {getLessonTypeLabel(selectedLessonForView.type)} - Click below to download or view
+                        </p>
+                        <Button size="lg" className="gap-2" asChild>
+                          <a
+                            href={`/api/lessons/file/${selectedLessonForView.course_id}/${selectedLessonForView.id}/${selectedLessonForView.file_url.split("/").pop()}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Download className="w-5 h-5" />
+                            {selectedLessonForView.type === "file_video" ? "Watch Video" : "Download File"}
+                          </a>
+                        </Button>
+                        {selectedLessonForView.file_size && (
+                          <p className="text-sm text-gray-500 mt-4">
+                            File size: {selectedLessonForView.file_size}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  // Structured Content (AI-generated or manual rich text)
+                  if (selectedLessonForView.type === "ai_generated" || selectedLessonForView.type === "manual_rich_text") {
+                    const sections = selectedLessonForView.notes?.sections;
+                    if (sections && Array.isArray(sections) && sections.length > 0) {
+                      return (
+                        <div className="prose prose-slate max-w-none">
+                          {sections.map((section: any, index: number) => (
+                            <div key={index} className="mb-8">
+                              <h3 className="text-gray-900 mt-6 mb-3 text-xl font-semibold">
+                                {section.title || `Section ${index + 1}`}
+                              </h3>
+                              <div
+                                className="text-gray-700 leading-relaxed prose prose-slate max-w-none"
+                                dangerouslySetInnerHTML={{ __html: parseMarkdown(section.content || "") }}
+                              />
+                            </div>
+                          ))}
+                          {selectedLessonForView.notes?.estimated_duration && (
+                            <div className="mt-6 pt-6 border-t border-gray-200">
+                              <div className="flex items-center gap-2 text-sm text-gray-600">
+                                <Clock className="w-4 h-4" />
+                                <span>Estimated duration: {selectedLessonForView.notes.estimated_duration}</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div className="text-center py-8 text-gray-500">
+                          <p className="mb-2">This lesson has no content sections yet.</p>
+                          <p className="text-sm">Type: {selectedLessonForView.type}</p>
+                          {selectedLessonForView.notes && (
+                            <div className="mt-4 p-4 bg-gray-50 rounded text-left">
+                              <p className="text-sm font-semibold mb-2">Notes structure:</p>
+                              <pre className="text-xs bg-white p-3 rounded overflow-auto max-h-40">
+                                {JSON.stringify(selectedLessonForView.notes, null, 2)}
+                              </pre>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }
+                  }
+
+                  // Fallback for unknown types
+                  return (
+                    <div className="text-center py-8">
+                      <div className="mb-4">{getLessonIcon(selectedLessonForView.type)}</div>
+                      <p className="text-gray-600 mb-2">Lesson Type: {selectedLessonForView.type || "Unknown"}</p>
+                      <div className="mt-4 p-4 bg-gray-50 rounded text-left">
+                        <p className="text-sm font-semibold mb-2">Full Lesson Data:</p>
+                        <pre className="text-xs bg-white p-3 rounded overflow-auto max-h-60">
+                          {JSON.stringify(selectedLessonForView, null, 2)}
+                        </pre>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            ) : (
+              <div className="py-8 text-center text-gray-500">
+                <p>No lesson data available.</p>
+                <p className="text-xs mt-2">selectedLessonForView: {selectedLessonForView ? "exists" : "null"}</p>
+              </div>
+            )}
+            </div>
+
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setSelectedLessonForView(null)}>
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Assignments Section */}
         {activeSection === "assignments" && (

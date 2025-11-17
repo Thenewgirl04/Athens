@@ -1,0 +1,1096 @@
+[
+  {
+    "id": "quiz_cs101_week1_main_67da771b",
+    "courseId": "cs101",
+    "weekNumber": 1,
+    "quizType": "main",
+    "title": "Week 1 Main Quiz",
+    "description": "Main quiz for Week 1 covering current week's topics and bonus questions from previous week",
+    "questions": [
+      {
+        "id": "q1",
+        "question": "Which of the following best describes Computer Science?",
+        "type": "multiple_choice",
+        "options": [
+          "The study of how to build and maintain computer hardware.",
+          "The study of computation, algorithms, and information.",
+          "The practice of writing software for business applications.",
+          "The design and implementation of computer networks."
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_1_1",
+        "topicTitle": "What is Computer Science?",
+        "conceptId": "cs_definition",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q2",
+        "question": "What is a key design philosophy of the Go programming language?",
+        "type": "multiple_choice",
+        "options": [
+          "Extensive use of inheritance and complex class hierarchies.",
+          "Emphasis on simplicity, readability, and efficient concurrency.",
+          "Heavy reliance on dynamic typing and metaprogramming.",
+          "Prioritization of functional programming paradigms above all else."
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_1_2",
+        "topicTitle": "Introduction to the Go Programming Language",
+        "conceptId": "go_design_philosophy",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q3",
+        "question": "In the context of setting up a development environment, what is VS Code primarily used for?",
+        "type": "multiple_choice",
+        "options": [
+          "Compiling Go programs directly.",
+          "Running Go programs in a virtual machine.",
+          "A code editor with extensions for writing and debugging code.",
+          "Managing Go package dependencies."
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_1_3",
+        "topicTitle": "Setting up Your Development Environment (VS Code & Terminal)",
+        "conceptId": "vs_code_purpose",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q4",
+        "question": "What is the purpose of the `package main` declaration in a Go program?",
+        "type": "multiple_choice",
+        "options": [
+          "It signifies that the package is for internal use only.",
+          "It indicates that the package defines a library that can be imported by other programs.",
+          "It declares an executable program, signifying it's the entry point.",
+          "It's used for defining external dependencies."
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_1_4",
+        "topicTitle": "Your First Go Program: 'Hello, World!'",
+        "conceptId": "package_main",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q5",
+        "question": "Which of the following is NOT typically considered a sub-discipline of Computer Science?",
+        "type": "multiple_choice",
+        "options": [
+          "Artificial Intelligence",
+          "Software Engineering",
+          "Astrophysics",
+          "Algorithms and Data Structures"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_1_1",
+        "topicTitle": "What is Computer Science?",
+        "conceptId": "cs_sub_disciplines",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q6",
+        "question": "What is the command typically used in a terminal to navigate to a different directory?",
+        "type": "multiple_choice",
+        "options": [
+          "ls",
+          "mkdir",
+          "cd",
+          "pwd"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_1_3",
+        "topicTitle": "Setting up Your Development Environment (VS Code & Terminal)",
+        "conceptId": "terminal_cd_command",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q7",
+        "question": "In the 'Hello, World!' Go program, what is the role of the `fmt` package?",
+        "type": "multiple_choice",
+        "options": [
+          "To manage network connections.",
+          "To handle mathematical operations.",
+          "To perform input and output operations, like printing to the console.",
+          "To define custom data types."
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_1_4",
+        "topicTitle": "Your First Go Program: 'Hello, World!'",
+        "conceptId": "fmt_package",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q8",
+        "question": "Go's concurrency features are often associated with which of the following concepts?",
+        "type": "multiple_choice",
+        "options": [
+          "Classes and Objects",
+          "Goroutines and Channels",
+          "Exception Handling",
+          "Inheritance"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_1_2",
+        "topicTitle": "Introduction to the Go Programming Language",
+        "conceptId": "go_concurrency",
+        "difficultyLevel": "hard",
+        "isBonus": false
+      }
+    ],
+    "topicIds": [
+      "topic_1_1",
+      "topic_1_2",
+      "topic_1_3",
+      "topic_1_4"
+    ],
+    "createdAt": "2025-11-17T17:44:08.465800Z",
+    "maxScore": 8
+  },
+  {
+    "id": "quiz_cs101_week2_main_67ce3570",
+    "courseId": "cs101",
+    "weekNumber": 2,
+    "quizType": "main",
+    "title": "Week 2 Main Quiz",
+    "description": "Main quiz for Week 2 covering current week's topics and bonus questions from previous week",
+    "questions": [
+      {
+        "id": "q1",
+        "question": "Which Go data type is used to represent whole numbers, both positive and negative?",
+        "type": "multiple_choice",
+        "options": [
+          "float64",
+          "bool",
+          "int",
+          "string"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_2_1",
+        "topicTitle": "Understanding Data Types",
+        "conceptId": "integers",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q2",
+        "question": "What is the primary purpose of the `:=` operator in Go?",
+        "type": "multiple_choice",
+        "options": [
+          "To declare a variable of a specific type.",
+          "To assign a value to an existing variable.",
+          "To declare and initialize a variable with type inference.",
+          "To perform arithmetic operations."
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_2_2",
+        "topicTitle": "Declaring and Using Variables",
+        "conceptId": "short_variable_declaration",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q3",
+        "question": "Which of the following keywords is used to declare a constant in Go?",
+        "type": "multiple_choice",
+        "options": [
+          "var",
+          "let",
+          "const",
+          "define"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_2_3",
+        "topicTitle": "Constants and Their Usage",
+        "conceptId": "declaring_constants",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q4",
+        "question": "In Go, what is the result of the expression `10 / 3` when both operands are integers?",
+        "type": "multiple_choice",
+        "options": [
+          "3.3333...",
+          "3",
+          "4",
+          "Error"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_4",
+        "topicTitle": "Basic Arithmetic and Logical Operators",
+        "conceptId": "integer_division",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q5",
+        "question": "Consider the following Go code snippet:\n\n```go\nvar isComplete bool = true\n\nif isComplete {\n    fmt.Println(\"Done!\")\n}\n```\n\nWhat will be printed to the console?",
+        "type": "multiple_choice",
+        "options": [
+          "Done!",
+          "false",
+          "true",
+          "Nothing will be printed."
+        ],
+        "correctAnswer": 0,
+        "topicId": "topic_2_1",
+        "topicTitle": "Understanding Data Types",
+        "conceptId": "booleans",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q6",
+        "question": "What does it mean for a variable to be 'untyped' in the context of Go constants?",
+        "type": "multiple_choice",
+        "options": [
+          "It cannot be assigned a value.",
+          "It does not have a fixed underlying type and can be used in contexts requiring different types.",
+          "It must be declared using the `var` keyword.",
+          "It is automatically initialized to zero."
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_3",
+        "topicTitle": "Constants and Their Usage",
+        "conceptId": "untyped_constants",
+        "difficultyLevel": "hard",
+        "isBonus": false
+      },
+      {
+        "id": "q7",
+        "question": "Which operator is used to check if two boolean expressions are both true in Go?",
+        "type": "multiple_choice",
+        "options": [
+          "||",
+          "!",
+          "&&",
+          "=="
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_2_4",
+        "topicTitle": "Basic Arithmetic and Logical Operators",
+        "conceptId": "logical_and",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q8",
+        "question": "If you declare a variable using `var myVar float64`, and do not explicitly assign a value, what will its initial value be?",
+        "type": "multiple_choice",
+        "options": [
+          "0",
+          "0.0",
+          "NaN",
+          "nil"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_2",
+        "topicTitle": "Declaring and Using Variables",
+        "conceptId": "variable_initialization",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q9",
+        "question": "What is the main command used to run a Go program from the terminal?",
+        "type": "multiple_choice",
+        "options": [
+          "go build",
+          "go run",
+          "go start",
+          "go execute"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_1_3",
+        "topicTitle": "Setting up Your Development Environment (VS Code & Terminal)",
+        "conceptId": "running_go_programs",
+        "difficultyLevel": "easy",
+        "isBonus": true
+      },
+      {
+        "id": "q10",
+        "question": "In Go, what does the `package main` declaration signify?",
+        "type": "multiple_choice",
+        "options": [
+          "It indicates that the package is intended for use by other packages.",
+          "It is a required declaration for any Go package.",
+          "It signifies that the package is an executable program.",
+          "It imports a specific set of standard library functions."
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_1_4",
+        "topicTitle": "Your First Go Program: 'Hello, World!'",
+        "conceptId": "package_main",
+        "difficultyLevel": "medium",
+        "isBonus": true
+      }
+    ],
+    "topicIds": [
+      "topic_2_1",
+      "topic_2_2",
+      "topic_2_3",
+      "topic_2_4"
+    ],
+    "createdAt": "2025-11-17T17:47:55.214357Z",
+    "maxScore": 10
+  },
+  {
+    "id": "quiz_cs101_week1_refresher_964c0aa7",
+    "courseId": "cs101",
+    "weekNumber": 1,
+    "quizType": "refresher",
+    "title": "Week 1 Refresher Quiz",
+    "description": "Optional refresher quiz for Week 1 - questions change each time",
+    "questions": [
+      {
+        "id": "q1",
+        "question": "Beyond computational theory, what is a significant driving force behind the evolution of Computer Science as a discipline?",
+        "type": "multiple_choice",
+        "options": [
+          "The pursuit of purely mathematical elegance",
+          "The demand for solutions to real-world problems and technological advancement",
+          "The historical legacy of early computing pioneers",
+          "The development of theoretical algorithms without practical application"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_1_1",
+        "topicTitle": "What is Computer Science?",
+        "conceptId": "field_impact",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q2",
+        "question": "What design principle is a cornerstone of Go's philosophy, aimed at making code easier to understand and maintain?",
+        "type": "multiple_choice",
+        "options": [
+          "Extensive use of complex inheritance hierarchies",
+          "Prioritizing developer productivity through explicit error handling and clear syntax",
+          "Encouraging meta-programming for dynamic code generation",
+          "Maximizing abstraction to hide implementation details completely"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_1_2",
+        "topicTitle": "Introduction to the Go Programming Language",
+        "conceptId": "design_philosophy",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q3",
+        "question": "When working with Go in VS Code, which of the following is a common and highly recommended extension for enhancing Go development?",
+        "type": "multiple_choice",
+        "options": [
+          "A CSS preprocessor extension",
+          "A Go-specific extension providing linting, debugging, and IntelliSense",
+          "A database management extension",
+          "A graphic design plugin"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_1_3",
+        "topicTitle": "Setting up Your Development Environment",
+        "conceptId": "vs_code_extensions",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q4",
+        "question": "In the context of a Go program, what is the primary purpose of the `package main` declaration?",
+        "type": "multiple_choice",
+        "options": [
+          "To import external libraries",
+          "To define a reusable module for other programs",
+          "To indicate that the package is an executable program",
+          "To declare global variables"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_1_4",
+        "topicTitle": "Your First Go Program: 'Hello, World!'",
+        "conceptId": "package_main",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q5",
+        "question": "Which sub-discipline of Computer Science often focuses on algorithms, data structures, and the theoretical limits of computation?",
+        "type": "multiple_choice",
+        "options": [
+          "Human-Computer Interaction (HCI)",
+          "Software Engineering",
+          "Artificial Intelligence (AI)",
+          "Theoretical Computer Science"
+        ],
+        "correctAnswer": 3,
+        "topicId": "topic_1_1",
+        "topicTitle": "What is Computer Science?",
+        "conceptId": "sub_disciplines",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q6",
+        "question": "What is a key advantage of Go's built-in support for concurrency?",
+        "type": "multiple_choice",
+        "options": [
+          "It requires complex external libraries to manage threads",
+          "It allows for efficient handling of multiple tasks simultaneously without significant overhead",
+          "It is primarily designed for single-threaded applications",
+          "It introduces significant performance bottlenecks for parallel execution"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_1_2",
+        "topicTitle": "Introduction to the Go Programming Language",
+        "conceptId": "concurrency_features",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q7",
+        "question": "Imagine you've navigated into a directory named 'my_project' using your terminal. To create a new empty file named 'main.go' within this directory, which command would you use?",
+        "type": "multiple_choice",
+        "options": [
+          "mkdir main.go",
+          "cd main.go",
+          "touch main.go",
+          "ls main.go"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_1_3",
+        "topicTitle": "Setting up Your Development Environment",
+        "conceptId": "terminal_file_operations",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q8",
+        "question": "In a Go program, what is the purpose of the `import` statement?",
+        "type": "multiple_choice",
+        "options": [
+          "To define custom data types",
+          "To execute a function immediately",
+          "To make functions and variables from other packages available for use",
+          "To print output to the console"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_1_4",
+        "topicTitle": "Your First Go Program: 'Hello, World!'",
+        "conceptId": "import_statement",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q9",
+        "question": "Which of the following is NOT a common use case for the Go programming language, as discussed in Week 1?",
+        "type": "multiple_choice",
+        "options": [
+          "Building scalable network services and APIs",
+          "Developing client-side web applications with complex UIs",
+          "Creating command-line tools",
+          "Managing cloud infrastructure and microservices"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_1_2",
+        "topicTitle": "Introduction to the Go Programming Language",
+        "conceptId": "common_use_cases",
+        "difficultyLevel": "hard",
+        "isBonus": false
+      },
+      {
+        "id": "q10",
+        "question": "If you are in a terminal and want to change your current directory to a subdirectory named 'src' that resides within your current location, what command would you execute?",
+        "type": "multiple_choice",
+        "options": [
+          "pwd src",
+          "mkdir src",
+          "cp src .",
+          "cd src"
+        ],
+        "correctAnswer": 3,
+        "topicId": "topic_1_3",
+        "topicTitle": "Setting up Your Development Environment",
+        "conceptId": "terminal_navigation",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      }
+    ],
+    "topicIds": [
+      "topic_1_1",
+      "topic_1_2",
+      "topic_1_3",
+      "topic_1_4"
+    ],
+    "createdAt": "2025-11-17T17:52:52.474624Z",
+    "maxScore": 10
+  },
+  {
+    "id": "quiz_cs101_week2_dynamic_stu_001_4f52b739",
+    "courseId": "cs101",
+    "weekNumber": 2,
+    "quizType": "dynamic",
+    "title": "Week 2 Dynamic Quiz",
+    "description": "Personalized quiz targeting your weak areas from Week 2",
+    "questions": [
+      {
+        "id": "q1",
+        "question": "Which of the following is the correct way to declare an integer variable named 'age' and initialize it with the value 30 using short variable declaration in Go?",
+        "type": "multiple_choice",
+        "options": [
+          "var age int = 30",
+          "age := 30",
+          "let age = 30",
+          "const age = 30"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_2",
+        "topicTitle": "Declaring and Using Variables",
+        "conceptId": "short_variable_declaration",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q2",
+        "question": "Consider the following Go code snippet:\n\n```go\nvar score int\nscore = 95\n```\n\nWhat is the initial value of `score` before it is assigned 95?",
+        "type": "multiple_choice",
+        "options": [
+          "1",
+          "0",
+          "nil",
+          "The code will not compile"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_2",
+        "topicTitle": "Declaring and Using Variables",
+        "conceptId": "default_initialization",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q3",
+        "question": "What will be the output of the following Go code?\n\n```go\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n\tresult := 10 + 5 * 2\n\tfmt.Println(result)\n}\n```",
+        "type": "multiple_choice",
+        "options": [
+          "30",
+          "20",
+          "25",
+          "100"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_2_4",
+        "topicTitle": "Basic Arithmetic and Logical Operators",
+        "conceptId": "operator_precedence_arithmetic",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q4",
+        "question": "In Go, what does the `:=` operator do?",
+        "type": "multiple_choice",
+        "options": [
+          "It declares a variable without initializing it.",
+          "It declares and initializes a variable with type inference.",
+          "It assigns a new value to an existing variable.",
+          "It declares a constant."
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_2",
+        "topicTitle": "Declaring and Using Variables",
+        "conceptId": "short_variable_declaration_purpose",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q5",
+        "question": "Evaluate the following Go expression: `7 % 3`",
+        "type": "multiple_choice",
+        "options": [
+          "2",
+          "2.33",
+          "1",
+          "0"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_2_4",
+        "topicTitle": "Basic Arithmetic and Logical Operators",
+        "conceptId": "modulo_operator",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q6",
+        "question": "Consider this Go code:\n\n```go\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar count int\n\tcount = 10\n\tcount := 5 // This will cause an error\n\tfmt.Println(count)\n}\n```\n\nWhy will the line `count := 5` cause an error?",
+        "type": "multiple_choice",
+        "options": [
+          "You cannot reassign a value to a variable declared with `var`.",
+          "You cannot redeclare a variable in the same scope.",
+          "The `:=` operator can only be used for initializing new variables.",
+          "Integer types cannot be assigned repeatedly."
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_2",
+        "topicTitle": "Declaring and Using Variables",
+        "conceptId": "redeclaration_error",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q7",
+        "question": "What is the result of the logical expression `(true || false) && !false` in Go?",
+        "type": "multiple_choice",
+        "options": [
+          "true",
+          "false",
+          "Error",
+          "Depends on the order of operations"
+        ],
+        "correctAnswer": 0,
+        "topicId": "topic_2_4",
+        "topicTitle": "Basic Arithmetic and Logical Operators",
+        "conceptId": "logical_operators_evaluation",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q8",
+        "question": "Which of the following Go statements correctly declares a variable named `temperature` using `var` and specifies its type as float64, initializing it to 25.5?",
+        "type": "multiple_choice",
+        "options": [
+          "var temperature := 25.5",
+          "temperature := float64(25.5)",
+          "var temperature float64 = 25.5",
+          "float64 temperature = 25.5"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_2_2",
+        "topicTitle": "Declaring and Using Variables",
+        "conceptId": "explicit_declaration_initialization",
+        "difficultyLevel": "hard",
+        "isBonus": false
+      },
+      {
+        "id": "q9",
+        "question": "Consider the Go code:\n\n```go\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := 10\n\tb := 3\n\tfmt.Println(a / b)\n}\n```\n\nWhat will be the output?",
+        "type": "multiple_choice",
+        "options": [
+          "3.3333333333333335",
+          "3",
+          "Error: Division by zero",
+          "0"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_4",
+        "topicTitle": "Basic Arithmetic and Logical Operators",
+        "conceptId": "integer_division",
+        "difficultyLevel": "hard",
+        "isBonus": false
+      },
+      {
+        "id": "q10",
+        "question": "In Go, when you declare a variable using `var name string` without explicit initialization, what is its zero value?",
+        "type": "multiple_choice",
+        "options": [
+          "0",
+          "\"\"",
+          "false",
+          "nil"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_2",
+        "topicTitle": "Declaring and Using Variables",
+        "conceptId": "zero_values",
+        "difficultyLevel": "hard",
+        "isBonus": false
+      }
+    ],
+    "topicIds": [
+      "topic_2_1",
+      "topic_2_2",
+      "topic_2_3",
+      "topic_2_4"
+    ],
+    "createdAt": "2025-11-17T18:09:25.856536Z",
+    "maxScore": 10
+  },
+  {
+    "id": "quiz_cs101_week3_main_67f67d3f",
+    "courseId": "cs101",
+    "weekNumber": 3,
+    "quizType": "main",
+    "title": "Week 3 Main Quiz",
+    "description": "Main quiz for Week 3 covering current week's topics and bonus questions from previous week",
+    "questions": [
+      {
+        "id": "q1",
+        "question": "Which statement is used to execute a block of code only if a specified condition is true in Go?",
+        "type": "multiple_choice",
+        "options": [
+          "else",
+          "switch",
+          "if",
+          "for"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_3_1",
+        "topicTitle": "Conditional Statements: `if`, `else if`, `else`",
+        "conceptId": "if_statement",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q2",
+        "question": "Consider the following Go code: \n\n```go\nscore := 85\nif score >= 90 {\n  println(\"A\")\n} else if score >= 80 {\n  println(\"B\")\n} else {\n  println(\"C\")\n}\n```\n\nWhat will be printed?",
+        "type": "multiple_choice",
+        "options": [
+          "A",
+          "B",
+          "C",
+          "Nothing"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_3_1",
+        "topicTitle": "Conditional Statements: `if`, `else if`, `else`",
+        "conceptId": "if_else_if_else_chain",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q3",
+        "question": "In Go, the `switch` statement can have a `default` case. When does the `default` case execute?",
+        "type": "multiple_choice",
+        "options": [
+          "Always, regardless of the switch expression",
+          "If no other `case` matches the switch expression",
+          "Only if the switch expression is zero",
+          "If the switch expression is `nil`"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_3_2",
+        "topicTitle": "The `switch` Statement in Go",
+        "conceptId": "switch_default_case",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q4",
+        "question": "By default, in a Go `switch` statement, does a `case` automatically 'fall through' to the next `case`?",
+        "type": "multiple_choice",
+        "options": [
+          "Yes, similar to C/C++",
+          "No, each `case` must explicitly end with `break`",
+          "No, each `case` automatically exits the `switch` block",
+          "Only if the `fallthrough` keyword is used"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_3_2",
+        "topicTitle": "The `switch` Statement in Go",
+        "conceptId": "switch_fallthrough",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q5",
+        "question": "Which form of the `for` loop in Go is used to iterate a specific number of times, often with an initialization, condition, and post-statement?",
+        "type": "multiple_choice",
+        "options": [
+          "for condition {}",
+          "for {}",
+          "for initialization; condition; post-statement {}",
+          "for range {}"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_3_3",
+        "topicTitle": "Looping Constructs: `for` Loops",
+        "conceptId": "for_init_cond_post",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q6",
+        "question": "What is the primary function of the `break` statement within a loop in Go?",
+        "type": "multiple_choice",
+        "options": [
+          "To skip the current iteration and move to the next",
+          "To immediately terminate the loop and exit its block",
+          "To restart the loop from the beginning",
+          "To print the current loop counter"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_3_4",
+        "topicTitle": "`break` and `continue` Statements",
+        "conceptId": "break_statement",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q7",
+        "question": "Consider the following Go code:\n\n```go\nfor i := 0; i < 5; i++ {\n  if i == 2 {\n    continue\n  }\n  println(i)\n}\n```\n\nWhat will be printed?",
+        "type": "multiple_choice",
+        "options": [
+          "0 1 2 3 4",
+          "0 1 3 4",
+          "0 1 2 3 4 5",
+          "1 2 3 4"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_3_4",
+        "topicTitle": "`break` and `continue` Statements",
+        "conceptId": "continue_statement_in_for",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q8",
+        "question": "Which `switch` statement form in Go is used when you want to execute code without any specific condition, similar to a catch-all?",
+        "type": "multiple_choice",
+        "options": [
+          "case true:",
+          "default:",
+          "case nil:",
+          "fallthrough:"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_3_2",
+        "topicTitle": "The `switch` Statement in Go",
+        "conceptId": "switch_default_usage",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q9",
+        "question": "In Go, what is the result of the expression `5 / 2` if both operands are integers?",
+        "type": "multiple_choice",
+        "options": [
+          "2.5",
+          "2",
+          "3",
+          "Error"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_1",
+        "topicTitle": "Understanding Data Types (Integers, Floats, Booleans)",
+        "conceptId": "integer_division",
+        "difficultyLevel": "easy",
+        "isBonus": true
+      },
+      {
+        "id": "q10",
+        "question": "Which Go operator is used to check if two values are NOT equal?",
+        "type": "multiple_choice",
+        "options": [
+          "==",
+          "!=",
+          "<>",
+          "==="
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_2_4",
+        "topicTitle": "Basic Arithmetic and Logical Operators",
+        "conceptId": "not_equal_operator",
+        "difficultyLevel": "easy",
+        "isBonus": true
+      }
+    ],
+    "topicIds": [
+      "topic_3_1",
+      "topic_3_2",
+      "topic_3_3",
+      "topic_3_4"
+    ],
+    "createdAt": "2025-11-17T18:12:26.400493Z",
+    "maxScore": 10
+  },
+  {
+    "id": "quiz_cs101_week4_main_1f5dba4a",
+    "courseId": "cs101",
+    "weekNumber": 4,
+    "quizType": "main",
+    "title": "Week 4 Main Quiz",
+    "description": "Main quiz for Week 4 covering current week's topics and bonus questions from previous week",
+    "questions": [
+      {
+        "id": "q1",
+        "question": "Which of the following best describes a fixed-size array in Go?",
+        "type": "multiple_choice",
+        "options": [
+          "A collection of elements that can grow or shrink dynamically.",
+          "A data structure with a fixed number of elements that are all of the same type.",
+          "A key-value pair collection where keys must be unique.",
+          "A sequence of characters representing text."
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_4_1",
+        "topicTitle": "Arrays in Go",
+        "conceptId": "array_definition",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q2",
+        "question": "What is the default value for an integer element in a Go array if not explicitly initialized?",
+        "type": "multiple_choice",
+        "options": [
+          "1",
+          "nil",
+          "0",
+          "An empty string"
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_4_1",
+        "topicTitle": "Arrays in Go",
+        "conceptId": "array_initialization",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q3",
+        "question": "How do you access the third element of an array named `myArray` in Go?",
+        "type": "multiple_choice",
+        "options": [
+          "myArray[3]",
+          "myArray[2]",
+          "myArray.get(2)",
+          "myArray(3)"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_4_1",
+        "topicTitle": "Arrays in Go",
+        "conceptId": "array_access",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q4",
+        "question": "What is the key difference between a Go slice and a Go array?",
+        "type": "multiple_choice",
+        "options": [
+          "Slices are always fixed-size, while arrays are dynamic.",
+          "Arrays can hold elements of different types, while slices can only hold one type.",
+          "Slices provide a dynamic view into an underlying array and can change size, while arrays have a fixed size.",
+          "There is no significant difference; they are interchangeable."
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_4_2",
+        "topicTitle": "Introduction to Slices",
+        "conceptId": "slice_array_difference",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q5",
+        "question": "A Go slice has two important properties: length and capacity. What do these represent?",
+        "type": "multiple_choice",
+        "options": [
+          "Length is the number of elements currently in the slice; capacity is the maximum number of elements the underlying array can hold before reallocation.",
+          "Length is the maximum number of elements the underlying array can hold; capacity is the number of elements currently in the slice.",
+          "Length is the memory address of the first element; capacity is the memory address of the last element.",
+          "Length refers to the number of unique elements; capacity refers to the total number of elements."
+        ],
+        "correctAnswer": 0,
+        "topicId": "topic_4_2",
+        "topicTitle": "Introduction to Slices",
+        "conceptId": "slice_length_capacity",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q6",
+        "question": "When you use the `append` function in Go to add an element to a slice, and the slice's current capacity is insufficient, what happens?",
+        "type": "multiple_choice",
+        "options": [
+          "The program crashes with an out-of-bounds error.",
+          "The element is not added, and the slice remains unchanged.",
+          "A new, larger underlying array is allocated, elements are copied over, and the new element is added.",
+          "The existing underlying array is resized in-place, causing potential data corruption."
+        ],
+        "correctAnswer": 2,
+        "topicId": "topic_4_3",
+        "topicTitle": "Slice Operations: `append` and `copy`",
+        "conceptId": "append_reallocation",
+        "difficultyLevel": "hard",
+        "isBonus": false
+      },
+      {
+        "id": "q7",
+        "question": "Consider the following Go code snippet:\n\n```go\nsource := []int{1, 2, 3}\ndest := make([]int, 2)\ncopy(dest, source)\n```\n\nWhat will be the value of `dest` after this operation?",
+        "type": "multiple_choice",
+        "options": [
+          "[1, 2, 3]",
+          "[1, 2]",
+          "[0, 0]",
+          "[1, 2, 0]"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_4_3",
+        "topicTitle": "Slice Operations: `append` and `copy`",
+        "conceptId": "copy_operation",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q8",
+        "question": "When using the `range` keyword to iterate over a slice in Go, what does the second variable in `for index, value := range mySlice` represent?",
+        "type": "multiple_choice",
+        "options": [
+          "The length of the slice.",
+          "The capacity of the slice.",
+          "The index of the current element.",
+          "The value of the current element."
+        ],
+        "correctAnswer": 3,
+        "topicId": "topic_4_4",
+        "topicTitle": "Iterating Over Slices using `range`",
+        "conceptId": "range_value",
+        "difficultyLevel": "easy",
+        "isBonus": false
+      },
+      {
+        "id": "q9",
+        "question": "If you only need the values from a slice during iteration and not their indices, how should you structure your `range` loop in Go?",
+        "type": "multiple_choice",
+        "options": [
+          "for value := range mySlice",
+          "for _, value := range mySlice",
+          "for index := range mySlice",
+          "for mySlice, value := range mySlice"
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_4_4",
+        "topicTitle": "Iterating Over Slices using `range`",
+        "conceptId": "range_ignore_index",
+        "difficultyLevel": "medium",
+        "isBonus": false
+      },
+      {
+        "id": "q10",
+        "question": "In Go, what is the primary purpose of the `if` statement?",
+        "type": "multiple_choice",
+        "options": [
+          "To execute a block of code repeatedly a fixed number of times.",
+          "To execute a block of code only if a specific condition is true.",
+          "To choose one of many code blocks to execute based on a value.",
+          "To jump to a different part of the program."
+        ],
+        "correctAnswer": 1,
+        "topicId": "topic_3_1",
+        "topicTitle": "Conditional Statements: `if`, `else if`, `else`",
+        "conceptId": "if_statement_purpose",
+        "difficultyLevel": "easy",
+        "isBonus": true
+      }
+    ],
+    "topicIds": [
+      "topic_4_1",
+      "topic_4_2",
+      "topic_4_3",
+      "topic_4_4"
+    ],
+    "createdAt": "2025-11-17T18:13:07.340347Z",
+    "maxScore": 10
+  }
+]

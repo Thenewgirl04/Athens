@@ -1,0 +1,181 @@
+[
+  {
+    "id": "quiz_001",
+    "courseId": "course_001",
+    "title": "React Basics Quiz",
+    "description": "Test your understanding of React fundamentals",
+    "questions": [
+      {
+        "id": "q1",
+        "question": "What is JSX?",
+        "type": "multiple_choice",
+        "options": [
+          "JavaScript XML",
+          "Java Syntax Extension",
+          "JSON XML"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": "q2",
+        "question": "What is a component?",
+        "type": "multiple_choice",
+        "options": [
+          "A function",
+          "A class",
+          "Both"
+        ],
+        "correctAnswer": 2
+      }
+    ],
+    "maxScore": 100,
+    "timeLimit": 30
+  },
+  {
+    "id": "quiz_002",
+    "courseId": "course_001",
+    "title": "React Hooks Quiz",
+    "description": "Test your knowledge of React Hooks",
+    "questions": [
+      {
+        "id": "q3",
+        "question": "What does useState return?",
+        "type": "multiple_choice",
+        "options": [
+          "A value",
+          "An array",
+          "An object"
+        ],
+        "correctAnswer": 1
+      }
+    ],
+    "maxScore": 100,
+    "timeLimit": 20
+  },
+  {
+    "id": "quiz_003",
+    "courseId": "course_002",
+    "title": "Color Theory Quiz",
+    "description": "Test your color theory knowledge",
+    "questions": [
+      {
+        "id": "q4",
+        "question": "What are primary colors?",
+        "type": "multiple_choice",
+        "options": [
+          "Red, Blue, Yellow",
+          "Red, Green, Blue",
+          "Cyan, Magenta, Yellow"
+        ],
+        "correctAnswer": 0
+      }
+    ],
+    "maxScore": 100,
+    "timeLimit": 25
+  },
+  {
+    "id": "quiz_004",
+    "courseId": "course_002",
+    "title": "Typography Quiz",
+    "description": "Test typography fundamentals",
+    "questions": [
+      {
+        "id": "q5",
+        "question": "What is kerning?",
+        "type": "multiple_choice",
+        "options": [
+          "Letter spacing",
+          "Line spacing",
+          "Word spacing"
+        ],
+        "correctAnswer": 0
+      }
+    ],
+    "maxScore": 100,
+    "timeLimit": 20
+  },
+  {
+    "id": "quiz_005",
+    "courseId": "course_003",
+    "title": "Python Basics Quiz",
+    "description": "Test Python programming basics",
+    "questions": [
+      {
+        "id": "q6",
+        "question": "What is a list comprehension?",
+        "type": "multiple_choice",
+        "options": [
+          "A way to create lists",
+          "A loop",
+          "A function"
+        ],
+        "correctAnswer": 0
+      }
+    ],
+    "maxScore": 100,
+    "timeLimit": 30
+  },
+  {
+    "id": "quiz_006",
+    "courseId": "course_003",
+    "title": "Machine Learning Quiz",
+    "description": "Test ML concepts",
+    "questions": [
+      {
+        "id": "q7",
+        "question": "What is supervised learning?",
+        "type": "multiple_choice",
+        "options": [
+          "Learning with labels",
+          "Learning without labels",
+          "Reinforcement learning"
+        ],
+        "correctAnswer": 0
+      }
+    ],
+    "maxScore": 100,
+    "timeLimit": 25
+  },
+  {
+    "id": "quiz_007",
+    "courseId": "course_004",
+    "title": "Business Strategy Quiz",
+    "description": "Test strategic thinking concepts",
+    "questions": [
+      {
+        "id": "q8",
+        "question": "What is SWOT analysis?",
+        "type": "multiple_choice",
+        "options": [
+          "Strengths, Weaknesses, Opportunities, Threats",
+          "Sales, Work, Operations, Technology",
+          "Strategy, Workflow, Objectives, Tactics"
+        ],
+        "correctAnswer": 0
+      }
+    ],
+    "maxScore": 100,
+    "timeLimit": 20
+  },
+  {
+    "id": "quiz_008",
+    "courseId": "course_001",
+    "title": "Advanced React Patterns",
+    "description": "Test advanced React concepts",
+    "questions": [
+      {
+        "id": "q9",
+        "question": "What is the purpose of useMemo?",
+        "type": "multiple_choice",
+        "options": [
+          "Memoize values",
+          "Memoize functions",
+          "Both"
+        ],
+        "correctAnswer": 0
+      }
+    ],
+    "maxScore": 100,
+    "timeLimit": 25
+  }
+]

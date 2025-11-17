@@ -1,0 +1,38 @@
+[
+  {
+    "id": "attempt_58d44d9f",
+    "studentId": "stu_001",
+    "courseId": "cs101",
+    "pretestId": "pretest_cs101_e7dcbccc",
+    "answers": {
+      "q1": 1,
+      "q29": 1
+    },
+    "score": 2.0,
+    "maxScore": 29.0,
+    "percentage": 6.896551724137931,
+    "completedAt": "2025-11-17T15:54:19.054206Z"
+  },
+  {
+    "id": "attempt_c1992731",
+    "studentId": "stu_002",
+    "courseId": "cs101",
+    "pretestId": "pretest_cs101_e7dcbccc",
+    "answers": {
+      "q1": 1,
+      "q3": 1,
+      "q2": 1,
+      "q4": 0,
+      "q5": 1,
+      "q6": 0,
+      "q7": 2,
+      "q8": 1,
+      "q9": 3,
+      "q10": 0
+    },
+    "score": 6.0,
+    "maxScore": 15.0,
+    "percentage": 40.0,
+    "completedAt": "2025-11-17T18:45:58.764618Z"
+  }
+]

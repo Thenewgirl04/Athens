@@ -1,8 +1,10 @@
 """
 Pydantic models for request and response validation.
 """
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 
 class CurriculumGenerationRequest(BaseModel):
@@ -80,12 +82,15 @@ class Lesson(BaseModel):
     """Represents a lesson/module with its notes."""
     
     id: str
-    topic_id: str
+    topic_id: str = Field(default="miscellaneous", description="Topic ID or 'miscellaneous' for unassigned lessons")
     course_id: str
     title: str
-    notes: LessonNote
+    notes: Optional[LessonNote] = Field(None, description="Structured notes for AI-generated or manual rich text lessons")
     created_at: str
-    type: str = Field(default="generated_notes", description="To distinguish from uploaded materials")
+    type: str = Field(default="ai_generated", description="Lesson type: 'ai_generated', 'manual_rich_text', 'file_pdf', 'file_video', 'file_document', 'link'")
+    file_url: Optional[str] = Field(None, description="URL/path for file-based lessons")
+    file_size: Optional[str] = Field(None, description="File size for file-based lessons")
+    external_url: Optional[str] = Field(None, description="External URL for link-type lessons")
 
 
 class LessonGenerationRequest(BaseModel):
@@ -103,3 +108,425 @@ class LessonGenerationResponse(BaseModel):
     success: bool
     message: str
     lesson: Optional[Lesson] = None
+
+
+# Manual Lesson Creation Models
+
+class LessonCreateRequest(BaseModel):
+    """Request to create a manual lesson."""
+    
+    course_id: str = Field(..., description="Course identifier")
+    title: str = Field(..., description="Lesson title")
+    topic_id: Optional[str] = Field(default="miscellaneous", description="Topic ID from curriculum or 'miscellaneous'")
+    content_type: str = Field(..., description="Content type: 'manual_rich_text', 'file_pdf', 'file_video', 'file_document', 'link'")
+    # For rich text lessons
+    sections: Optional[List[LessonSection]] = Field(None, description="Structured sections for rich text lessons")
+    estimated_duration: Optional[str] = Field(None, description="Estimated duration for rich text lessons")
+    # For link lessons
+    external_url: Optional[str] = Field(None, description="External URL for link-type lessons")
+
+
+class LessonUpdateRequest(BaseModel):
+    """Request to update an existing lesson."""
+    
+    title: Optional[str] = None
+    topic_id: Optional[str] = None
+    sections: Optional[List[LessonSection]] = None
+    estimated_duration: Optional[str] = None
+    external_url: Optional[str] = None
+
+
+class LessonCreateResponse(BaseModel):
+    """Response from lesson creation."""
+    
+    success: bool
+    message: str
+    lesson: Optional[Lesson] = None
+
+
+class TopicWithLessons(BaseModel):
+    """Topic with its associated lessons."""
+    
+    topic_id: str
+    topic_title: str
+    topic_description: Optional[str] = None
+    week_number: Optional[int] = None
+    week_title: Optional[str] = None
+    lessons: List[Lesson] = Field(default_factory=list)
+
+
+class LessonsByTopicResponse(BaseModel):
+    """Response containing lessons grouped by topics."""
+    
+    course_id: str
+    topics: List[TopicWithLessons] = Field(default_factory=list)
+
+
+# Student Database Models
+
+class CompletedAssignment(BaseModel):
+    """Represents a completed assignment submission."""
+    assignmentId: str
+    courseId: str
+    score: float
+    submittedAt: str
+
+
+class QuizAttempt(BaseModel):
+    """Represents a quiz attempt by a student."""
+    quizId: str
+    courseId: str
+    score: float
+    maxScore: float
+    attemptedAt: str
+    answers: dict
+
+
+class Student(BaseModel):
+    """Student profile model."""
+    id: str
+    firstName: str
+    lastName: str
+    email: str
+    password: str  # Hashed password
+    studentId: str
+    avatarUrl: Optional[str] = None
+    major: str
+    yearLevel: str
+    department: str
+    advisor: str
+    gpa: float
+    credits: int
+    enrolledCourses: List[str] = Field(default_factory=list)
+    completedAssignments: List[CompletedAssignment] = Field(default_factory=list)
+    quizAttempts: List[QuizAttempt] = Field(default_factory=list)
+    grades: List[dict] = Field(default_factory=list)
+    strengthsWeaknesses: Dict[str, "StudentStrengthWeakness"] = Field(default_factory=dict, description="Course ID -> StudentStrengthWeakness")
+    weeklyQuizProgress: Dict[str, Dict[int, "QuizProgress"]] = Field(default_factory=dict, description="Course ID -> Week Number -> QuizProgress")
+
+
+class Teacher(BaseModel):
+    """Teacher profile model."""
+    id: str
+    firstName: str
+    lastName: str
+    email: str
+    password: str  # Hashed password
+    department: str
+    courses: List[str] = Field(default_factory=list)
+
+
+class CourseModule(BaseModel):
+    """Course module/topic."""
+    id: str
+    title: str
+    order: int
+
+
+class Course(BaseModel):
+    """Course model."""
+    id: str
+    title: str
+    description: str
+    instructor: str
+    instructorId: str
+    thumbnail: Optional[str] = None
+    modules: List[CourseModule] = Field(default_factory=list)
+    assignments: List[str] = Field(default_factory=list)
+    quizzes: List[str] = Field(default_factory=list)
+
+
+class Enrollment(BaseModel):
+    """Student-course enrollment."""
+    studentId: str
+    courseId: str
+    enrolledAt: str
+    progress: int  # Percentage 0-100
+
+
+class Assignment(BaseModel):
+    """Assignment model."""
+    id: str
+    courseId: str
+    title: str
+    description: str
+    dueDate: str
+    points: int
+    type: str  # "assignment", "project", etc.
+
+
+class QuizQuestion(BaseModel):
+    """Quiz question model."""
+    id: str
+    question: str
+    type: str  # "multiple_choice", "true_false", etc.
+    options: Optional[List[str]] = None
+    correctAnswer: Optional[int] = None
+
+
+class Quiz(BaseModel):
+    """Quiz model."""
+    id: str
+    courseId: str
+    title: str
+    description: str
+    questions: List[QuizQuestion] = Field(default_factory=list)
+    maxScore: int
+    timeLimit: int  # Minutes
+
+
+class Submission(BaseModel):
+    """Student submission for an assignment."""
+    id: str
+    studentId: str
+    assignmentId: str
+    courseId: str
+    submittedAt: str
+    score: Optional[float] = None
+    fileUrl: Optional[str] = None
+    feedback: Optional[str] = None
+
+
+# Authentication Models
+
+class LoginRequest(BaseModel):
+    """Login request model."""
+    email: str
+    password: str
+
+
+class AuthResponse(BaseModel):
+    """Authentication response model."""
+    success: bool
+    message: str
+    user: Optional[dict] = None
+    token: Optional[str] = None  # Simple token simulation
+
+
+# Student API Response Models
+
+class StudentProfileResponse(BaseModel):
+    """Student profile response."""
+    student: Student
+
+
+class StudentCourseResponse(BaseModel):
+    """Student course with progress."""
+    course: Course
+    progress: int
+    enrollmentDate: str
+
+
+class StudentAssignmentResponse(BaseModel):
+    """Student assignment with submission status."""
+    assignment: Assignment
+    submitted: bool
+    score: Optional[float] = None
+    submittedAt: Optional[str] = None
+
+
+class StudentQuizResponse(BaseModel):
+    """Student quiz with attempt history."""
+    quiz: Quiz
+    attempts: List[QuizAttempt]
+    bestScore: Optional[float] = None
+
+
+# Pretest Models
+
+class PretestQuestion(BaseModel):
+    """Pretest question model."""
+    id: str
+    question: str
+    options: List[str] = Field(..., description="List of 4 multiple choice options")
+    correctAnswer: int = Field(..., description="Index of correct answer (0-3)")
+    topicId: Optional[str] = Field(None, description="Topic ID from curriculum this question relates to")
+    topicTitle: Optional[str] = Field(None, description="Topic title for analysis")
+
+
+class Pretest(BaseModel):
+    """Pretest model for a course."""
+    id: str
+    courseId: str
+    questions: List[PretestQuestion] = Field(default_factory=list)
+    createdAt: str
+    maxScore: int
+
+
+class PretestAttempt(BaseModel):
+    """Student's pretest attempt."""
+    id: str
+    studentId: str
+    courseId: str
+    pretestId: str
+    answers: Dict[str, int] = Field(..., description="Question ID -> selected answer index")
+    score: float
+    maxScore: float
+    percentage: float
+    completedAt: str
+
+
+class TopicPerformance(BaseModel):
+    """Performance breakdown for a specific topic."""
+    topicId: str
+    topicTitle: str
+    questionsCount: int
+    correctCount: int
+    percentage: float
+    performanceLevel: str = Field(..., description="'strong', 'moderate', or 'weak'")
+
+
+class PretestAnalysis(BaseModel):
+    """SAT-style performance analysis."""
+    overallScore: float
+    maxScore: float
+    percentage: float
+    performanceLevel: str = Field(..., description="'fail' (0-69%), 'below_moderate' (70-84%), 'moderate_plus' (85-100%)")
+    topicBreakdown: List[TopicPerformance]
+    strengths: List[str] = Field(default_factory=list, description="Topics where student performed well")
+    weaknesses: List[str] = Field(default_factory=list, description="Topics where student needs improvement")
+
+
+class TopicRecommendation(BaseModel):
+    """Resource recommendation for a weak topic area."""
+    topicId: str
+    topicTitle: str
+    recommendation: str = Field(..., description="Explanation of why this topic needs attention")
+    resourceUrl: str
+    resourceType: str = Field(..., description="'article', 'video', 'pdf', or 'course'")
+
+
+class PretestSubmissionRequest(BaseModel):
+    """Request to submit pretest answers."""
+    studentId: str
+    courseId: str
+    pretestId: str
+    answers: Dict[str, int] = Field(..., description="Question ID -> selected answer index")
+
+
+class PretestResultResponse(BaseModel):
+    """Complete pretest result with analysis and recommendations."""
+    attempt: PretestAttempt
+    analysis: PretestAnalysis
+    recommendation: Optional[TopicRecommendation] = Field(None, description="Only present if score < 85%")
+
+
+# Weekly Quiz Models
+
+class WeeklyQuizQuestion(BaseModel):
+    """Enhanced quiz question for weekly quizzes."""
+    id: str
+    question: str
+    type: str = Field(default="multiple_choice", description="Question type: 'multiple_choice', 'true_false', etc.")
+    options: List[str] = Field(..., description="List of answer options (typically 4)")
+    correctAnswer: int = Field(..., description="Index of correct answer")
+    topicId: Optional[str] = Field(None, description="Topic ID from curriculum this question relates to")
+    topicTitle: Optional[str] = Field(None, description="Topic title for analysis")
+    conceptId: Optional[str] = Field(None, description="Specific concept within the topic")
+    difficultyLevel: Optional[str] = Field(default="medium", description="Difficulty: 'easy', 'medium', 'hard'")
+    isBonus: bool = Field(default=False, description="Whether this is a bonus question (main quiz only)")
+
+
+class WeeklyQuiz(BaseModel):
+    """Weekly quiz model for main, refresher, and dynamic quizzes."""
+    id: str
+    courseId: str
+    weekNumber: int
+    quizType: str = Field(..., description="Quiz type: 'main', 'refresher', or 'dynamic'")
+    title: str
+    description: Optional[str] = None
+    questions: List[WeeklyQuizQuestion] = Field(default_factory=list, max_length=10)
+    topicIds: List[str] = Field(default_factory=list, description="Topic IDs covered in this quiz")
+    createdAt: str
+    maxScore: int
+
+
+class QuizTopicPerformance(BaseModel):
+    """Performance breakdown for a specific topic in a quiz."""
+    topicId: str
+    topicTitle: str
+    questionsCount: int
+    correctCount: int
+    incorrectCount: int
+    percentage: float
+    performanceLevel: str = Field(..., description="'strong', 'moderate', or 'weak'")
+
+
+class QuizAnalysis(BaseModel):
+    """Short SAT-style performance analysis for quizzes."""
+    overallScore: float
+    maxScore: float
+    percentage: float
+    performanceLevel: str = Field(..., description="'fail' (0-59%), 'below_moderate' (60-84%), 'moderate_plus' (85-100%)")
+    topicBreakdown: List[QuizTopicPerformance] = Field(default_factory=list)
+    correctCount: int
+    incorrectCount: int
+
+
+class WeeklyQuizAttempt(BaseModel):
+    """Student's weekly quiz attempt."""
+    id: str
+    studentId: str
+    courseId: str
+    weekNumber: int
+    quizId: str
+    quizType: str = Field(..., description="Quiz type: 'main', 'refresher', or 'dynamic'")
+    answers: Dict[str, int] = Field(..., description="Question ID -> selected answer index")
+    score: float
+    maxScore: float
+    percentage: float
+    completedAt: str
+    analysis: Optional[QuizAnalysis] = None
+
+
+class QuizProgress(BaseModel):
+    """Track student's quiz progress for a week."""
+    weekNumber: int
+    mainQuizCompleted: bool = False
+    mainQuizScore: Optional[float] = None
+    mainQuizAttemptId: Optional[str] = None
+    refresherQuizAttempts: List[str] = Field(default_factory=list, description="List of refresher quiz attempt IDs")
+    dynamicQuizCompleted: bool = False
+    dynamicQuizAttemptId: Optional[str] = None
+
+
+class StudentStrengthWeakness(BaseModel):
+    """Track student's strengths and weaknesses per course."""
+    studentId: str
+    courseId: str
+    strengths: List[str] = Field(default_factory=list, description="List of topic IDs where student is strong (>75%)")
+    weaknesses: List[str] = Field(default_factory=list, description="List of topic IDs where student is weak (<50%)")
+    topicPerformance: Dict[str, float] = Field(default_factory=dict, description="Topic ID -> performance percentage")
+    lastUpdated: str
+
+
+# Quiz Request/Response Models
+
+class QuizSubmissionRequest(BaseModel):
+    """Request to submit quiz answers."""
+    studentId: str
+    courseId: str
+    weekNumber: int
+    quizId: str
+    quizType: str = Field(..., description="Quiz type: 'main', 'refresher', or 'dynamic'")
+    answers: Dict[str, int] = Field(..., description="Question ID -> selected answer index")
+
+
+class QuizSubmissionResponse(BaseModel):
+    """Response from quiz submission."""
+    success: bool
+    message: str
+    attempt: WeeklyQuizAttempt
+    analysis: QuizAnalysis
+
+
+class QuizAvailabilityResponse(BaseModel):
+    """Response showing quiz availability for a student."""
+    weekNumber: int
+    mainQuizAvailable: bool
+    mainQuizCompleted: bool
+    mainQuizScore: Optional[float] = None
+    refresherQuizAvailable: bool
+    dynamicQuizAvailable: bool
+    dynamicQuizRequired: bool = False
+    dynamicQuizCompleted: bool = False

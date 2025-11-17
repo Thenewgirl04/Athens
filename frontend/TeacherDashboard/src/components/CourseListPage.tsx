@@ -1,4 +1,5 @@
 import { PlusCircle, Users, TrendingUp, Edit, Eye } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Progress } from "./ui/progress";
@@ -16,7 +17,7 @@ interface Course {
 
 const courses: Course[] = [
   {
-    id: "1",
+    id: "cs101",
     name: "Introduction to Computer Science",
     code: "CS101",
     students: 45,
@@ -25,7 +26,7 @@ const courses: Course[] = [
     semester: "Fall 2025",
   },
   {
-    id: "2",
+    id: "cs201",
     name: "Data Structures & Algorithms",
     code: "CS201",
     students: 38,
@@ -33,50 +34,11 @@ const courses: Course[] = [
     status: "active",
     semester: "Fall 2025",
   },
-  {
-    id: "3",
-    name: "Web Development Fundamentals",
-    code: "CS105",
-    students: 52,
-    completionRate: 82,
-    status: "active",
-    semester: "Fall 2025",
-  },
-  {
-    id: "4",
-    name: "Database Management Systems",
-    code: "CS301",
-    students: 28,
-    completionRate: 71,
-    status: "active",
-    semester: "Fall 2025",
-  },
-  {
-    id: "5",
-    name: "Machine Learning Basics",
-    code: "CS401",
-    students: 19,
-    completionRate: 58,
-    status: "active",
-    semester: "Fall 2025",
-  },
-  {
-    id: "6",
-    name: "Software Engineering",
-    code: "CS305",
-    students: 34,
-    completionRate: 88,
-    status: "archived",
-    semester: "Spring 2025",
-  },
 ];
 
-interface CourseListPageProps {
-  onCreateCourse: () => void;
-  onEditCourse: (courseId: string, courseName: string, courseCode: string) => void;
-}
+export function CourseListPage() {
+  const navigate = useNavigate();
 
-export function CourseListPage({ onCreateCourse, onEditCourse }: CourseListPageProps) {
   const getStatusColor = (status: Course["status"]) => {
     switch (status) {
       case "active":
@@ -86,12 +48,6 @@ export function CourseListPage({ onCreateCourse, onEditCourse }: CourseListPageP
       case "draft":
         return "bg-yellow-500/10 text-yellow-700 border-yellow-200";
     }
-  };
-
-  const getProgressColor = (rate: number) => {
-    if (rate >= 80) return "bg-green-500";
-    if (rate >= 60) return "bg-blue-500";
-    return "bg-orange-500";
   };
 
   return (
@@ -104,7 +60,7 @@ export function CourseListPage({ onCreateCourse, onEditCourse }: CourseListPageP
             Manage and track all your courses in one place
           </p>
         </div>
-        <Button onClick={onCreateCourse} size="lg">
+        <Button onClick={() => navigate("/create-course")} size="lg">
           <PlusCircle className="h-5 w-5 mr-2" />
           Create New Course
         </Button>
@@ -153,18 +109,26 @@ export function CourseListPage({ onCreateCourse, onEditCourse }: CourseListPageP
             </CardContent>
 
             <CardFooter className="flex gap-2 pt-4 border-t">
-              <Button 
-                variant="default" 
+              <Button
+                variant="default"
                 className="flex-1"
-                onClick={() => onEditCourse(course.id, course.name, course.code)}
+                onClick={() =>
+                  navigate(`/courses/${course.id}`, {
+                    state: { courseName: course.name, courseCode: course.code },
+                  })
+                }
               >
                 <Eye className="h-4 w-4 mr-2" />
                 View Course
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="flex-1"
-                onClick={() => onEditCourse(course.id, course.name, course.code)}
+                onClick={() =>
+                  navigate(`/courses/${course.id}`, {
+                    state: { courseName: course.name, courseCode: course.code },
+                  })
+                }
               >
                 <Edit className="h-4 w-4 mr-2" />
                 Edit Course
@@ -184,7 +148,7 @@ export function CourseListPage({ onCreateCourse, onEditCourse }: CourseListPageP
           <p className="text-gray-600 mb-6">
             Get started by creating your first course
           </p>
-          <Button onClick={onCreateCourse}>
+          <Button onClick={() => navigate("/create-course")}>
             <PlusCircle className="h-5 w-5 mr-2" />
             Create New Course
           </Button>

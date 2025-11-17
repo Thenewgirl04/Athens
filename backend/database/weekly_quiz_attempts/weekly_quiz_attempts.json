@@ -1,0 +1,348 @@
+[
+  {
+    "id": "attempt_9be15b6d",
+    "studentId": "stu_001",
+    "courseId": "cs101",
+    "weekNumber": 1,
+    "quizId": "quiz_cs101_week1_main_67da771b",
+    "quizType": "main",
+    "answers": {
+      "q1": 1,
+      "q2": 1,
+      "q3": 2,
+      "q4": 2,
+      "q5": 2,
+      "q6": 2,
+      "q7": 2,
+      "q8": 1
+    },
+    "score": 8.0,
+    "maxScore": 8.0,
+    "percentage": 100.0,
+    "completedAt": "2025-11-17T17:45:27.554480Z",
+    "analysis": {
+      "overallScore": 8.0,
+      "maxScore": 8.0,
+      "percentage": 100.0,
+      "performanceLevel": "moderate_plus",
+      "topicBreakdown": [
+        {
+          "topicId": "topic_1_1",
+          "topicTitle": "What is Computer Science?",
+          "questionsCount": 2,
+          "correctCount": 2,
+          "incorrectCount": 0,
+          "percentage": 100.0,
+          "performanceLevel": "strong"
+        },
+        {
+          "topicId": "topic_1_2",
+          "topicTitle": "Introduction to the Go Programming Language",
+          "questionsCount": 2,
+          "correctCount": 2,
+          "incorrectCount": 0,
+          "percentage": 100.0,
+          "performanceLevel": "strong"
+        },
+        {
+          "topicId": "topic_1_3",
+          "topicTitle": "Setting up Your Development Environment (VS Code & Terminal)",
+          "questionsCount": 2,
+          "correctCount": 2,
+          "incorrectCount": 0,
+          "percentage": 100.0,
+          "performanceLevel": "strong"
+        },
+        {
+          "topicId": "topic_1_4",
+          "topicTitle": "Your First Go Program: 'Hello, World!'",
+          "questionsCount": 2,
+          "correctCount": 2,
+          "incorrectCount": 0,
+          "percentage": 100.0,
+          "performanceLevel": "strong"
+        }
+      ],
+      "correctCount": 8,
+      "incorrectCount": 0
+    }
+  },
+  {
+    "id": "attempt_90247291",
+    "studentId": "stu_001",
+    "courseId": "cs101",
+    "weekNumber": 2,
+    "quizId": "quiz_cs101_week2_main_67ce3570",
+    "quizType": "main",
+    "answers": {
+      "q1": 2,
+      "q2": 3,
+      "q3": 0,
+      "q4": 2,
+      "q5": 3,
+      "q6": 1,
+      "q7": 3,
+      "q8": 2,
+      "q9": 0,
+      "q10": 3
+    },
+    "score": 2.0,
+    "maxScore": 10.0,
+    "percentage": 20.0,
+    "completedAt": "2025-11-17T17:49:12.359671Z",
+    "analysis": {
+      "overallScore": 2.0,
+      "maxScore": 10.0,
+      "percentage": 20.0,
+      "performanceLevel": "fail",
+      "topicBreakdown": [
+        {
+          "topicId": "topic_2_1",
+          "topicTitle": "Understanding Data Types",
+          "questionsCount": 2,
+          "correctCount": 1,
+          "incorrectCount": 1,
+          "percentage": 50.0,
+          "performanceLevel": "weak"
+        },
+        {
+          "topicId": "topic_2_2",
+          "topicTitle": "Declaring and Using Variables",
+          "questionsCount": 2,
+          "correctCount": 0,
+          "incorrectCount": 2,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        },
+        {
+          "topicId": "topic_2_3",
+          "topicTitle": "Constants and Their Usage",
+          "questionsCount": 2,
+          "correctCount": 1,
+          "incorrectCount": 1,
+          "percentage": 50.0,
+          "performanceLevel": "weak"
+        },
+        {
+          "topicId": "topic_2_4",
+          "topicTitle": "Basic Arithmetic and Logical Operators",
+          "questionsCount": 2,
+          "correctCount": 0,
+          "incorrectCount": 2,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        },
+        {
+          "topicId": "topic_1_3",
+          "topicTitle": "Setting up Your Development Environment (VS Code & Terminal)",
+          "questionsCount": 1,
+          "correctCount": 0,
+          "incorrectCount": 1,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        },
+        {
+          "topicId": "topic_1_4",
+          "topicTitle": "Your First Go Program: 'Hello, World!'",
+          "questionsCount": 1,
+          "correctCount": 0,
+          "incorrectCount": 1,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        }
+      ],
+      "correctCount": 2,
+      "incorrectCount": 8
+    }
+  },
+  {
+    "id": "attempt_bf868b43",
+    "studentId": "stu_001",
+    "courseId": "cs101",
+    "weekNumber": 1,
+    "quizId": "quiz_cs101_week1_refresher_964c0aa7",
+    "quizType": "refresher",
+    "answers": {
+      "q1": 0
+    },
+    "score": 0.0,
+    "maxScore": 10.0,
+    "percentage": 0.0,
+    "completedAt": "2025-11-17T17:53:01.425972Z",
+    "analysis": {
+      "overallScore": 0.0,
+      "maxScore": 10.0,
+      "percentage": 0.0,
+      "performanceLevel": "fail",
+      "topicBreakdown": [
+        {
+          "topicId": "topic_1_1",
+          "topicTitle": "What is Computer Science?",
+          "questionsCount": 2,
+          "correctCount": 0,
+          "incorrectCount": 2,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        },
+        {
+          "topicId": "topic_1_2",
+          "topicTitle": "Introduction to the Go Programming Language",
+          "questionsCount": 3,
+          "correctCount": 0,
+          "incorrectCount": 3,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        },
+        {
+          "topicId": "topic_1_3",
+          "topicTitle": "Setting up Your Development Environment",
+          "questionsCount": 3,
+          "correctCount": 0,
+          "incorrectCount": 3,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        },
+        {
+          "topicId": "topic_1_4",
+          "topicTitle": "Your First Go Program: 'Hello, World!'",
+          "questionsCount": 2,
+          "correctCount": 0,
+          "incorrectCount": 2,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        }
+      ],
+      "correctCount": 0,
+      "incorrectCount": 10
+    }
+  },
+  {
+    "id": "attempt_f6feb309",
+    "studentId": "stu_001",
+    "courseId": "cs101",
+    "weekNumber": 2,
+    "quizId": "quiz_cs101_week2_dynamic_stu_001_4f52b739",
+    "quizType": "dynamic",
+    "answers": {
+      "q1": 1,
+      "q2": 1,
+      "q3": 1,
+      "q4": 1,
+      "q5": 2,
+      "q6": 2,
+      "q7": 0,
+      "q8": 1,
+      "q9": 0,
+      "q10": 1
+    },
+    "score": 6.0,
+    "maxScore": 10.0,
+    "percentage": 60.0,
+    "completedAt": "2025-11-17T18:11:52.988718Z",
+    "analysis": {
+      "overallScore": 6.0,
+      "maxScore": 10.0,
+      "percentage": 60.0,
+      "performanceLevel": "below_moderate",
+      "topicBreakdown": [
+        {
+          "topicId": "topic_2_2",
+          "topicTitle": "Declaring and Using Variables",
+          "questionsCount": 6,
+          "correctCount": 4,
+          "incorrectCount": 2,
+          "percentage": 66.66666666666666,
+          "performanceLevel": "moderate"
+        },
+        {
+          "topicId": "topic_2_4",
+          "topicTitle": "Basic Arithmetic and Logical Operators",
+          "questionsCount": 4,
+          "correctCount": 2,
+          "incorrectCount": 2,
+          "percentage": 50.0,
+          "performanceLevel": "weak"
+        }
+      ],
+      "correctCount": 6,
+      "incorrectCount": 4
+    }
+  },
+  {
+    "id": "attempt_9207a575",
+    "studentId": "stu_001",
+    "courseId": "cs101",
+    "weekNumber": 3,
+    "quizId": "quiz_cs101_week3_main_67f67d3f",
+    "quizType": "main",
+    "answers": {},
+    "score": 0.0,
+    "maxScore": 10.0,
+    "percentage": 0.0,
+    "completedAt": "2025-11-17T18:12:52.089337Z",
+    "analysis": {
+      "overallScore": 0.0,
+      "maxScore": 10.0,
+      "percentage": 0.0,
+      "performanceLevel": "fail",
+      "topicBreakdown": [
+        {
+          "topicId": "topic_3_1",
+          "topicTitle": "Conditional Statements: `if`, `else if`, `else`",
+          "questionsCount": 2,
+          "correctCount": 0,
+          "incorrectCount": 2,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        },
+        {
+          "topicId": "topic_3_2",
+          "topicTitle": "The `switch` Statement in Go",
+          "questionsCount": 3,
+          "correctCount": 0,
+          "incorrectCount": 3,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        },
+        {
+          "topicId": "topic_3_3",
+          "topicTitle": "Looping Constructs: `for` Loops",
+          "questionsCount": 1,
+          "correctCount": 0,
+          "incorrectCount": 1,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        },
+        {
+          "topicId": "topic_3_4",
+          "topicTitle": "`break` and `continue` Statements",
+          "questionsCount": 2,
+          "correctCount": 0,
+          "incorrectCount": 2,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        },
+        {
+          "topicId": "topic_2_1",
+          "topicTitle": "Understanding Data Types (Integers, Floats, Booleans)",
+          "questionsCount": 1,
+          "correctCount": 0,
+          "incorrectCount": 1,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        },
+        {
+          "topicId": "topic_2_4",
+          "topicTitle": "Basic Arithmetic and Logical Operators",
+          "questionsCount": 1,
+          "correctCount": 0,
+          "incorrectCount": 1,
+          "percentage": 0.0,
+          "performanceLevel": "weak"
+        }
+      ],
+      "correctCount": 0,
+      "incorrectCount": 10
+    }
+  }
+]

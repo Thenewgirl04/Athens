@@ -25,3 +25,6 @@ pnpm-debug.log*
 # OS/editor cruft
 .DS_Store
 
+# dummy files
+fake_Student_dashboard/
+

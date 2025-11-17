@@ -1,0 +1,823 @@
+{
+  "course_id": "cs101",
+  "success": true,
+  "message": "Curriculum generated successfully",
+  "weeks": [
+    {
+      "week_number": 1,
+      "title": "Introduction to Computer Science and Go Fundamentals",
+      "topics": [
+        {
+          "id": "topic_1_1",
+          "title": "What is Computer Science?",
+          "description": "An overview of the field of computer science, its history, core concepts, and its impact on the modern world. We'll explore different sub-disciplines and career paths.",
+          "resources": [
+            {
+              "url": "https://www.cs.princeton.edu/courses/archive/fall13/cos126/lectures/1-whatiscs.pdf",
+              "type": "pdf"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=k2i7158fXpA",
+              "type": "video"
+            },
+            {
+              "url": "https://www.computer.org/publications/tech-news/what-is-computer-science",
+              "type": "article"
+            }
+          ]
+        },
+        {
+          "id": "topic_1_2",
+          "title": "Introduction to the Go Programming Language",
+          "description": "An introduction to Go (Golang), its design philosophy, key features (simplicity, concurrency, performance), and why it's a great language for beginners. We'll cover its history and common use cases.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/install",
+              "type": "article"
+            },
+            {
+              "url": "https://go.dev/tour/",
+              "type": "course"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=ytXCId-6S04",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_1_3",
+          "title": "Setting up Your Development Environment (VS Code & Terminal)",
+          "description": "Learn how to install Visual Studio Code (VS Code) and essential extensions for Go development. We'll cover basic terminal commands for navigation, file operations, and running Go programs.",
+          "resources": [
+            {
+              "url": "https://code.visualstudio.com/docs/languages/go",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=i2R_q7x8nO8",
+              "type": "video"
+            },
+            {
+              "url": "https://www.codecademy.com/learn/learn-the-command-line",
+              "type": "course"
+            }
+          ]
+        },
+        {
+          "id": "topic_1_4",
+          "title": "Your First Go Program: 'Hello, World!'",
+          "description": "Write, compile, and run your very first Go program. Understand the basic structure of a Go program, including the `package main`, `import` statement, and the `main` function.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/tutorial/hello-world",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=sK-rW2706Jg",
+              "type": "video"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 2,
+      "title": "Basic Data Types and Variables in Go",
+      "topics": [
+        {
+          "id": "topic_2_1",
+          "title": "Understanding Data Types (Integers, Floats, Booleans)",
+          "description": "Explore the fundamental data types in Go: integers (signed and unsigned), floating-point numbers, and booleans. Learn about their ranges, memory representation, and common operations.",
+          "resources": [
+            {
+              "url": "https://go.dev/ref/spec#Numeric_types",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=K-e6jFf7fQ4",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_2_2",
+          "title": "Declaring and Using Variables",
+          "description": "Learn how to declare variables in Go using `var` and short variable declaration (`:=`). Understand variable scope and initialization. Explore type inference.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#variables",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=_aN-B3bQ41Y",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_2_3",
+          "title": "Constants and Their Usage",
+          "description": "Understand the concept of constants in Go. Learn how to declare and use constants with `const` and explore untyped constants.",
+          "resources": [
+            {
+              "url": "https://go.dev/ref/spec#Constants",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=25r7a6z1FkY",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_2_4",
+          "title": "Basic Arithmetic and Logical Operators",
+          "description": "Master the use of arithmetic operators (+, -, *, /, %) and logical operators (&&, ||, !). Understand operator precedence and how to perform calculations.",
+          "resources": [
+            {
+              "url": "https://go.dev/ref/spec#Operators",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=0XjJg-55jR4",
+              "type": "video"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 3,
+      "title": "Control Flow: Decisions and Loops",
+      "topics": [
+        {
+          "id": "topic_3_1",
+          "title": "Conditional Statements: `if`, `else if`, `else`",
+          "description": "Learn how to control the execution flow of your program based on conditions using `if`, `else if`, and `else` statements. Explore conditional expressions.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#if",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=5X9k6H8z_7M",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_3_2",
+          "title": "The `switch` Statement in Go",
+          "description": "Discover the flexibility of the `switch` statement for handling multiple conditions efficiently. Learn about `case`, `default`, and fallthrough behavior.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#switch",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=pQkP6_g_vKk",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_3_3",
+          "title": "Looping Constructs: `for` Loops",
+          "description": "Understand the versatile `for` loop in Go. Learn about its different forms: initialization, condition, post-statement; condition only; and infinite loops.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#for",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=aJqfQ4aV7eQ",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_3_4",
+          "title": "`break` and `continue` Statements",
+          "description": "Learn how to alter the normal flow of loops using `break` to exit a loop and `continue` to skip to the next iteration.",
+          "resources": [
+            {
+              "url": "https://go.dev/ref/spec#Break_statements",
+              "type": "article"
+            },
+            {
+              "url": "https://go.dev/ref/spec#Continue_statements",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=165x-K052eA",
+              "type": "video"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 4,
+      "title": "Composite Data Types: Arrays and Slices",
+      "topics": [
+        {
+          "id": "topic_4_1",
+          "title": "Arrays in Go",
+          "description": "Understand fixed-size arrays in Go. Learn how to declare, initialize, and access elements of an array. Explore array iteration.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#arrays",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=K_2x6_3qQ2U",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_4_2",
+          "title": "Introduction to Slices",
+          "description": "Learn about slices, Go's dynamic arrays. Understand the underlying array, length, and capacity. Explore how slices are created and manipulated.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#slices",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=7t3tI7b4gR8",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_4_3",
+          "title": "Slice Operations: `append` and `copy`",
+          "description": "Master essential slice operations like appending new elements (`append`) and copying elements between slices (`copy`). Understand the implications of these operations on underlying arrays.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/tutorial/slice-manipulation",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=Q7W9G03d6dY",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_4_4",
+          "title": "Iterating Over Slices using `range`",
+          "description": "Learn the idiomatic Go way to iterate over slices using the `range` keyword. Understand how to access both index and value, or just the value.",
+          "resources": [
+            {
+              "url": "https://go.dev/ref/spec#Range_clauses",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=T0sD3bN4jV4",
+              "type": "video"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 5,
+      "title": "Composite Data Types: Maps and Structs",
+      "topics": [
+        {
+          "id": "topic_5_1",
+          "title": "Maps in Go",
+          "description": "Explore Go's built-in map type for key-value data storage. Learn how to create, populate, access, update, and delete entries in a map.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#maps",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=yS7nU1dG0bY",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_5_2",
+          "title": "Structs: Defining Custom Data Types",
+          "description": "Learn how to define custom data types using structs. Understand how to group related data fields together and create your own data structures.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#structs",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=2p9A0oWfQ68",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_5_3",
+          "title": "Working with Structs: Fields and Methods",
+          "description": "Discover how to access struct fields and how to associate methods with structs to define behavior. Explore embedded structs.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/tutorial/methods",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=_QW6k5gK5jU",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_5_4",
+          "title": "Zero Values and Initialization of Structs",
+          "description": "Understand the concept of zero values for different data types in Go. Learn various ways to initialize structs, including literal initialization and using `new()`.",
+          "resources": [
+            {
+              "url": "https://go.dev/ref/spec#The_zero_value",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=PjSg2Hn7-Cg",
+              "type": "video"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 6,
+      "title": "Functions and Error Handling in Go",
+      "topics": [
+        {
+          "id": "topic_6_1",
+          "title": "Defining and Calling Functions",
+          "description": "Learn how to define reusable blocks of code in Go. Understand function signatures, parameters, and return values. Explore multiple return values.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#functions",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=8f3A-01pMzc",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_6_2",
+          "title": "Variadic Functions and Anonymous Functions",
+          "description": "Explore variadic functions that accept a variable number of arguments and learn about anonymous functions (closures) and their use cases.",
+          "resources": [
+            {
+              "url": "https://go.dev/ref/spec#Variadic_functions",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=m3L47M7XW7w",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_6_3",
+          "title": "Introduction to Error Handling in Go",
+          "description": "Understand Go's philosophy of explicit error handling using the `error` interface. Learn how functions return errors and how to check for them.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#errors",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=h15y-w-U2Hw",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_6_4",
+          "title": "Common Error Handling Patterns",
+          "description": "Learn practical patterns for handling errors, including checking errors immediately, propagating errors, and creating custom error messages.",
+          "resources": [
+            {
+              "url": "https://go.dev/blog/errors-are-values",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=i0x9v8q-i7o",
+              "type": "video"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 7,
+      "title": "Pointers and Memory Management",
+      "topics": [
+        {
+          "id": "topic_7_1",
+          "title": "Understanding Pointers",
+          "description": "Dive into the concept of pointers in Go. Learn how to declare, initialize, and dereference pointers to access memory addresses.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#pointers",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=P2b31b8mO3Q",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_7_2",
+          "title": "Pointers to Structs and Slices",
+          "description": "Explore how pointers interact with complex data types like structs and slices. Understand when to use pointers to avoid unnecessary copying and to modify data in place.",
+          "resources": [
+            {
+              "url": "https://www.golangprograms.com/go-pointers-to-structs.html",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=0wP0fD7r8bY",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_7_3",
+          "title": "Memory Allocation and Garbage Collection",
+          "description": "Gain an understanding of how Go manages memory, including automatic memory allocation and the role of the garbage collector. Discuss efficiency considerations.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/gc-guide",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=fG_i2jWvj44",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_7_4",
+          "title": "Pass by Value vs. Pass by Reference (and Go's Approach)",
+          "description": "Clarify the distinction between pass-by-value and pass-by-reference in programming. Understand how Go's mechanisms (passing values, using pointers) achieve similar effects.",
+          "resources": [
+            {
+              "url": "https://www.digitalocean.com/community/tutorials/understanding-pointers-in-go",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=s7x9J94jXnU",
+              "type": "video"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 8,
+      "title": "Introduction to Interfaces and Polymorphism",
+      "topics": [
+        {
+          "id": "topic_8_1",
+          "title": "Understanding Interfaces in Go",
+          "description": "Learn about Go's unique approach to interfaces, which are satisfied implicitly. Understand how interfaces define a set of methods.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#interfaces",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=oN3S30q-B2E",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_8_2",
+          "title": "Implementing Interfaces Implicitly",
+          "description": "Discover how types implement interfaces by satisfying their method sets, without explicit declarations. Explore the power of duck typing.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/tutorial/interfaces",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=z6W73X80s-I",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_8_3",
+          "title": "Polymorphism with Interfaces",
+          "description": "Understand how interfaces enable polymorphism, allowing you to write code that can operate on values of different types that implement the same interface.",
+          "resources": [
+            {
+              "url": "https://www.golangprograms.com/go-polymorphism-using-interfaces.html",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=1g3m8-L4hR0",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_8_4",
+          "title": "The Empty Interface (`interface{}`) and Type Assertions",
+          "description": "Learn about the empty interface, which can hold values of any type. Understand how to use type assertions to extract values from an empty interface.",
+          "resources": [
+            {
+              "url": "https://go.dev/tour/methods/15",
+              "type": "course"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=678kR6z4f1w",
+              "type": "video"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 9,
+      "title": "Concurrency with Goroutines and Channels",
+      "topics": [
+        {
+          "id": "topic_9_1",
+          "title": "Introduction to Concurrency in Go",
+          "description": "Explore the concept of concurrency and Go's first-class support for it. Understand the difference between concurrency and parallelism.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#concurrency",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=oYQ1m2U_L1k",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_9_2",
+          "title": "Goroutines: Lightweight Threads",
+          "description": "Learn how to launch concurrent functions using `go` routines. Understand their lightweight nature and how they enable concurrent execution.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/tutorial/concurrency",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=ysKz14Wn8vE",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_9_3",
+          "title": "Channels: Communicating Between Goroutines",
+          "description": "Discover channels, the primary mechanism for communication and synchronization between goroutines. Learn how to create, send to, and receive from channels.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#channels",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=r-I-7_yKk5A",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_9_4",
+          "title": "Synchronized Data Access and the `sync` Package",
+          "description": "Understand potential race conditions in concurrent programs. Learn to use synchronization primitives from the `sync` package, like `Mutex`, to protect shared data.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/articles/race_detector",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=79lWwT0WfGE",
+              "type": "video"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 10,
+      "title": "Packages, Modules, and Input/Output",
+      "topics": [
+        {
+          "id": "topic_10_1",
+          "title": "Understanding Go Packages",
+          "description": "Learn about Go's package system for organizing code. Understand how to create, import, and use packages. Explore standard library packages.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/effective_go#packages",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=f1G6-F_J5aI",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_10_2",
+          "title": "Go Modules: Dependency Management",
+          "description": "Master Go Modules for managing external dependencies. Learn how to initialize a module, add dependencies, and understand `go.mod` and `go.sum` files.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/modules/intro",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=o9y5zVlJgJk",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_10_3",
+          "title": "Reading Input from the User",
+          "description": "Learn how to read input from the standard input (keyboard) using the `fmt` package and other relevant tools.",
+          "resources": [
+            {
+              "url": "https://go.dev/pkg/fmt/",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=f0k1Ld-UvWA",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_10_4",
+          "title": "Working with Files: Reading and Writing",
+          "description": "Explore basic file operations in Go using the `os` and `io` packages. Learn how to open, read from, write to, and close files.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/tutorial/create-write-file",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=g7s50R2M74w",
+              "type": "video"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 11,
+      "title": "Introduction to Algorithms and Data Structures (Conceptual)",
+      "topics": [
+        {
+          "id": "topic_11_1",
+          "title": "What are Algorithms?",
+          "description": "An introduction to algorithms as a set of well-defined instructions for solving a problem or performing a computation. Discuss algorithm design principles.",
+          "resources": [
+            {
+              "url": "https://www.geeksforgeeks.org/what-is-an-algorithm/",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=rD6_uR66M0o",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_11_2",
+          "title": "Introduction to Data Structures",
+          "description": "Explore fundamental data structures like lists, stacks, queues, trees, and graphs. Understand their properties and use cases.",
+          "resources": [
+            {
+              "url": "https://www.geeksforgeeks.org/data-structures-introduction/",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=b6f03W0i9M0",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_11_3",
+          "title": "Time and Space Complexity (Big O Notation - Basic)",
+          "description": "Introduce the concept of Big O notation for analyzing the efficiency of algorithms. Understand how to describe the growth rate of time and space requirements.",
+          "resources": [
+            {
+              "url": "https://www.freecodecamp.org/news/big-o-notation-explained-with-examples/",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=v4cd35Z0I5U",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_11_4",
+          "title": "Simple Sorting Algorithms (e.g., Bubble Sort, Selection Sort)",
+          "description": "Implement and analyze basic sorting algorithms like Bubble Sort and Selection Sort. Understand their mechanics and Big O complexity.",
+          "resources": [
+            {
+              "url": "https://www.geeksforgeeks.org/bubble-sort/",
+              "type": "article"
+            },
+            {
+              "url": "https://www.geeksforgeeks.org/selection-sort/",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=e-f16f5A_xY",
+              "type": "video"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "week_number": 12,
+      "title": "Putting It All Together: Projects and Next Steps",
+      "topics": [
+        {
+          "id": "topic_12_1",
+          "title": "Project Work and Code Review",
+          "description": "Students will work on a cumulative project that integrates concepts learned throughout the course. Peer code review sessions will be conducted to provide constructive feedback.",
+          "resources": [
+            {
+              "url": "https://github.com/golang/go/wiki/Projects",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=0_1k0F_8cI8",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_12_2",
+          "title": "Debugging Techniques in Go",
+          "description": "Learn effective debugging strategies using VS Code's debugger and other tools to identify and fix issues in your Go programs.",
+          "resources": [
+            {
+              "url": "https://code.visualstudio.com/docs/editor/debugging",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=90r-009C6kE",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_12_3",
+          "title": "Introduction to Testing in Go",
+          "description": "Understand the importance of testing. Learn how to write unit tests in Go using the built-in `testing` package.",
+          "resources": [
+            {
+              "url": "https://go.dev/doc/tutorial/write-tests",
+              "type": "article"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=T5iF9H-K2wA",
+              "type": "video"
+            }
+          ]
+        },
+        {
+          "id": "topic_12_4",
+          "title": "Next Steps and Further Learning",
+          "description": "Guidance on continuing your learning journey in computer science and Go. Explore advanced topics, community resources, and potential career paths.",
+          "resources": [
+            {
+              "url": "https://go.dev/community/",
+              "type": "article"
+            },
+            {
+              "url": "https://www.udemy.com/courses/computer-science/",
+              "type": "course"
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=247d5kFvC6A",
+              "type": "video"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -5,3 +5,5 @@ google-generativeai==0.3.0
 openai
 pydantic
 pydantic-settings
+bcrypt
+python-multipart

@@ -1,0 +1,24 @@
+[
+  {
+    "id": "cs101",
+    "title": "CS101: Introduction to Programming",
+    "description": "Learn the fundamentals of programming using Python. Cover variables, data types, control structures, functions, and basic algorithms.",
+    "instructor": "Dr. Sarah Johnson",
+    "instructorId": "teach_001",
+    "thumbnail": "https://images.unsplash.com/photo-1516116216624-53e697fedbea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "modules": [],
+    "assignments": [],
+    "quizzes": []
+  },
+  {
+    "id": "cs201",
+    "title": "CS201: Data Structures and Algorithms",
+    "description": "Advanced programming concepts including data structures (arrays, lists, trees, graphs) and algorithm design and analysis.",
+    "instructor": "Dr. Sarah Johnson",
+    "instructorId": "teach_001",
+    "thumbnail": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "modules": [],
+    "assignments": [],
+    "quizzes": []
+  }
+]

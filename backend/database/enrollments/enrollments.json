@@ -1,0 +1,38 @@
+[
+  {
+    "studentId": "stu_001",
+    "courseId": "cs101",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 0
+  },
+  {
+    "studentId": "stu_001",
+    "courseId": "cs201",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 0
+  },
+  {
+    "studentId": "stu_002",
+    "courseId": "cs101",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 0
+  },
+  {
+    "studentId": "stu_002",
+    "courseId": "cs201",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 0
+  },
+  {
+    "studentId": "stu_003",
+    "courseId": "cs101",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 0
+  },
+  {
+    "studentId": "stu_003",
+    "courseId": "cs201",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 0
+  }
+]

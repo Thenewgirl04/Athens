@@ -1,0 +1,298 @@
+[
+  {
+    "id": "stu_001",
+    "firstName": "Arthur",
+    "lastName": "Thompson",
+    "email": "arthur.thompson@university.edu",
+    "password": "$2b$12$lp7/QN4TYZ2im8a9YrNk9..L/HrcsYUzEV5Ay4ltcd1JpHISs6yQq",
+    "studentId": "STU-2024-0825",
+    "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Arthur",
+    "major": "Computer Science",
+    "yearLevel": "Junior",
+    "department": "School of Computer Science & Engineering",
+    "advisor": "Dr. Sarah Johnson",
+    "gpa": 3.85,
+    "credits": 78,
+    "enrolledCourses": [
+      "cs101",
+      "cs201"
+    ],
+    "completedAssignments": [
+      {
+        "assignmentId": "assign_001",
+        "courseId": "course_001",
+        "score": 95,
+        "submittedAt": "2025-10-15T10:30:00Z"
+      },
+      {
+        "assignmentId": "assign_002",
+        "courseId": "course_001",
+        "score": 88,
+        "submittedAt": "2025-10-20T14:20:00Z"
+      },
+      {
+        "assignmentId": "assign_003",
+        "courseId": "course_001",
+        "score": 92,
+        "submittedAt": "2025-10-25T09:15:00Z"
+      },
+      {
+        "assignmentId": "assign_004",
+        "courseId": "course_002",
+        "score": 85,
+        "submittedAt": "2025-10-18T16:45:00Z"
+      },
+      {
+        "assignmentId": "assign_005",
+        "courseId": "course_002",
+        "score": 90,
+        "submittedAt": "2025-10-22T11:30:00Z"
+      },
+      {
+        "assignmentId": "assign_006",
+        "courseId": "course_003",
+        "score": 94,
+        "submittedAt": "2025-10-16T13:20:00Z"
+      },
+      {
+        "assignmentId": "assign_007",
+        "courseId": "course_003",
+        "score": 87,
+        "submittedAt": "2025-10-21T15:10:00Z"
+      },
+      {
+        "assignmentId": "assign_008",
+        "courseId": "course_003",
+        "score": 91,
+        "submittedAt": "2025-10-24T10:00:00Z"
+      },
+      {
+        "assignmentId": "assign_009",
+        "courseId": "course_004",
+        "score": 82,
+        "submittedAt": "2025-10-19T12:30:00Z"
+      },
+      {
+        "assignmentId": "assign_010",
+        "courseId": "course_004",
+        "score": 79,
+        "submittedAt": "2025-10-23T14:00:00Z"
+      },
+      {
+        "assignmentId": "assign_011",
+        "courseId": "course_001",
+        "score": 89,
+        "submittedAt": "2025-10-26T09:45:00Z"
+      },
+      {
+        "assignmentId": "assign_012",
+        "courseId": "course_002",
+        "score": 86,
+        "submittedAt": "2025-10-27T11:20:00Z"
+      }
+    ],
+    "quizAttempts": [
+      {
+        "quizId": "quiz_001",
+        "courseId": "course_001",
+        "score": 92,
+        "maxScore": 100,
+        "attemptedAt": "2025-10-14T10:00:00Z",
+        "answers": {}
+      },
+      {
+        "quizId": "quiz_002",
+        "courseId": "course_001",
+        "score": 88,
+        "maxScore": 100,
+        "attemptedAt": "2025-10-19T14:30:00Z",
+        "answers": {}
+      },
+      {
+        "quizId": "quiz_003",
+        "courseId": "course_002",
+        "score": 85,
+        "maxScore": 100,
+        "attemptedAt": "2025-10-17T16:00:00Z",
+        "answers": {}
+      },
+      {
+        "quizId": "quiz_004",
+        "courseId": "course_002",
+        "score": 90,
+        "maxScore": 100,
+        "attemptedAt": "2025-10-21T11:00:00Z",
+        "answers": {}
+      },
+      {
+        "quizId": "quiz_005",
+        "courseId": "course_003",
+        "score": 94,
+        "maxScore": 100,
+        "attemptedAt": "2025-10-15T13:00:00Z",
+        "answers": {}
+      },
+      {
+        "quizId": "quiz_006",
+        "courseId": "course_003",
+        "score": 87,
+        "maxScore": 100,
+        "attemptedAt": "2025-10-20T15:30:00Z",
+        "answers": {}
+      },
+      {
+        "quizId": "quiz_007",
+        "courseId": "course_004",
+        "score": 81,
+        "maxScore": 100,
+        "attemptedAt": "2025-10-18T12:00:00Z",
+        "answers": {}
+      },
+      {
+        "quizId": "quiz_008",
+        "courseId": "course_001",
+        "score": 89,
+        "maxScore": 100,
+        "attemptedAt": "2025-10-25T10:30:00Z",
+        "answers": {}
+      }
+    ],
+    "grades": []
+  },
+  {
+    "id": "stu_002",
+    "firstName": "Sarah",
+    "lastName": "Martinez",
+    "email": "sarah.martinez@university.edu",
+    "password": "$2b$12$H29IyUdrHp9eQZkpakuSaeRTsyDAIDV0jhcsqvboVsUYiHFaI9fDG",
+    "studentId": "STU-2024-0912",
+    "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+    "major": "Graphic Design",
+    "yearLevel": "Sophomore",
+    "department": "School of Arts & Design",
+    "advisor": "Prof. Michael Chen",
+    "gpa": 3.42,
+    "credits": 45,
+    "enrolledCourses": [
+      "cs101",
+      "cs201"
+    ],
+    "completedAssignments": [
+      {
+        "assignmentId": "assign_001",
+        "courseId": "course_001",
+        "score": 78,
+        "submittedAt": "2025-10-15T10:30:00Z"
+      },
+      {
+        "assignmentId": "assign_002",
+        "courseId": "course_001",
+        "score": 82,
+        "submittedAt": "2025-10-20T14:20:00Z"
+      },
+      {
+        "assignmentId": "assign_004",
+        "courseId": "course_002",
+        "score": 75,
+        "submittedAt": "2025-10-18T16:45:00Z"
+      },
+      {
+        "assignmentId": "assign_005",
+        "courseId": "course_002",
+        "score": 80,
+        "submittedAt": "2025-10-22T11:30:00Z"
+      },
+      {
+        "assignmentId": "assign_006",
+        "courseId": "course_003",
+        "score": 85,
+        "submittedAt": "2025-10-16T13:20:00Z"
+      },
+      {
+        "assignmentId": "assign_009",
+        "courseId": "course_004",
+        "score": 72,
+        "submittedAt": "2025-10-19T12:30:00Z"
+      }
+    ],
+    "quizAttempts": [
+      {
+        "quizId": "quiz_001",
+        "courseId": "course_001",
+        "score": 75,
+        "maxScore": 100,
+        "attemptedAt": "2025-10-14T10:00:00Z",
+        "answers": {}
+      },
+      {
+        "quizId": "quiz_002",
+        "courseId": "course_001",
+        "score": 80,
+        "maxScore": 100,
+        "attemptedAt": "2025-10-19T14:30:00Z",
+        "answers": {}
+      },
+      {
+        "quizId": "quiz_003",
+        "courseId": "course_002",
+        "score": 78,
+        "maxScore": 100,
+        "attemptedAt": "2025-10-17T16:00:00Z",
+        "answers": {}
+      },
+      {
+        "quizId": "quiz_005",
+        "courseId": "course_003",
+        "score": 82,
+        "maxScore": 100,
+        "attemptedAt": "2025-10-15T13:00:00Z",
+        "answers": {}
+      }
+    ],
+    "grades": []
+  },
+  {
+    "id": "stu_003",
+    "firstName": "James",
+    "lastName": "Wilson",
+    "email": "james.wilson@university.edu",
+    "password": "$2b$12$yF9YHbkdCzhkMuWbHdzPVuN6epuqbUausAoskFbC2hHGozc39Apui",
+    "studentId": "STU-2024-1001",
+    "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=James",
+    "major": "Business Administration",
+    "yearLevel": "Freshman",
+    "department": "School of Business",
+    "advisor": "Prof. James Wilson",
+    "gpa": 3.2,
+    "credits": 15,
+    "enrolledCourses": [
+      "cs101",
+      "cs201"
+    ],
+    "completedAssignments": [
+      {
+        "assignmentId": "assign_001",
+        "courseId": "course_001",
+        "score": 68,
+        "submittedAt": "2025-10-15T10:30:00Z"
+      },
+      {
+        "assignmentId": "assign_004",
+        "courseId": "course_002",
+        "score": 70,
+        "submittedAt": "2025-10-18T16:45:00Z"
+      }
+    ],
+    "quizAttempts": [
+      {
+        "quizId": "quiz_001",
+        "courseId": "course_001",
+        "score": 65,
+        "maxScore": 100,
+        "attemptedAt": "2025-10-14T10:00:00Z",
+        "answers": {}
+      }
+    ],
+    "grades": []
+  }
+]

@@ -6,6 +6,7 @@ from typing import Dict, Any, List, Union
 from models import CurriculumGenerationResponse, Week, Topic, Resource
 from utils.gemini_client import GeminiClient
 from storage.curriculum_storage import CurriculumStorage
+from services.pretest_service import PretestService
 
 
 class CurriculumService:
@@ -15,6 +16,7 @@ class CurriculumService:
         """Initialize curriculum service with Gemini client."""
         self.gemini_client = GeminiClient()
         self.storage = CurriculumStorage()
+        self.pretest_service = PretestService()
     
     def generate_curriculum(
         self,
@@ -66,6 +68,13 @@ class CurriculumService:
 
             # Persist curriculum for later retrieval
             self.storage.save(response)
+            
+            # Automatically generate pretest after successful curriculum creation
+            try:
+                self.pretest_service.generate_pretest_for_curriculum(course_id)
+            except Exception as e:
+                # Log error but don't fail curriculum generation
+                print(f"Warning: Failed to generate pretest for course {course_id}: {str(e)}")
             
             return response
         
