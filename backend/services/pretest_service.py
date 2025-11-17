@@ -202,6 +202,16 @@ class PretestService:
             )
             questions.append(question)
 
+        # Enforce maximum of 15 questions (trim if AI generated too many)
+        MAX_QUESTIONS = 15
+        if len(questions) > MAX_QUESTIONS:
+            # Simply take the first 15 questions
+            questions = questions[:MAX_QUESTIONS]
+            
+            # Re-number question IDs
+            for idx, question in enumerate(questions, 1):
+                question.id = f"q_{idx}"
+
         return questions
 
     def _extract_json(self, text: str) -> str:

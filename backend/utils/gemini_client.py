@@ -285,32 +285,50 @@ Generate the detailed lesson notes now:"""
         """
         # Extract topics from curriculum
         topics_list = []
-        for week in curriculum_data.get("weeks", []):
+        first_week_topics = []
+        for week_idx, week in enumerate(curriculum_data.get("weeks", [])):
             for topic in week.get("topics", []):
-                topics_list.append({
+                topic_data = {
                     "id": topic.get("id", ""),
                     "title": topic.get("title", ""),
                     "description": topic.get("description", "")
-                })
+                }
+                topics_list.append(topic_data)
+                # Collect first week topics
+                if week_idx == 0:
+                    first_week_topics.append(topic_data)
         
         topics_text = "\n".join([
             f"- {t['id']}: {t['title']} - {t['description']}"
             for t in topics_list
         ])
         
-        prompt = f"""You are an expert test creator. Generate a comprehensive pretest to assess students' prior knowledge across all topics in this course curriculum.
+        first_week_text = "\n".join([
+            f"- {t['id']}: {t['title']} - {t['description']}"
+            for t in first_week_topics
+        ]) if first_week_topics else "None"
+        
+        prompt = f"""You are an expert test creator. Generate a SHORT pretest to assess students' readiness for this course.
 
-Curriculum Topics:
+Full Curriculum Topics (for reference):
 {topics_text}
 
-Requirements:
-- Generate 10-15 multiple choice questions total
+First Week Topics (students will learn these early):
+{first_week_text}
+
+CRITICAL REQUIREMENTS - READ CAREFULLY:
+- Generate multiple choice questions (aim for 5-15 questions)
+- MAXIMUM 15 QUESTIONS - DO NOT EXCEED THIS LIMIT
+- If you generate more than 15 questions, only the first 15 will be displayed and graded
 - Each question must have exactly 4 options (A, B, C, D)
-- Questions should cover all major topics from the curriculum
-- Questions should assess foundational knowledge and prerequisite concepts
+- Focus PRIMARILY on prerequisite knowledge students should have BEFORE starting this course
+- Include 2-3 questions from the first week's topics to gauge readiness for early lessons
+- Questions should assess foundational knowledge and prerequisite concepts needed for success
 - Mix easy, medium, and challenging questions
 - For each question, specify which topic it relates to (use the topic ID)
 - Return the response as valid JSON only (no markdown, no extra text)
+- DO NOT try to cover all topics - focus on prerequisites and early course readiness
+- IMPORTANT: This is a SHORT readiness assessment, NOT a comprehensive exam
 
 JSON Format:
 {{
