@@ -22,7 +22,7 @@ export function LoginPage() {
     }
   }, [isAuthenticated, navigate]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -31,7 +31,7 @@ export function LoginPage() {
       return;
     }
 
-    const success = login(email, password);
+    const success = await login(email, password);
     if (success) {
       navigate('/dashboard');
     } else {
@@ -44,7 +44,7 @@ export function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <div className="text-center mb-4">
-            <h1 className="text-3xl font-bold text-indigo-600 mb-2">LearnHub</h1>
+            <h1 className="text-3xl font-bold text-indigo-600 mb-2">Athens</h1>
             <CardDescription>Sign in to your account</CardDescription>
           </div>
         </CardHeader>
@@ -87,8 +87,9 @@ export function LoginPage() {
 
             <div className="mt-4 p-4 bg-slate-50 rounded-lg text-sm text-slate-600">
               <p className="font-semibold mb-2">Demo Credentials:</p>
-              <p>Student: admin@student.com / admin</p>
-              <p>Teacher: admin@teacher.com / admin</p>
+              <p>Arthur: arthur.thompson@university.edu / student123</p>
+              <p>Sarah: sarah.martinez@university.edu / student123</p>
+              <p>James: james.wilson@university.edu / student123</p>
             </div>
           </form>
         </CardContent>

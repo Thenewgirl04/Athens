@@ -1,0 +1,155 @@
+[
+  {
+    "id": "course_001",
+    "title": "Advanced Web Development",
+    "description": "Learn modern web development techniques including React, Node.js, and advanced JavaScript patterns.",
+    "instructor": "Dr. Sarah Johnson",
+    "instructorId": "teach_001",
+    "thumbnail": "https://images.unsplash.com/photo-1593720213681-e9a8778330a7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMGNvZGluZ3xlbnwxfHx8fDE3NjEzMjI3NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    "modules": [
+      {
+        "id": "mod_001",
+        "title": "Introduction to React",
+        "order": 1
+      },
+      {
+        "id": "mod_002",
+        "title": "React Hooks Deep Dive",
+        "order": 2
+      },
+      {
+        "id": "mod_003",
+        "title": "State Management",
+        "order": 3
+      },
+      {
+        "id": "mod_004",
+        "title": "Advanced Patterns",
+        "order": 4
+      }
+    ],
+    "assignments": [
+      "assign_001",
+      "assign_002",
+      "assign_003",
+      "assign_011"
+    ],
+    "quizzes": [
+      "quiz_001",
+      "quiz_002",
+      "quiz_008"
+    ]
+  },
+  {
+    "id": "course_002",
+    "title": "Graphic Design Fundamentals",
+    "description": "Master the principles of graphic design, typography, and visual communication.",
+    "instructor": "Prof. Michael Chen",
+    "instructorId": "teach_002",
+    "thumbnail": "https://images.unsplash.com/photo-1572882724878-e17d310e6a74?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxncmFwaGljJTIwZGVzaWduJTIwdG9vbHN8ZW58MXx8fHwxNzYxMzE3NTQ3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    "modules": [
+      {
+        "id": "mod_005",
+        "title": "Color Theory Basics",
+        "order": 1
+      },
+      {
+        "id": "mod_006",
+        "title": "Color Theory in Practice",
+        "order": 2
+      },
+      {
+        "id": "mod_007",
+        "title": "Typography Fundamentals",
+        "order": 3
+      }
+    ],
+    "assignments": [
+      "assign_004",
+      "assign_005",
+      "assign_012"
+    ],
+    "quizzes": [
+      "quiz_003",
+      "quiz_004"
+    ]
+  },
+  {
+    "id": "course_003",
+    "title": "Data Science & Analytics",
+    "description": "Explore data analysis, machine learning, and statistical methods for data-driven decision making.",
+    "instructor": "Dr. Emily Rodriguez",
+    "instructorId": "teach_003",
+    "thumbnail": "https://images.unsplash.com/photo-1666875753105-c63a6f3bdc86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXRhJTIwc2NpZW5jZSUyMGFuYWx5dGljc3xlbnwxfHx8fDE3NjEyODU2NzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    "modules": [
+      {
+        "id": "mod_008",
+        "title": "Python Basics",
+        "order": 1
+      },
+      {
+        "id": "mod_009",
+        "title": "Machine Learning Basics",
+        "order": 2
+      },
+      {
+        "id": "mod_010",
+        "title": "Data Visualization",
+        "order": 3
+      }
+    ],
+    "assignments": [
+      "assign_006",
+      "assign_007",
+      "assign_008"
+    ],
+    "quizzes": [
+      "quiz_005",
+      "quiz_006"
+    ]
+  },
+  {
+    "id": "course_004",
+    "title": "Business Strategy",
+    "description": "Learn strategic thinking, market analysis, and business planning for competitive advantage.",
+    "instructor": "Prof. James Wilson",
+    "instructorId": "teach_004",
+    "thumbnail": "https://images.unsplash.com/photo-1709715357520-5e1047a2b691?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1lZXRpbmd8ZW58MXx8fHwxNzYxMjk2NTg2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    "modules": [
+      {
+        "id": "mod_011",
+        "title": "Market Analysis Techniques",
+        "order": 1
+      },
+      {
+        "id": "mod_012",
+        "title": "Strategic Planning",
+        "order": 2
+      }
+    ],
+    "assignments": [
+      "assign_009",
+      "assign_010"
+    ],
+    "quizzes": [
+      "quiz_007"
+    ]
+  },
+  {
+    "id": "course_005",
+    "title": "Introduction to Psychology",
+    "description": "Explore the fundamentals of human behavior and mental processes.",
+    "instructor": "Dr. Lisa Anderson",
+    "instructorId": "teach_005",
+    "thumbnail": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "modules": [
+      {
+        "id": "mod_013",
+        "title": "Introduction to Psychology",
+        "order": 1
+      }
+    ],
+    "assignments": [],
+    "quizzes": []
+  }
+]

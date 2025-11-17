@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -17,79 +17,35 @@ import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useAuth } from '../contexts/AuthContext';
-
-interface CourseData {
-  id: number;
-  name: string;
-  thumbnail: string;
-  enrolledStudents: number;
-  completionRate: number;
-  category: string;
-  lastUpdated: string;
-}
-
-const mockCoursesData: CourseData[] = [
-  {
-    id: 1,
-    name: 'Introduction to Programming',
-    thumbnail: 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb21wdXRlciUyMHByb2dyYW1taW5nfGVufDF8fHx8MTc2MjMxNzI1N3ww&ixlib=rb-4.1.0&q=80&w=1080',
-    enrolledStudents: 245,
-    completionRate: 78,
-    category: 'Computer Science',
-    lastUpdated: 'Nov 3, 2025',
-  },
-  {
-    id: 2,
-    name: 'Digital Art Masterclass',
-    thumbnail: 'https://images.unsplash.com/flagged/photo-1572392640988-ba48d1a74457?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnQlMjBwYWludGluZ3xlbnwxfHx8fDE3NjIyNTMzNDl8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    enrolledStudents: 189,
-    completionRate: 65,
-    category: 'Arts & Design',
-    lastUpdated: 'Nov 4, 2025',
-  },
-  {
-    id: 3,
-    name: 'Advanced Mathematics',
-    thumbnail: 'https://images.unsplash.com/photo-1635372722656-389f87a941b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYXRoZW1hdGljcyUyMGVxdWF0aW9uc3xlbnwxfHx8fDE3NjIyMTY3NzZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    enrolledStudents: 167,
-    completionRate: 82,
-    category: 'Mathematics',
-    lastUpdated: 'Nov 2, 2025',
-  },
-  {
-    id: 4,
-    name: 'Marketing Strategy 101',
-    thumbnail: 'https://images.unsplash.com/photo-1533750349088-cd871a92f312?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYXJrZXRpbmclMjBzdHJhdGVneXxlbnwxfHx8fDE3NjIzMDMwOTl8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    enrolledStudents: 312,
-    completionRate: 71,
-    category: 'Business',
-    lastUpdated: 'Nov 5, 2025',
-  },
-  {
-    id: 5,
-    name: 'Chemistry Laboratory Techniques',
-    thumbnail: 'https://images.unsplash.com/photo-1614934273038-8829c68de36c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzY2llbmNlJTIwbGFib3JhdG9yeXxlbnwxfHx8fDE3NjIxOTUzMTZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    enrolledStudents: 134,
-    completionRate: 69,
-    category: 'Science',
-    lastUpdated: 'Nov 1, 2025',
-  },
-  {
-    id: 6,
-    name: 'World History: Ancient Civilizations',
-    thumbnail: 'https://images.unsplash.com/photo-1491841651911-c44c30c34548?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoaXN0b3J5JTIwYm9va3N8ZW58MXx8fHwxNzYyMzE3MjU4fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    enrolledStudents: 198,
-    completionRate: 75,
-    category: 'History',
-    lastUpdated: 'Nov 4, 2025',
-  },
-];
+import { api, Course } from '../services/api';
 
 export function MyCourses() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const [activeNav, setActiveNav] = useState('courses');
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user?.id && user.role === 'student') {
+      loadCourses();
+    }
+  }, [user]);
+
+  const loadCourses = async () => {
+    if (!user?.id) return;
+    
+    try {
+      setLoading(true);
+      const coursesData = await api.getStudentCourses(user.id);
+      setCourses(coursesData);
+    } catch (error) {
+      console.error('Error loading courses:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
@@ -117,7 +73,7 @@ export function MyCourses() {
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
         <div className="p-6 border-b border-slate-200">
-          <h1 className="text-indigo-600">LearnHub</h1>
+          <h1 className="text-indigo-600">Athens</h1>
         </div>
         
         <nav className="flex-1 p-4">
@@ -169,8 +125,8 @@ export function MyCourses() {
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
               <Avatar>
-                <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Arthur" />
-                <AvatarFallback>AR</AvatarFallback>
+                <AvatarImage src={user?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.firstName}`} />
+                <AvatarFallback>{user?.firstName?.[0]}{user?.lastName?.[0]}</AvatarFallback>
               </Avatar>
             </div>
           </div>
@@ -181,66 +137,51 @@ export function MyCourses() {
           {/* Header */}
           <div className="mb-8">
             <h3 className="text-slate-900 mb-2">All Courses</h3>
-            <p className="text-slate-600">You're managing {mockCoursesData.length} courses</p>
+            <p className="text-slate-600">You're enrolled in {loading ? '...' : courses.length} courses</p>
           </div>
 
           {/* Course Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockCoursesData.map((course) => (
-              <Card key={course.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="aspect-video relative overflow-hidden bg-slate-100">
-                  <ImageWithFallback
-                    src={course.thumbnail}
-                    alt={course.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <CardTitle className="text-slate-900 line-clamp-2">{course.name}</CardTitle>
+          {loading ? (
+            <div className="text-center py-8 text-slate-500">Loading courses...</div>
+          ) : courses.length === 0 ? (
+            <div className="text-center py-8 text-slate-500">No courses enrolled</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {courses.map((course) => (
+                <Card key={course.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate(`/courses/${course.id}`)}>
+                  <div className="aspect-video relative overflow-hidden bg-slate-100">
+                    <ImageWithFallback
+                      src={course.thumbnail || ''}
+                      alt={course.title}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <CardDescription className="text-sm">{course.category}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {/* Stats */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex items-center gap-2">
-                      <div className="p-2 bg-indigo-50 rounded-lg">
-                        <Users className="w-4 h-4 text-indigo-600" />
-                      </div>
-                      <div>
-                        <p className="text-slate-900">{course.enrolledStudents}</p>
-                        <p className="text-xs text-slate-500">Students</p>
-                      </div>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <CardTitle className="text-slate-900 line-clamp-2">{course.title}</CardTitle>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="p-2 bg-emerald-50 rounded-lg">
-                        <TrendingUp className="w-4 h-4 text-emerald-600" />
+                    <CardDescription className="text-sm">{course.instructor}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {/* Progress Bar */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-slate-600">Course Progress</span>
+                        <span className="text-slate-900">{course.progress || 0}%</span>
                       </div>
-                      <div>
-                        <p className="text-slate-900">{course.completionRate}%</p>
-                        <p className="text-xs text-slate-500">Completion</p>
-                      </div>
+                      <Progress value={course.progress || 0} className="h-2" />
                     </div>
-                  </div>
 
-                  {/* Progress Bar */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-slate-600">Course Progress</span>
-                      <span className="text-slate-900">{course.completionRate}%</span>
-                    </div>
-                    <Progress value={course.completionRate} className="h-2" />
-                  </div>
+                    {/* Enrollment Date */}
+                    {course.enrollmentDate && (
+                      <p className="text-xs text-slate-500">
+                        Enrolled: {new Date(course.enrollmentDate).toLocaleDateString()}
+                      </p>
+                    )}
 
-                  {/* Last Updated */}
-                  <p className="text-xs text-slate-500">
-                    Last updated: {course.lastUpdated}
-                  </p>
-
-                  {/* Action Button */}
-                  <div className="pt-2">
-                    <Button 
+                    {/* Action Button */}
+                    <div className="pt-2">
+                      <Button 
                       variant="outline" 
                       className="w-full gap-2" 
                       size="sm"
@@ -254,6 +195,7 @@ export function MyCourses() {
               </Card>
             ))}
           </div>
+          )}
         </main>
       </div>
     </div>

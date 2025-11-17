@@ -1,0 +1,80 @@
+[
+  {
+    "studentId": "stu_001",
+    "courseId": "course_001",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 65
+  },
+  {
+    "studentId": "stu_001",
+    "courseId": "course_002",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 78
+  },
+  {
+    "studentId": "stu_001",
+    "courseId": "course_003",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 42
+  },
+  {
+    "studentId": "stu_001",
+    "courseId": "course_004",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 23
+  },
+  {
+    "studentId": "stu_002",
+    "courseId": "course_001",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 45
+  },
+  {
+    "studentId": "stu_002",
+    "courseId": "course_002",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 50
+  },
+  {
+    "studentId": "stu_002",
+    "courseId": "course_003",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 40
+  },
+  {
+    "studentId": "stu_002",
+    "courseId": "course_004",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 35
+  },
+  {
+    "studentId": "stu_002",
+    "courseId": "course_005",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 55
+  },
+  {
+    "studentId": "stu_003",
+    "courseId": "course_001",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 15
+  },
+  {
+    "studentId": "stu_003",
+    "courseId": "course_002",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 20
+  },
+  {
+    "studentId": "stu_003",
+    "courseId": "course_003",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 10
+  },
+  {
+    "studentId": "stu_003",
+    "courseId": "course_004",
+    "enrolledAt": "2025-09-01T00:00:00Z",
+    "progress": 15
+  }
+]

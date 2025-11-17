@@ -182,7 +182,7 @@ export function AssignmentsPage() {
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
         <div className="p-6 border-b border-slate-200">
-          <h1 className="text-indigo-600">LearnHub</h1>
+          <h1 className="text-indigo-600">Athens</h1>
         </div>
         
         <nav className="flex-1 p-4">

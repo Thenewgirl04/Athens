@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -30,12 +30,41 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 import { useAuth } from '../contexts/AuthContext';
+import { api, Student, Assignment } from '../services/api';
 
 export function ProfilePage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const [activeNav, setActiveNav] = useState('profile');
+  const [student, setStudent] = useState<Student | null>(null);
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user?.id && user.role === 'student') {
+      loadProfileData();
+    }
+  }, [user]);
+
+  const loadProfileData = async () => {
+    if (!user?.id) return;
+    
+    try {
+      setLoading(true);
+      const [profileData, assignmentsData] = await Promise.all([
+        api.getStudentProfile(user.id),
+        api.getStudentAssignments(user.id),
+      ]);
+
+      setStudent(profileData.student);
+      setAssignments(assignmentsData);
+    } catch (error) {
+      console.error('Error loading profile data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
@@ -54,28 +83,28 @@ export function ProfilePage() {
     navigate('/login');
   };
 
-  const academicStats = [
-    { label: 'GPA', value: '3.85', description: 'Current GPA' },
-    { label: 'Credits', value: '78', description: 'Completed Credits' },
-    { label: 'Courses', value: '12', description: 'Enrolled Courses' },
-    { label: 'Due', value: '5', description: 'Assignments Due' },
-  ];
+  const academicStats = student ? [
+    { label: 'GPA', value: student.gpa.toFixed(2), description: 'Current GPA' },
+    { label: 'Credits', value: student.credits.toString(), description: 'Completed Credits' },
+    { label: 'Courses', value: student.enrolledCourses.length.toString(), description: 'Enrolled Courses' },
+    { label: 'Due', value: assignments.filter(a => !a.submitted && new Date(a.dueDate) > new Date()).length.toString(), description: 'Assignments Due' },
+  ] : [];
 
-  const personalInfo = [
-    { label: 'Full Name', value: 'Arthur Thompson', icon: User },
-    { label: 'Email', value: 'arthur.thompson@university.edu', icon: Mail },
-    { label: 'Phone', value: '+1 (555) 123-4567', icon: Phone },
-    { label: 'Major', value: 'Computer Science', icon: GraduationCap },
-    { label: 'Student ID', value: 'STU-2024-0825', icon: IdCard },
-    { label: 'Year Level', value: 'Junior (3rd Year)', icon: Calendar },
-  ];
+  const personalInfo = student ? [
+    { label: 'Full Name', value: `${student.firstName} ${student.lastName}`, icon: User },
+    { label: 'Email', value: student.email, icon: Mail },
+    { label: 'Phone', value: 'N/A', icon: Phone },
+    { label: 'Major', value: student.major, icon: GraduationCap },
+    { label: 'Student ID', value: student.studentId, icon: IdCard },
+    { label: 'Year Level', value: student.yearLevel, icon: Calendar },
+  ] : [];
 
-  const academicInfo = [
-    { label: 'Department', value: 'School of Computer Science & Engineering', icon: Building2 },
-    { label: 'Advisor', value: 'Dr. Sarah Johnson', icon: UserCircle2 },
+  const academicInfo = student ? [
+    { label: 'Department', value: student.department, icon: Building2 },
+    { label: 'Advisor', value: student.advisor, icon: UserCircle2 },
     { label: 'Current Semester', value: 'Fall 2025', icon: Calendar },
-    { label: 'Enrolled Courses', value: '6 courses', icon: BookMarked, hasChevron: true },
-  ];
+    { label: 'Enrolled Courses', value: `${student.enrolledCourses.length} courses`, icon: BookMarked, hasChevron: true },
+  ] : [];
 
   const settingsOptions = [
     { label: 'Notifications', icon: Bell, description: 'Manage notification preferences' },
@@ -90,7 +119,7 @@ export function ProfilePage() {
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
         <div className="p-6 border-b border-slate-200">
-          <h1 className="text-indigo-600">LearnHub</h1>
+          <h1 className="text-indigo-600">Athens</h1>
         </div>
         
         <nav className="flex-1 p-4">
@@ -155,38 +184,44 @@ export function ProfilePage() {
             {/* Student Info Card */}
             <Card>
               <CardContent className="p-6">
-                <div className="flex items-start gap-6">
-                  <div className="relative">
-                    <Avatar className="w-24 h-24">
-                      <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Arthur" />
-                      <AvatarFallback className="text-2xl">AR</AvatarFallback>
-                    </Avatar>
-                    <button className="absolute bottom-0 right-0 p-1.5 bg-indigo-600 rounded-full text-white hover:bg-indigo-700 transition-colors">
-                      <Camera className="w-4 h-4" />
-                    </button>
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="text-slate-900 mb-2">Arthur Thompson</h2>
-                    <div className="space-y-1 text-sm text-slate-600">
-                      <p className="flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        arthur.thompson@university.edu
-                      </p>
-                      <p className="flex items-center gap-2">
-                        <GraduationCap className="w-4 h-4" />
-                        Computer Science • Junior
-                      </p>
-                      <p className="flex items-center gap-2">
-                        <IdCard className="w-4 h-4" />
-                        STU-2024-0825
-                      </p>
+                {loading ? (
+                  <div className="text-center py-8 text-slate-500">Loading profile...</div>
+                ) : student ? (
+                  <div className="flex items-start gap-6">
+                    <div className="relative">
+                      <Avatar className="w-24 h-24">
+                        <AvatarImage src={student.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${student.firstName}`} />
+                        <AvatarFallback className="text-2xl">{student.firstName[0]}{student.lastName[0]}</AvatarFallback>
+                      </Avatar>
+                      <button className="absolute bottom-0 right-0 p-1.5 bg-indigo-600 rounded-full text-white hover:bg-indigo-700 transition-colors">
+                        <Camera className="w-4 h-4" />
+                      </button>
                     </div>
+                    <div className="flex-1">
+                      <h2 className="text-slate-900 mb-2">{student.firstName} {student.lastName}</h2>
+                      <div className="space-y-1 text-sm text-slate-600">
+                        <p className="flex items-center gap-2">
+                          <Mail className="w-4 h-4" />
+                          {student.email}
+                        </p>
+                        <p className="flex items-center gap-2">
+                          <GraduationCap className="w-4 h-4" />
+                          {student.major} • {student.yearLevel}
+                        </p>
+                        <p className="flex items-center gap-2">
+                          <IdCard className="w-4 h-4" />
+                          {student.studentId}
+                        </p>
+                      </div>
+                    </div>
+                    <Button variant="outline" className="gap-2">
+                      <Edit className="w-4 h-4" />
+                      Edit Profile
+                    </Button>
                   </div>
-                  <Button variant="outline" className="gap-2">
-                    <Edit className="w-4 h-4" />
-                    Edit Profile
-                  </Button>
-                </div>
+                ) : (
+                  <div className="text-center py-8 text-slate-500">No profile data available</div>
+                )}
               </CardContent>
             </Card>
 

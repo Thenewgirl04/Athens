@@ -1,13 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-interface User {
-  email: string;
-  role: 'student' | 'teacher';
-}
+import { api, User } from '../services/api';
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => boolean;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -21,29 +17,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+        localStorage.removeItem('user');
+      }
     }
   }, []);
 
-  const login = (email: string, password: string): boolean => {
-    // Simple validation - check email and password
-    if (password !== 'admin') {
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      const response = await api.login(email, password);
+      
+      if (response.success && response.user && response.token) {
+        const userData = {
+          ...response.user,
+          token: response.token,
+        };
+        setUser(response.user);
+        localStorage.setItem('user', JSON.stringify(userData));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Login error:', error);
       return false;
     }
-
-    let role: 'student' | 'teacher';
-    if (email === 'admin@student.com') {
-      role = 'student';
-    } else if (email === 'admin@teacher.com') {
-      role = 'teacher';
-    } else {
-      return false;
-    }
-
-    const newUser: User = { email, role };
-    setUser(newUser);
-    localStorage.setItem('user', JSON.stringify(newUser));
-    return true;
   };
 
   const logout = () => {

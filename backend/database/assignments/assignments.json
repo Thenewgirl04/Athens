@@ -1,0 +1,110 @@
+[
+  {
+    "id": "assign_001",
+    "courseId": "course_001",
+    "title": "React Component Library",
+    "description": "Build a reusable component library using React",
+    "dueDate": "2025-10-28T23:59:59Z",
+    "points": 100,
+    "type": "project"
+  },
+  {
+    "id": "assign_002",
+    "courseId": "course_001",
+    "title": "Hooks Implementation",
+    "description": "Implement custom React hooks",
+    "dueDate": "2025-10-30T23:59:59Z",
+    "points": 50,
+    "type": "assignment"
+  },
+  {
+    "id": "assign_003",
+    "courseId": "course_001",
+    "title": "State Management Exercise",
+    "description": "Practice with Redux and Context API",
+    "dueDate": "2025-11-05T23:59:59Z",
+    "points": 75,
+    "type": "assignment"
+  },
+  {
+    "id": "assign_004",
+    "courseId": "course_002",
+    "title": "Color Palette Design",
+    "description": "Create a cohesive color palette",
+    "dueDate": "2025-10-26T23:59:59Z",
+    "points": 50,
+    "type": "project"
+  },
+  {
+    "id": "assign_005",
+    "courseId": "course_002",
+    "title": "Typography Study",
+    "description": "Analyze and apply typography principles",
+    "dueDate": "2025-11-01T23:59:59Z",
+    "points": 60,
+    "type": "assignment"
+  },
+  {
+    "id": "assign_006",
+    "courseId": "course_003",
+    "title": "Data Analysis Project",
+    "description": "Analyze a dataset using Python",
+    "dueDate": "2025-10-29T23:59:59Z",
+    "points": 100,
+    "type": "project"
+  },
+  {
+    "id": "assign_007",
+    "courseId": "course_003",
+    "title": "ML Model Implementation",
+    "description": "Build a simple machine learning model",
+    "dueDate": "2025-11-03T23:59:59Z",
+    "points": 100,
+    "type": "project"
+  },
+  {
+    "id": "assign_008",
+    "courseId": "course_003",
+    "title": "Data Visualization",
+    "description": "Create visualizations using matplotlib/seaborn",
+    "dueDate": "2025-11-06T23:59:59Z",
+    "points": 75,
+    "type": "assignment"
+  },
+  {
+    "id": "assign_009",
+    "courseId": "course_004",
+    "title": "Market Analysis Report",
+    "description": "Analyze a market and write a strategic report",
+    "dueDate": "2025-10-27T23:59:59Z",
+    "points": 100,
+    "type": "project"
+  },
+  {
+    "id": "assign_010",
+    "courseId": "course_004",
+    "title": "Business Plan Draft",
+    "description": "Create a business plan outline",
+    "dueDate": "2025-11-04T23:59:59Z",
+    "points": 80,
+    "type": "project"
+  },
+  {
+    "id": "assign_011",
+    "courseId": "course_001",
+    "title": "Final Project Proposal",
+    "description": "Submit proposal for final project",
+    "dueDate": "2025-11-10T23:59:59Z",
+    "points": 25,
+    "type": "assignment"
+  },
+  {
+    "id": "assign_012",
+    "courseId": "course_002",
+    "title": "Design Portfolio",
+    "description": "Compile design portfolio",
+    "dueDate": "2025-11-12T23:59:59Z",
+    "points": 150,
+    "type": "project"
+  }
+]

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -18,15 +18,7 @@ import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useAuth } from '../contexts/AuthContext';
-
-interface Course {
-  id: number;
-  title: string;
-  progress: number;
-  thumbnail: string;
-  instructor: string;
-  nextLesson: string;
-}
+import { api, Course, Assignment } from '../services/api';
 
 interface Announcement {
   id: number;
@@ -36,77 +28,79 @@ interface Announcement {
   course: string;
 }
 
-const mockCourses: Course[] = [
-  {
-    id: 1,
-    title: 'Advanced Web Development',
-    progress: 65,
-    thumbnail: 'https://images.unsplash.com/photo-1593720213681-e9a8778330a7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMGNvZGluZ3xlbnwxfHx8fDE3NjEzMjI3NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    instructor: 'Dr. Sarah Johnson',
-    nextLesson: 'React Hooks Deep Dive',
-  },
-  {
-    id: 2,
-    title: 'Graphic Design Fundamentals',
-    progress: 42,
-    thumbnail: 'https://images.unsplash.com/photo-1572882724878-e17d310e6a74?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxncmFwaGljJTIwZGVzaWduJTIwdG9vbHN8ZW58MXx8fHwxNzYxMzE3NTQ3fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    instructor: 'Prof. Michael Chen',
-    nextLesson: 'Color Theory in Practice',
-  },
-  {
-    id: 3,
-    title: 'Data Science & Analytics',
-    progress: 78,
-    thumbnail: 'https://images.unsplash.com/photo-1666875753105-c63a6f3bdc86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXRhJTIwc2NpZW5jZSUyMGFuYWx5dGljc3xlbnwxfHx8fDE3NjEyODU2NzJ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    instructor: 'Dr. Emily Rodriguez',
-    nextLesson: 'Machine Learning Basics',
-  },
-  {
-    id: 4,
-    title: 'Business Strategy',
-    progress: 23,
-    thumbnail: 'https://images.unsplash.com/photo-1709715357520-5e1047a2b691?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1lZXRpbmd8ZW58MXx8fHwxNzYxMjk2NTg2fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    instructor: 'Prof. James Wilson',
-    nextLesson: 'Market Analysis Techniques',
-  },
-];
-
-const mockAnnouncements: Announcement[] = [
-  {
-    id: 1,
-    title: 'Final Project Submission',
-    date: 'Oct 28, 2025',
-    type: 'deadline',
-    course: 'Advanced Web Development',
-  },
-  {
-    id: 2,
-    title: 'New Module Released: Advanced Python',
-    date: 'Oct 25, 2025',
-    type: 'announcement',
-    course: 'Data Science & Analytics',
-  },
-  {
-    id: 3,
-    title: 'Assignment 3 Due',
-    date: 'Oct 26, 2025',
-    type: 'deadline',
-    course: 'Graphic Design Fundamentals',
-  },
-  {
-    id: 4,
-    title: 'Live Q&A Session Tomorrow',
-    date: 'Oct 25, 2025',
-    type: 'announcement',
-    course: 'Business Strategy',
-  },
-];
-
 export function Dashboard() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const [activeNav, setActiveNav] = useState('dashboard');
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    coursesEnrolled: 0,
+    assignmentsDue: 0,
+    averageProgress: 0,
+  });
+
+  useEffect(() => {
+    if (user?.id && user.role === 'student') {
+      loadDashboardData();
+    }
+  }, [user]);
+
+  const loadDashboardData = async () => {
+    if (!user?.id) return;
+    
+    try {
+      setLoading(true);
+      const [coursesData, assignmentsData] = await Promise.all([
+        api.getStudentCourses(user.id),
+        api.getStudentAssignments(user.id),
+      ]);
+
+      setCourses(coursesData);
+      setAssignments(assignmentsData);
+
+      // Calculate stats
+      const coursesEnrolled = coursesData.length;
+      const now = new Date();
+      const assignmentsDue = assignmentsData.filter(a => {
+        if (a.submitted) return false;
+        const dueDate = new Date(a.dueDate);
+        return dueDate > now;
+      }).length;
+
+      const averageProgress = coursesData.length > 0
+        ? Math.round(coursesData.reduce((sum, c) => sum + (c.progress || 0), 0) / coursesData.length)
+        : 0;
+
+      setStats({
+        coursesEnrolled,
+        assignmentsDue,
+        averageProgress,
+      });
+    } catch (error) {
+      console.error('Error loading dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Generate announcements from assignments
+  const announcements: Announcement[] = assignments
+    .filter(a => !a.submitted)
+    .slice(0, 4)
+    .map((a, idx) => {
+      const course = courses.find(c => c.id === a.courseId);
+      const dueDate = new Date(a.dueDate);
+      return {
+        id: idx + 1,
+        title: a.title,
+        date: dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        type: 'deadline' as const,
+        course: course?.title || 'Unknown Course',
+      };
+    });
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
@@ -130,7 +124,7 @@ export function Dashboard() {
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
         <div className="p-6 border-b border-slate-200">
-          <h1 className="text-indigo-600">LearnHub</h1>
+          <h1 className="text-indigo-600">Athens</h1>
         </div>
         
         <nav className="flex-1 p-4">
@@ -173,7 +167,7 @@ export function Dashboard() {
         <header className="bg-white border-b border-slate-200 px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-slate-900">Welcome back, Arthur!</h2>
+              <h2 className="text-slate-900">Welcome back, {user?.firstName || 'Student'}!</h2>
               <p className="text-slate-500">Here's what's happening with your courses today.</p>
             </div>
             <div className="flex items-center gap-4">
@@ -182,8 +176,8 @@ export function Dashboard() {
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
               <Avatar>
-                <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Arthur" />
-                <AvatarFallback>AR</AvatarFallback>
+                <AvatarImage src={user?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.firstName}`} />
+                <AvatarFallback>{user?.firstName?.[0]}{user?.lastName?.[0]}</AvatarFallback>
               </Avatar>
             </div>
           </div>
@@ -196,12 +190,12 @@ export function Dashboard() {
             <Card>
               <CardHeader className="pb-3">
                 <CardDescription>Courses Enrolled</CardDescription>
-                <CardTitle className="text-indigo-600">12</CardTitle>
+                <CardTitle className="text-indigo-600">{loading ? '...' : stats.coursesEnrolled}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-2 text-slate-600">
                   <BookOpen className="w-4 h-4" />
-                  <span className="text-sm">4 in progress</span>
+                  <span className="text-sm">{courses.filter(c => (c.progress || 0) > 0 && (c.progress || 0) < 100).length} in progress</span>
                 </div>
               </CardContent>
             </Card>
@@ -209,12 +203,18 @@ export function Dashboard() {
             <Card>
               <CardHeader className="pb-3">
                 <CardDescription>Assignments Due</CardDescription>
-                <CardTitle className="text-amber-600">5</CardTitle>
+                <CardTitle className="text-amber-600">{loading ? '...' : stats.assignmentsDue}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-2 text-slate-600">
                   <Clock className="w-4 h-4" />
-                  <span className="text-sm">2 due this week</span>
+                  <span className="text-sm">{assignments.filter(a => {
+                    if (a.submitted) return false;
+                    const dueDate = new Date(a.dueDate);
+                    const weekFromNow = new Date();
+                    weekFromNow.setDate(weekFromNow.getDate() + 7);
+                    return dueDate <= weekFromNow && dueDate > new Date();
+                  }).length} due this week</span>
                 </div>
               </CardContent>
             </Card>
@@ -222,10 +222,10 @@ export function Dashboard() {
             <Card>
               <CardHeader className="pb-3">
                 <CardDescription>Average Progress</CardDescription>
-                <CardTitle className="text-emerald-600">52%</CardTitle>
+                <CardTitle className="text-emerald-600">{loading ? '...' : `${stats.averageProgress}%`}</CardTitle>
               </CardHeader>
               <CardContent>
-                <Progress value={52} className="h-2" />
+                <Progress value={stats.averageProgress} className="h-2" />
               </CardContent>
             </Card>
           </div>
@@ -240,35 +240,52 @@ export function Dashboard() {
               </Button>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {mockCourses.map((course) => (
-                <Card key={course.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
-                  <div className="aspect-video relative overflow-hidden bg-slate-100">
-                    <ImageWithFallback
-                      src={course.thumbnail}
-                      alt={course.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-slate-900 line-clamp-2">{course.title}</CardTitle>
-                    <CardDescription className="text-sm">{course.instructor}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-600">Progress</span>
-                        <span className="text-slate-900">{course.progress}%</span>
+            {loading ? (
+              <div className="text-center py-8 text-slate-500">Loading courses...</div>
+            ) : courses.length === 0 ? (
+              <div className="text-center py-8 text-slate-500">No courses enrolled</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {courses.slice(0, 4).map((course) => {
+                  const nextModule = course.modules && course.modules.length > 0 
+                    ? course.modules[0] 
+                    : null;
+                  return (
+                    <Card 
+                      key={course.id} 
+                      className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                      onClick={() => navigate(`/courses/${course.id}`)}
+                    >
+                      <div className="aspect-video relative overflow-hidden bg-slate-100">
+                        <ImageWithFallback
+                          src={course.thumbnail || ''}
+                          alt={course.title}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                      <Progress value={course.progress} className="h-2" />
-                      <p className="text-sm text-slate-500 pt-2">
-                        Next: {course.nextLesson}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-slate-900 line-clamp-2">{course.title}</CardTitle>
+                        <CardDescription className="text-sm">{course.instructor}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-slate-600">Progress</span>
+                            <span className="text-slate-900">{course.progress || 0}%</span>
+                          </div>
+                          <Progress value={course.progress || 0} className="h-2" />
+                          {nextModule && (
+                            <p className="text-sm text-slate-500 pt-2">
+                              Next: {nextModule.title}
+                            </p>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
           </section>
 
           {/* Announcements & Deadlines */}
@@ -280,7 +297,10 @@ export function Dashboard() {
             <Card>
               <CardContent className="p-0">
                 <div className="divide-y divide-slate-200">
-                  {mockAnnouncements.map((announcement) => (
+                  {announcements.length === 0 ? (
+                    <div className="p-4 text-center text-slate-500">No upcoming deadlines</div>
+                  ) : (
+                    announcements.map((announcement) => (
                     <div
                       key={announcement.id}
                       className="flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors"
@@ -306,7 +326,7 @@ export function Dashboard() {
                         </Badge>
                       </div>
                     </div>
-                  ))}
+                  )))}
                 </div>
               </CardContent>
             </Card>

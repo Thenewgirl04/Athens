@@ -11,10 +11,18 @@ from models import (
     HealthCheckResponse,
     LessonGenerationRequest,
     LessonGenerationResponse,
-    Lesson
+    Lesson,
+    LoginRequest,
+    AuthResponse,
+    StudentProfileResponse,
+    StudentCourseResponse,
+    StudentAssignmentResponse,
+    StudentQuizResponse
 )
 from services.curriculum_service import CurriculumService
 from services.lesson_service import LessonService
+from services.auth_service import AuthService
+from services.student_service import StudentService
 from config import settings
 
 import uvicorn
@@ -24,6 +32,8 @@ app = FastAPI(title="Teacher Dashboard Backend", version="1.0.0")
 # Initialize services
 curriculum_service = CurriculumService()
 lesson_service = LessonService()
+auth_service = AuthService()
+student_service = StudentService()
 
 
 def _coerce_bool(value: bool | str | None, default: bool) -> bool:
@@ -237,6 +247,197 @@ def get_lesson(lesson_id: str, course_id: str = None) -> Lesson:
         raise HTTPException(
             status_code=500,
             detail=f"Error retrieving lesson: {str(e)}"
+        )
+
+
+# Authentication Endpoints
+
+@app.post("/api/auth/login", response_model=AuthResponse, tags=["Authentication"])
+def login(request: LoginRequest) -> AuthResponse:
+    """
+    Authenticate a student or teacher.
+    
+    Args:
+        request: LoginRequest with email and password
+    
+    Returns:
+        AuthResponse with user data and token
+    """
+    try:
+        # Try student first
+        user = auth_service.authenticate_student(request.email, request.password)
+        role = "student"
+        
+        # If not a student, try teacher
+        if not user:
+            user = auth_service.authenticate_teacher(request.email, request.password)
+            role = "teacher"
+        
+        if not user:
+            return AuthResponse(
+                success=False,
+                message="Invalid email or password",
+                user=None,
+                token=None
+            )
+        
+        # Create simple token (in production, use JWT)
+        token = f"token_{user.get('id', '')}_{role}"
+        
+        # Prepare user response (without password)
+        user_response = {
+            "id": user.get("id"),
+            "email": user.get("email"),
+            "firstName": user.get("firstName"),
+            "lastName": user.get("lastName"),
+            "role": role
+        }
+        
+        # Add role-specific fields
+        if role == "student":
+            user_response["studentId"] = user.get("studentId")
+            user_response["avatarUrl"] = user.get("avatarUrl")
+        elif role == "teacher":
+            user_response["department"] = user.get("department")
+        
+        return AuthResponse(
+            success=True,
+            message="Login successful",
+            user=user_response,
+            token=token
+        )
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error during authentication: {str(e)}"
+        )
+
+
+# Student Endpoints
+
+@app.get("/api/student/profile", tags=["Student"])
+def get_student_profile(student_id: str) -> dict:
+    """
+    Get student profile by ID.
+    
+    Args:
+        student_id: Student ID (query parameter)
+    
+    Returns:
+        Student profile data
+    """
+    try:
+        if not student_id:
+            raise HTTPException(
+                status_code=400,
+                detail="student_id is required"
+            )
+        student = student_service.get_student_by_id(student_id)
+        if not student:
+            raise HTTPException(
+                status_code=404,
+                detail="Student not found"
+            )
+        return {"student": student}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error retrieving student profile: {str(e)}"
+        )
+
+
+@app.get("/api/student/{student_id}/courses", tags=["Student"])
+def get_student_courses(student_id: str) -> List[dict]:
+    """
+    Get all courses for a student with progress.
+    
+    Args:
+        student_id: Student ID
+    
+    Returns:
+        List of courses with progress
+    """
+    try:
+        courses = student_service.get_student_courses(student_id)
+        return courses
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error retrieving student courses: {str(e)}"
+        )
+
+
+@app.get("/api/student/{student_id}/assignments", tags=["Student"])
+def get_student_assignments(student_id: str) -> List[dict]:
+    """
+    Get all assignments for a student with submission status.
+    
+    Args:
+        student_id: Student ID
+    
+    Returns:
+        List of assignments with submission status
+    """
+    try:
+        assignments = student_service.get_student_assignments(student_id)
+        return assignments
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error retrieving student assignments: {str(e)}"
+        )
+
+
+@app.get("/api/student/{student_id}/quizzes", tags=["Student"])
+def get_student_quizzes(student_id: str) -> List[dict]:
+    """
+    Get all quizzes for a student with attempt history.
+    
+    Args:
+        student_id: Student ID
+    
+    Returns:
+        List of quizzes with attempt history
+    """
+    try:
+        quizzes = student_service.get_student_quiz_history(student_id)
+        return quizzes
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error retrieving student quizzes: {str(e)}"
+        )
+
+
+@app.put("/api/student/{student_id}/profile", tags=["Student"])
+def update_student_profile(student_id: str, updates: dict) -> dict:
+    """
+    Update student profile information.
+    
+    Args:
+        student_id: Student ID
+        updates: Dict of fields to update
+    
+    Returns:
+        Updated student profile
+    """
+    try:
+        updated_student = student_service.update_student_profile(student_id, updates)
+        if not updated_student:
+            raise HTTPException(
+                status_code=404,
+                detail="Student not found"
+            )
+        return {"student": updated_student}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error updating student profile: {str(e)}"
         )
 
 
