@@ -2,7 +2,7 @@
 Pydantic models for request and response validation.
 """
 from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 
 class CurriculumGenerationRequest(BaseModel):
@@ -271,3 +271,82 @@ class StudentQuizResponse(BaseModel):
     quiz: Quiz
     attempts: List[QuizAttempt]
     bestScore: Optional[float] = None
+
+
+# Pretest Models
+
+class PretestQuestion(BaseModel):
+    """Pretest question model."""
+    id: str
+    question: str
+    options: List[str] = Field(..., description="List of 4 multiple choice options")
+    correctAnswer: int = Field(..., description="Index of correct answer (0-3)")
+    topicId: Optional[str] = Field(None, description="Topic ID from curriculum this question relates to")
+    topicTitle: Optional[str] = Field(None, description="Topic title for analysis")
+
+
+class Pretest(BaseModel):
+    """Pretest model for a course."""
+    id: str
+    courseId: str
+    questions: List[PretestQuestion] = Field(default_factory=list)
+    createdAt: str
+    maxScore: int
+
+
+class PretestAttempt(BaseModel):
+    """Student's pretest attempt."""
+    id: str
+    studentId: str
+    courseId: str
+    pretestId: str
+    answers: Dict[str, int] = Field(..., description="Question ID -> selected answer index")
+    score: float
+    maxScore: float
+    percentage: float
+    completedAt: str
+
+
+class TopicPerformance(BaseModel):
+    """Performance breakdown for a specific topic."""
+    topicId: str
+    topicTitle: str
+    questionsCount: int
+    correctCount: int
+    percentage: float
+    performanceLevel: str = Field(..., description="'strong', 'moderate', or 'weak'")
+
+
+class PretestAnalysis(BaseModel):
+    """SAT-style performance analysis."""
+    overallScore: float
+    maxScore: float
+    percentage: float
+    performanceLevel: str = Field(..., description="'fail' (0-69%), 'below_moderate' (70-84%), 'moderate_plus' (85-100%)")
+    topicBreakdown: List[TopicPerformance]
+    strengths: List[str] = Field(default_factory=list, description="Topics where student performed well")
+    weaknesses: List[str] = Field(default_factory=list, description="Topics where student needs improvement")
+
+
+class TopicRecommendation(BaseModel):
+    """Resource recommendation for a weak topic area."""
+    topicId: str
+    topicTitle: str
+    recommendation: str = Field(..., description="Explanation of why this topic needs attention")
+    resourceUrl: str
+    resourceType: str = Field(..., description="'article', 'video', 'pdf', or 'course'")
+
+
+class PretestSubmissionRequest(BaseModel):
+    """Request to submit pretest answers."""
+    studentId: str
+    courseId: str
+    pretestId: str
+    answers: Dict[str, int] = Field(..., description="Question ID -> selected answer index")
+
+
+class PretestResultResponse(BaseModel):
+    """Complete pretest result with analysis and recommendations."""
+    attempt: PretestAttempt
+    analysis: PretestAnalysis
+    recommendation: Optional[TopicRecommendation] = Field(None, description="Only present if score < 85%")

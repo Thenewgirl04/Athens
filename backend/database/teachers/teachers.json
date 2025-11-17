@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "teach_001",
+    "firstName": "Sarah",
+    "lastName": "Johnson",
+    "email": "sarah.johnson@university.edu",
+    "password": "$2b$12$lp7/QN4TYZ2im8a9YrNk9..L/HrcsYUzEV5Ay4ltcd1JpHISs6yQq",
+    "department": "Computer Science",
+    "courses": ["cs101", "cs201"]
+  }
+]

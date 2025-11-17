@@ -17,7 +17,7 @@ interface Course {
 
 const courses: Course[] = [
   {
-    id: "1",
+    id: "cs101",
     name: "Introduction to Computer Science",
     code: "CS101",
     students: 45,
@@ -26,49 +26,13 @@ const courses: Course[] = [
     semester: "Fall 2025",
   },
   {
-    id: "2",
+    id: "cs201",
     name: "Data Structures & Algorithms",
     code: "CS201",
     students: 38,
     completionRate: 65,
     status: "active",
     semester: "Fall 2025",
-  },
-  {
-    id: "3",
-    name: "Web Development Fundamentals",
-    code: "CS105",
-    students: 52,
-    completionRate: 82,
-    status: "active",
-    semester: "Fall 2025",
-  },
-  {
-    id: "4",
-    name: "Database Management Systems",
-    code: "CS301",
-    students: 28,
-    completionRate: 71,
-    status: "active",
-    semester: "Fall 2025",
-  },
-  {
-    id: "5",
-    name: "Machine Learning Basics",
-    code: "CS401",
-    students: 19,
-    completionRate: 58,
-    status: "active",
-    semester: "Fall 2025",
-  },
-  {
-    id: "6",
-    name: "Software Engineering",
-    code: "CS305",
-    students: 34,
-    completionRate: 88,
-    status: "archived",
-    semester: "Spring 2025",
   },
 ];
 

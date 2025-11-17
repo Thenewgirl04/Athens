@@ -113,6 +113,101 @@ export interface Quiz {
   bestScore?: number;
 }
 
+// Pretest interfaces
+export interface PretestQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  topicId?: string;
+  topicTitle?: string;
+}
+
+export interface Pretest {
+  id: string;
+  courseId: string;
+  questions: PretestQuestion[];
+  createdAt: string;
+  maxScore: number;
+}
+
+export interface PretestAttempt {
+  id: string;
+  studentId: string;
+  courseId: string;
+  pretestId: string;
+  answers: Record<string, number>;
+  score: number;
+  maxScore: number;
+  percentage: number;
+  completedAt: string;
+}
+
+export interface TopicPerformance {
+  topicId: string;
+  topicTitle: string;
+  questionsCount: number;
+  correctCount: number;
+  percentage: number;
+  performanceLevel: 'strong' | 'moderate' | 'weak';
+}
+
+export interface PretestAnalysis {
+  overallScore: number;
+  maxScore: number;
+  percentage: number;
+  performanceLevel: 'fail' | 'below_moderate' | 'moderate_plus';
+  topicBreakdown: TopicPerformance[];
+  strengths: string[];
+  weaknesses: string[];
+}
+
+export interface TopicRecommendation {
+  topicId: string;
+  topicTitle: string;
+  recommendation: string;
+  resourceUrl: string;
+  resourceType: 'article' | 'video' | 'pdf' | 'course';
+}
+
+export interface PretestResultResponse {
+  attempt: PretestAttempt;
+  analysis: PretestAnalysis;
+  recommendation?: TopicRecommendation;
+}
+
+export interface PretestStatus {
+  courseId: string;
+  studentId: string;
+  completed: boolean;
+}
+
+// Curriculum interfaces
+export interface CurriculumResource {
+  url: string;
+  type: string;
+}
+
+export interface CurriculumTopic {
+  id: string;
+  title: string;
+  description: string;
+  resources?: CurriculumResource[];
+}
+
+export interface CurriculumWeek {
+  week_number: number;
+  title: string;
+  topics: CurriculumTopic[];
+}
+
+export interface CurriculumResponse {
+  course_id: string | null;
+  success: boolean;
+  message: string;
+  weeks: CurriculumWeek[];
+}
+
 class ApiService {
   private getAuthToken(): string | null {
     const user = localStorage.getItem('user');
@@ -184,6 +279,41 @@ class ApiService {
       method: 'PUT',
       body: JSON.stringify(updates),
     });
+  }
+
+  // Pretest endpoints
+  async getPretest(courseId: string): Promise<Pretest> {
+    return this.request<Pretest>(`/api/pretest/${courseId}`);
+  }
+
+  async submitPretest(
+    studentId: string,
+    courseId: string,
+    pretestId: string,
+    answers: Record<string, number>
+  ): Promise<PretestResultResponse> {
+    return this.request<PretestResultResponse>('/api/pretest/submit', {
+      method: 'POST',
+      body: JSON.stringify({
+        studentId,
+        courseId,
+        pretestId,
+        answers,
+      }),
+    });
+  }
+
+  async getPretestStatus(courseId: string, studentId: string): Promise<PretestStatus> {
+    return this.request<PretestStatus>(`/api/pretest/${courseId}/status/${studentId}`);
+  }
+
+  async getPretestResults(courseId: string, studentId: string): Promise<PretestResultResponse> {
+    return this.request<PretestResultResponse>(`/api/pretest/${courseId}/results/${studentId}`);
+  }
+
+  // Curriculum endpoints
+  async getCurriculum(courseId: string): Promise<CurriculumResponse> {
+    return this.request<CurriculumResponse>(`/api/curriculum/${courseId}`);
   }
 }
 

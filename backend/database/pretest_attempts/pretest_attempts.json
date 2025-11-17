@@ -1,0 +1,16 @@
+[
+  {
+    "id": "attempt_58d44d9f",
+    "studentId": "stu_001",
+    "courseId": "cs101",
+    "pretestId": "pretest_cs101_e7dcbccc",
+    "answers": {
+      "q1": 1,
+      "q29": 1
+    },
+    "score": 2.0,
+    "maxScore": 29.0,
+    "percentage": 6.896551724137931,
+    "completedAt": "2025-11-17T15:54:19.054206Z"
+  }
+]

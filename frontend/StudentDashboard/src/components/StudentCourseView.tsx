@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -44,6 +44,10 @@ import { AssignmentDetails } from './AssignmentDetails';
 import { CourseAssignmentsTab } from './CourseAssignmentsTab';
 import { ModulesTab, Module as ModuleType } from './ModulesTab';
 import { useAuth } from '../contexts/AuthContext';
+import { LockedCourseOverlay } from './LockedCourseOverlay';
+import { PretestModal } from './PretestModal';
+import { PretestAnalysis } from './PretestAnalysis';
+import { api, Pretest, PretestResultResponse, CurriculumResponse } from '../services/api';
 
 interface Lesson {
   id: number;
@@ -654,7 +658,7 @@ const getCourseData = (courseId: number) => {
 export function StudentCourseView() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const { courseId } = useParams<{ courseId: string }>();
   const [activeNav, setActiveNav] = useState('courses');
   const [activeTab, setActiveTab] = useState<TabValue>('lessons');
@@ -664,8 +668,116 @@ export function StudentCourseView() {
   const [upcomingOpen, setUpcomingOpen] = useState(true);
   const [undatedOpen, setUndatedOpen] = useState(true);
   
+  // Pretest state
+  const [pretestCompleted, setPretestCompleted] = useState<boolean | null>(null);
+  const [pretest, setPretest] = useState<Pretest | null>(null);
+  const [pretestModalOpen, setPretestModalOpen] = useState(false);
+  const [pretestResult, setPretestResult] = useState<PretestResultResponse | null>(null);
+  const [loadingPretest, setLoadingPretest] = useState(false);
+  const [showAnalysis, setShowAnalysis] = useState(false);
+  
+  // Curriculum state
+  const [curriculum, setCurriculum] = useState<CurriculumResponse | null>(null);
+  const [loadingCurriculum, setLoadingCurriculum] = useState(false);
+  
   const courseIdNum = courseId ? parseInt(courseId, 10) : 1;
   const courseData = getCourseData(courseIdNum);
+
+  // Check pretest status on mount
+  useEffect(() => {
+    if (courseId && user?.id) {
+      checkPretestStatus();
+    }
+  }, [courseId, user?.id]);
+
+  // Load curriculum on mount
+  useEffect(() => {
+    if (courseId) {
+      loadCurriculum();
+    }
+  }, [courseId]);
+
+  const loadCurriculum = async () => {
+    if (!courseId) return;
+    
+    try {
+      setLoadingCurriculum(true);
+      const curriculumData = await api.getCurriculum(courseId);
+      if (curriculumData.success) {
+        setCurriculum(curriculumData);
+      }
+    } catch (error) {
+      console.error('Error loading curriculum:', error);
+      // Curriculum might not exist yet, that's okay
+    } finally {
+      setLoadingCurriculum(false);
+    }
+  };
+
+  const checkPretestStatus = async () => {
+    if (!courseId || !user?.id) return;
+    
+    try {
+      const status = await api.getPretestStatus(courseId, user.id);
+      setPretestCompleted(status.completed);
+      
+      if (status.completed) {
+        // Load pretest result if completed
+        try {
+          const result = await api.getPretestResults(courseId, user.id);
+          setPretestResult(result);
+          // Show analysis if score < 85%
+          if (result.analysis.percentage < 85) {
+            setShowAnalysis(true);
+          }
+        } catch (error) {
+          console.error('Error loading pretest results:', error);
+        }
+      } else {
+        // Load pretest questions if not completed
+        try {
+          const pretestData = await api.getPretest(courseId);
+          setPretest(pretestData);
+        } catch (error) {
+          console.error('Error loading pretest:', error);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking pretest status:', error);
+      // If pretest doesn't exist, allow access (for courses without pretests)
+      setPretestCompleted(true);
+    }
+  };
+
+  const handleTakePretest = () => {
+    setPretestModalOpen(true);
+  };
+
+  const handlePretestSubmit = async (answers: Record<string, number>) => {
+    if (!pretest || !courseId || !user?.id) return;
+    
+    setLoadingPretest(true);
+    try {
+      const result = await api.submitPretest(user.id, courseId, pretest.id, answers);
+      setPretestResult(result);
+      setPretestCompleted(true);
+      setPretestModalOpen(false);
+      
+      // Show analysis if score < 85%
+      if (result.analysis.percentage < 85) {
+        setShowAnalysis(true);
+      }
+    } catch (error) {
+      console.error('Error submitting pretest:', error);
+      alert('Failed to submit pretest. Please try again.');
+    } finally {
+      setLoadingPretest(false);
+    }
+  };
+
+  const handleContinueFromAnalysis = () => {
+    setShowAnalysis(false);
+  };
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
@@ -720,8 +832,47 @@ export function StudentCourseView() {
     }
   };
 
+  // Show loading state while checking pretest status
+  if (pretestCompleted === null) {
+    return (
+      <div className="flex h-screen bg-slate-50 items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading course...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-slate-50">
+      {/* Locked Course Overlay */}
+      {!pretestCompleted && pretest && (
+        <LockedCourseOverlay onTakePretest={handleTakePretest} />
+      )}
+
+      {/* Pretest Modal */}
+      {pretest && (
+        <PretestModal
+          open={pretestModalOpen}
+          onClose={() => setPretestModalOpen(false)}
+          pretest={pretest}
+          onSubmit={handlePretestSubmit}
+          loading={loadingPretest}
+        />
+      )}
+
+      {/* Pretest Analysis */}
+      {showAnalysis && pretestResult && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-lg max-w-4xl w-full my-8">
+            <PretestAnalysis
+              result={pretestResult}
+              onContinue={handleContinueFromAnalysis}
+            />
+          </div>
+        </div>
+      )}
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
         <div className="p-6 border-b border-slate-200">
@@ -908,159 +1059,104 @@ export function StudentCourseView() {
             <TabsContent value="curriculum" className="space-y-6">
               <div className="mb-6">
                 <h3 className="text-2xl font-bold text-slate-900 mb-2">Course Curriculum</h3>
-                <p className="text-slate-600">Explore the comprehensive curriculum designed to help you master the course material</p>
+                <p className="text-slate-600">
+                  {curriculum?.weeks && curriculum.weeks.length > 0 
+                    ? 'Explore the comprehensive curriculum designed to help you master the course material'
+                    : 'The instructor is preparing the curriculum for this course'}
+                </p>
               </div>
               
-              <Accordion type="single" collapsible className="space-y-4">
-                {courseData.curriculum.map((module) => (
-                  <AccordionItem 
-                    key={module.id} 
-                    value={`module-${module.id}`}
-                    className="border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    <AccordionTrigger className="px-6 py-4 hover:no-underline [&[data-state=open]>div>svg]:rotate-180">
-                      <div className="flex items-start gap-4 flex-1 text-left">
-                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex-shrink-0">
-                          {module.number}
+              {loadingCurriculum ? (
+                <div className="text-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+                  <p className="text-slate-600">Loading curriculum...</p>
+                </div>
+              ) : curriculum?.weeks && curriculum.weeks.length > 0 ? (
+                <Accordion type="single" collapsible className="space-y-4">
+                  {curriculum.weeks.map((week) => (
+                    <AccordionItem 
+                      key={week.week_number} 
+                      value={`week-${week.week_number}`}
+                      className="border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <AccordionTrigger className="px-6 py-4 hover:no-underline [&[data-state=open]>div>svg]:rotate-180">
+                        <div className="flex items-start gap-4 flex-1 text-left">
+                          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex-shrink-0">
+                            {week.week_number}
+                          </div>
+                          <div className="flex-1 pr-4">
+                            <h4 className="text-slate-900 mb-2">
+                              Week {week.week_number}: {week.title}
+                            </h4>
+                            <div className="flex items-center gap-4 text-sm text-slate-600">
+                              <span className="flex items-center gap-1">
+                                <BookOpen className="w-4 h-4" />
+                                {week.topics.length} topics
+                              </span>
+                            </div>
+                          </div>
+                          <ChevronDown className="w-5 h-5 text-slate-400 transition-transform duration-200 flex-shrink-0" />
                         </div>
-                        <div className="flex-1 pr-4">
-                          <h4 className="text-slate-900 mb-2">
-                            Module {module.number}: {module.title}
-                          </h4>
-                          <p className="text-sm text-slate-600 mb-3">{module.description}</p>
-                          <div className="flex items-center gap-4 text-sm text-slate-600">
-                            <span className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              {module.estimatedTime}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <FileIcon className="w-4 h-4" />
-                              {module.resources.length} resources
-                            </span>
-                          </div>
-                        </div>
-                        <ChevronDown className="w-5 h-5 text-slate-400 transition-transform duration-200 flex-shrink-0" />
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="px-6 pb-6">
-                      <div className="pl-16 space-y-6">
-                        {/* Module Overview Section */}
-                        <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-lg p-6 space-y-6">
-                          {/* Week Breakdown Title */}
-                          <div>
-                            <h4 className="text-slate-900 mb-2">{module.overview.weekTitle}</h4>
-                          </div>
-
-                          {/* Subtopics */}
-                          <div>
-                            <h5 className="text-slate-900 mb-3 flex items-center gap-2">
-                              <div className="w-1 h-5 bg-indigo-600 rounded"></div>
-                              Key Topics Covered
-                            </h5>
-                            <ul className="space-y-2">
-                              {module.overview.subtopics.map((subtopic, index) => (
-                                <li key={index} className="flex items-start gap-2 text-slate-700">
-                                  <span className="text-indigo-600 mt-1.5">•</span>
-                                  <span>{subtopic}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          {/* What You'll Learn */}
-                          <div>
-                            <h5 className="text-slate-900 mb-3 flex items-center gap-2">
-                              <Lightbulb className="w-5 h-5 text-amber-600" />
-                              What You'll Learn
-                            </h5>
-                            <ul className="space-y-2">
-                              {module.overview.whatYouLearn.map((item, index) => (
-                                <li key={index} className="flex items-start gap-2 text-slate-700">
-                                  <CheckCircle className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
-                                  <span>{item}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          {/* Why This Matters */}
-                          <div>
-                            <h5 className="text-slate-900 mb-3 flex items-center gap-2">
-                              <Target className="w-5 h-5 text-rose-600" />
-                              Why This Matters
-                            </h5>
-                            <p className="text-slate-700">{module.overview.whyItMatters}</p>
-                          </div>
-
-                          {/* Real-World Applications */}
-                          <div>
-                            <h5 className="text-slate-900 mb-3 flex items-center gap-2">
-                              <Briefcase className="w-5 h-5 text-blue-600" />
-                              Real-World Applications
-                            </h5>
-                            <ul className="space-y-2">
-                              {module.overview.realWorldApplications.map((app, index) => (
-                                <li key={index} className="flex items-start gap-2 text-slate-700">
-                                  <span className="text-blue-600 mt-1.5">▸</span>
-                                  <span>{app}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-
-                        {/* Module Resources Section */}
-                        <div>
-                          <h5 className="text-slate-900 mb-4">Module Resources</h5>
-                          <div className="space-y-3">
-                            {module.resources.map((resource) => {
-                              const getResourceIcon = (type: Resource['type']) => {
-                                switch (type) {
-                                  case 'PDF':
-                                    return <FileIcon className="w-5 h-5 text-red-500" />;
-                                  case 'Link':
-                                    return <LinkIcon className="w-5 h-5 text-blue-500" />;
-                                  case 'Video':
-                                    return <Video className="w-5 h-5 text-purple-500" />;
-                                }
-                              };
-
-                              return (
-                                <div
-                                  key={resource.id}
-                                  className="flex items-center gap-3 p-4 bg-white border border-slate-200 rounded-lg hover:border-indigo-300 hover:shadow-sm transition-all"
-                                >
-                                  <div className="p-2 bg-slate-50 rounded">
-                                    {getResourceIcon(resource.type)}
+                      </AccordionTrigger>
+                      <AccordionContent className="px-6 pb-6">
+                        <div className="pl-16 space-y-4">
+                          {week.topics.map((topic) => (
+                            <div key={topic.id} className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-lg p-6">
+                              <h5 className="text-slate-900 font-semibold mb-2">{topic.title}</h5>
+                              <p className="text-slate-700 mb-4 whitespace-pre-wrap">{topic.description}</p>
+                              
+                              {topic.resources && topic.resources.length > 0 && (
+                                <div className="space-y-2 mt-4">
+                                  <h6 className="text-sm font-medium text-slate-700">Resources:</h6>
+                                  <div className="space-y-2">
+                                    {topic.resources.map((resource, idx) => {
+                                      const getResourceIcon = () => {
+                                        switch (resource.type) {
+                                          case 'video':
+                                            return <Video className="w-4 h-4 text-purple-600" />;
+                                          case 'pdf':
+                                            return <FileIcon className="w-4 h-4 text-red-600" />;
+                                          case 'course':
+                                            return <BookOpen className="w-4 h-4 text-green-600" />;
+                                          default:
+                                            return <LinkIcon className="w-4 h-4 text-blue-600" />;
+                                        }
+                                      };
+                                      
+                                      return (
+                                        <a
+                                          key={idx}
+                                          href={resource.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="flex items-center gap-2 p-2 rounded hover:bg-white/50 transition-colors text-sm text-indigo-600 hover:text-indigo-800"
+                                        >
+                                          {getResourceIcon()}
+                                          <span className="capitalize">{resource.type}</span>
+                                          <span className="text-slate-600">→</span>
+                                          <span className="truncate">{resource.url}</span>
+                                        </a>
+                                      );
+                                    })}
                                   </div>
-                                  <div className="flex-1">
-                                    <p className="text-slate-900">{resource.name}</p>
-                                    <div className="flex items-center gap-3 text-sm text-slate-500 mt-1">
-                                      <span className="flex items-center gap-1">
-                                        <Calendar className="w-3 h-3" />
-                                        {resource.uploadDate}
-                                      </span>
-                                      {resource.fileSize && (
-                                        <span>• {resource.fileSize}</span>
-                                      )}
-                                      <Badge variant="outline" className="text-xs">
-                                        {resource.type}
-                                      </Badge>
-                                    </div>
-                                  </div>
-                                  <Button variant="outline" size="sm">
-                                    View
-                                  </Button>
                                 </div>
-                              );
-                            })}
-                          </div>
+                              )}
+                            </div>
+                          ))}
                         </div>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              ) : (
+                <div className="text-center py-12 bg-white rounded-lg border border-slate-200">
+                  <BookOpen className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                  <h4 className="text-lg font-semibold text-slate-900 mb-2">No Curriculum Available</h4>
+                  <p className="text-slate-600">
+                    The instructor hasn't generated the curriculum for this course yet.
+                  </p>
+                </div>
+              )}
             </TabsContent>
           </Tabs>
           </div>

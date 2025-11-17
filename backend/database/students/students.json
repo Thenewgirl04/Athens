@@ -14,10 +14,8 @@
     "gpa": 3.85,
     "credits": 78,
     "enrolledCourses": [
-      "course_001",
-      "course_002",
-      "course_003",
-      "course_004"
+      "cs101",
+      "cs201"
     ],
     "completedAssignments": [
       {
@@ -176,11 +174,8 @@
     "gpa": 3.42,
     "credits": 45,
     "enrolledCourses": [
-      "course_001",
-      "course_002",
-      "course_003",
-      "course_004",
-      "course_005"
+      "cs101",
+      "cs201"
     ],
     "completedAssignments": [
       {
@@ -271,10 +266,8 @@
     "gpa": 3.2,
     "credits": 15,
     "enrolledCourses": [
-      "course_001",
-      "course_002",
-      "course_003",
-      "course_004"
+      "cs101",
+      "cs201"
     ],
     "completedAssignments": [
       {

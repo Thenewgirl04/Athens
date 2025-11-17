@@ -4,7 +4,7 @@ Google Gemini API client wrapper.
 import google.generativeai as genai
 from google.api_core.exceptions import NotFound
 from config import settings
-from typing import List
+from typing import List, Dict, Any
 
 
 class GeminiClient:
@@ -248,5 +248,165 @@ JSON Format:
 }}
 
 Generate the detailed lesson notes now:"""
+        
+        return prompt
+    
+    def generate_pretest(
+        self,
+        curriculum_data: Dict[str, Any]
+    ) -> str:
+        """
+        Generate pretest questions based on curriculum topics.
+        
+        Args:
+            curriculum_data: Dictionary containing curriculum weeks and topics
+            
+        Returns:
+            Raw JSON string from Gemini with pretest questions
+        """
+        prompt = self._build_pretest_prompt(curriculum_data)
+        try:
+            response = self.model.generate_content(prompt)
+        except NotFound as exc:
+            raise RuntimeError(
+                f"Gemini model '{settings.gemini_model}' cannot generate content: {exc}"
+            ) from exc
+        return response.text
+    
+    def _build_pretest_prompt(self, curriculum_data: Dict[str, Any]) -> str:
+        """
+        Build prompt for pretest generation.
+        
+        Args:
+            curriculum_data: Curriculum data with weeks and topics
+            
+        Returns:
+            Formatted prompt string
+        """
+        # Extract topics from curriculum
+        topics_list = []
+        for week in curriculum_data.get("weeks", []):
+            for topic in week.get("topics", []):
+                topics_list.append({
+                    "id": topic.get("id", ""),
+                    "title": topic.get("title", ""),
+                    "description": topic.get("description", "")
+                })
+        
+        topics_text = "\n".join([
+            f"- {t['id']}: {t['title']} - {t['description']}"
+            for t in topics_list
+        ])
+        
+        prompt = f"""You are an expert test creator. Generate a comprehensive pretest to assess students' prior knowledge across all topics in this course curriculum.
+
+Curriculum Topics:
+{topics_text}
+
+Requirements:
+- Generate 10-15 multiple choice questions total
+- Each question must have exactly 4 options (A, B, C, D)
+- Questions should cover all major topics from the curriculum
+- Questions should assess foundational knowledge and prerequisite concepts
+- Mix easy, medium, and challenging questions
+- For each question, specify which topic it relates to (use the topic ID)
+- Return the response as valid JSON only (no markdown, no extra text)
+
+JSON Format:
+{{
+  "questions": [
+    {{
+      "id": "q1",
+      "question": "What is the primary purpose of React hooks?",
+      "options": [
+        "To manage component state and side effects",
+        "To style React components",
+        "To handle routing in React applications",
+        "To optimize React component rendering"
+      ],
+      "correctAnswer": 0,
+      "topicId": "topic_1_1",
+      "topicTitle": "Introduction to React"
+    }}
+  ]
+}}
+
+Generate the pretest questions now:"""
+        
+        return prompt
+    
+    def generate_recommendation(
+        self,
+        topic_id: str,
+        topic_title: str,
+        topic_description: str,
+        student_performance: str
+    ) -> str:
+        """
+        Generate a resource recommendation for a weak topic area.
+        
+        Args:
+            topic_id: Topic identifier
+            topic_title: Title of the topic
+            topic_description: Description of the topic
+            student_performance: Description of student's performance on this topic
+            
+        Returns:
+            Raw JSON string from Gemini with recommendation
+        """
+        prompt = self._build_recommendation_prompt(
+            topic_id, topic_title, topic_description, student_performance
+        )
+        try:
+            response = self.model.generate_content(prompt)
+        except NotFound as exc:
+            raise RuntimeError(
+                f"Gemini model '{settings.gemini_model}' cannot generate content: {exc}"
+            ) from exc
+        return response.text
+    
+    def _build_recommendation_prompt(
+        self,
+        topic_id: str,
+        topic_title: str,
+        topic_description: str,
+        student_performance: str
+    ) -> str:
+        """
+        Build prompt for recommendation generation.
+        
+        Args:
+            topic_id: Topic identifier
+            topic_title: Title of the topic
+            topic_description: Description of the topic
+            student_performance: Description of student's performance
+            
+        Returns:
+            Formatted prompt string
+        """
+        prompt = f"""You are an educational advisor. A student needs help with a specific topic they struggled with on a pretest.
+
+Topic: {topic_title}
+Description: {topic_description}
+Student Performance: {student_performance}
+
+Generate ONE targeted learning resource recommendation:
+- Provide a specific, high-quality online resource (article, video, course, or PDF)
+- The resource should be appropriate for someone learning this topic from scratch or needing reinforcement
+- Include a brief explanation of why this resource will help
+- Return the response as valid JSON only (no markdown, no extra text)
+
+JSON Format:
+{{
+  "topicId": "{topic_id}",
+  "topicTitle": "{topic_title}",
+  "recommendation": "Brief explanation of why this topic needs attention and how the resource helps",
+  "resourceUrl": "https://example.com/resource",
+  "resourceType": "article"
+}}
+
+Resource types: "article" (articles, tutorials, documentation), "video" (YouTube, educational videos), "course" (online courses like Coursera, Khan Academy), or "pdf" (PDF documents)
+
+Generate the recommendation now:"""
         
         return prompt

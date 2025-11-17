@@ -2,7 +2,7 @@
 FastAPI application for Teacher Dashboard Backend.
 """
 from typing import List
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Query
 from fastapi.datastructures import UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from models import (
@@ -17,12 +17,16 @@ from models import (
     StudentProfileResponse,
     StudentCourseResponse,
     StudentAssignmentResponse,
-    StudentQuizResponse
+    StudentQuizResponse,
+    Pretest,
+    PretestSubmissionRequest,
+    PretestResultResponse
 )
 from services.curriculum_service import CurriculumService
 from services.lesson_service import LessonService
 from services.auth_service import AuthService
 from services.student_service import StudentService
+from services.pretest_service import PretestService
 from config import settings
 
 import uvicorn
@@ -34,6 +38,7 @@ curriculum_service = CurriculumService()
 lesson_service = LessonService()
 auth_service = AuthService()
 student_service = StudentService()
+pretest_service = PretestService()
 
 
 def _coerce_bool(value: bool | str | None, default: bool) -> bool:
@@ -438,6 +443,143 @@ def update_student_profile(student_id: str, updates: dict) -> dict:
         raise HTTPException(
             status_code=500,
             detail=f"Error updating student profile: {str(e)}"
+        )
+
+
+# Pretest Endpoints
+
+@app.post("/api/pretest/generate", response_model=Pretest, tags=["Pretest"])
+def generate_pretest(course_id: str = Query(..., description="Course identifier")) -> Pretest:
+    """
+    Generate pretest for a course (usually auto-called after curriculum generation).
+    
+    Args:
+        course_id: Course identifier (query parameter)
+    
+    Returns:
+        Generated Pretest object
+    """
+    try:
+        pretest = pretest_service.generate_pretest_for_curriculum(course_id)
+        return pretest
+    except ValueError as e:
+        raise HTTPException(
+            status_code=404,
+            detail=str(e)
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error generating pretest: {str(e)}"
+        )
+
+
+@app.get("/api/pretest/{course_id}", response_model=Pretest, tags=["Pretest"])
+def get_pretest(course_id: str) -> Pretest:
+    """
+    Get pretest questions for a course.
+    
+    Args:
+        course_id: Course identifier
+    
+    Returns:
+        Pretest object with questions
+    """
+    try:
+        pretest = pretest_service.get_pretest(course_id)
+        if not pretest:
+            raise HTTPException(
+                status_code=404,
+                detail="Pretest not found for this course"
+            )
+        return pretest
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error retrieving pretest: {str(e)}"
+        )
+
+
+@app.post("/api/pretest/submit", response_model=PretestResultResponse, tags=["Pretest"])
+def submit_pretest(request: PretestSubmissionRequest) -> PretestResultResponse:
+    """
+    Submit pretest answers and get results with analysis.
+    
+    Args:
+        request: PretestSubmissionRequest with student answers
+    
+    Returns:
+        PretestResultResponse with analysis and recommendations
+    """
+    try:
+        result = pretest_service.submit_pretest(request)
+        return result
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error submitting pretest: {str(e)}"
+        )
+
+
+@app.get("/api/pretest/{course_id}/status/{student_id}", tags=["Pretest"])
+def get_pretest_status(course_id: str, student_id: str) -> dict:
+    """
+    Check if student has completed pretest for a course.
+    
+    Args:
+        course_id: Course identifier
+        student_id: Student identifier
+    
+    Returns:
+        Dict with completion status
+    """
+    try:
+        completed = pretest_service.has_completed_pretest(student_id, course_id)
+        return {
+            "courseId": course_id,
+            "studentId": student_id,
+            "completed": completed
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error checking pretest status: {str(e)}"
+        )
+
+
+@app.get("/api/pretest/{course_id}/results/{student_id}", response_model=PretestResultResponse, tags=["Pretest"])
+def get_pretest_results(course_id: str, student_id: str) -> PretestResultResponse:
+    """
+    Get pretest results and analysis for a student.
+    
+    Args:
+        course_id: Course identifier
+        student_id: Student identifier
+    
+    Returns:
+        PretestResultResponse with analysis and recommendations
+    """
+    try:
+        result = pretest_service.get_pretest_result(student_id, course_id)
+        if not result:
+            raise HTTPException(
+                status_code=404,
+                detail="Pretest results not found. Student may not have completed the pretest."
+            )
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error retrieving pretest results: {str(e)}"
         )
 
 
